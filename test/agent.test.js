@@ -168,3 +168,24 @@ test("requests are checked before any model is called", () => {
   assert.match(validateRequest({ message: "hi", books: b, history: [{ role: "system", content: "x" }] }), /History/);
   assert.match(validateRequest({ message: "hi" }), /books/);
 });
+
+test("a record reaching back into the history, or a number the owner never gave, is sent back", async () => {
+  const { chat, asked } = scripted(
+    { tool_calls: [call("record_customer_payment", { customer: "Mai Tendai", amount: 12.7, method: "cash" }), call("record_expense", { category: "Transport", amount: 3, payment: "cash" })] },
+    "Done.",
+  );
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Paid $2 transport", history: [{ role: "user", content: "Mai Tendai took sugar on credit, she'll pay Friday" }], now: NOW });
+  assert.equal(out.proposals.length, 0);
+  const results = asked[1].messages.filter((m) => m.role === "tool").map((m) => m.content).join(" ");
+  assert.match(results, /Mai Tendai is not named/);
+  assert.match(results, /amount is not in the owner's latest message/);
+});
+
+test("an exchange rate the owner did not give is looked up, never taken from the model", async () => {
+  const { chat } = scripted({ tool_calls: [call("record_sale", { items: [{ item: "bread", qty: 2 }], payment: "mobile_money", paid_currency: "ZiG", paid_amount: 60, rate: 24 })] }, "Done.");
+  let looked = 0;
+  const rates = async () => (looked++, { unitsPerUsd: 26.5975, name: "ZiG", source: "idbz.co.zw", url: "https://www.idbz.co.zw/x", asOf: null, trace: [] });
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Sold 2 bread, paid 60 ZiG on mobile money", now: NOW, rates });
+  assert.equal(looked, 1);
+  assert.equal(out.proposals[0].amount, 226);
+});

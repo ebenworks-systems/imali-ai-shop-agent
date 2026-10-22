@@ -86,6 +86,7 @@ export function routerPrompt(snapshot) {
     "- Advice or analysis (what to restock, what sells slowly, why, how to price): call ask_analyst.",
     "- Closing the day or a till count: call close_day with the counted cash.",
     "- A customer who paid in ZiG, rand, pula or kwacha: pass paid_currency and paid_amount on record_sale; the system looks up today's official rate. Pass rate only when the owner says which rate was used.",
+    "- Record only what the owner's latest message says. Earlier messages are there to explain short answers; never record them again.",
     "- When a tool answers with a question, ask the owner that question and record nothing else for that transaction.",
     "- Reply in the language the owner wrote in. Plain words, no markdown, no emoji, item names rather than ids. Say what will be recorded; the owner confirms each record with one tap.",
     "",
@@ -126,6 +127,28 @@ const PAYMENT_WORDS = /(cash|mari|imali|mobile|eco ?cash|one ?money|innbucks|swi
 
 export function saysHowPaid(text) {
   return PAYMENT_WORDS.test(String(text || ""));
+}
+
+export function numbersIn(text) {
+  return new Set((String(text || "").match(/\d+(?:[.,]\d+)?/g) || []).map((n) => Number(n.replace(",", "."))));
+}
+
+function names(text, name) {
+  const first = String(name || "").toLowerCase().split(/\s+/).find((w) => w.length > 2 && !["mai", "baba", "mr", "mrs", "the"].includes(w));
+  return Boolean(first) && String(text || "").toLowerCase().includes(first);
+}
+
+// Records come only from the owner's latest message (and its photo). A model that reaches back into the history,
+// or fills in a number the owner never gave, is sent back with the reason.
+export function fromLatestMessage(name, args, message, photo) {
+  const nums = numbersIn(message);
+  const said = (n) => n === undefined || n === null || nums.has(Number(n));
+  if (name === "record_customer_payment" && !names(message, args.customer)) return `${args.customer || "That customer"} is not named in the owner's latest message. Record only what it says.`;
+  if (name === "record_supplier_payment" && !names(message, args.supplier)) return `${args.supplier || "That supplier"} is not named in the owner's latest message. Record only what it says.`;
+  if (name === "record_sale" && args.payment === "credit" && args.customer && !names(message, args.customer)) return `${args.customer} is not named in the owner's latest message. Ask who took it on credit.`;
+  if (["record_expense", "record_customer_payment", "record_supplier_payment", "record_owner_withdrawal"].includes(name) && !said(args.amount)) return "That amount is not in the owner's latest message. Use the owner's own figure or ask.";
+  if (name === "record_stock_in" && !photo && !names(message, args.supplier) && !(args.items || []).some((it) => said(it.unit_cost))) return "This stock is not in the owner's latest message. Record only what it says.";
+  return null;
 }
 
 function normaliseArgs(name, args) {
@@ -322,8 +345,13 @@ export async function runAgent({ chat, models, books, message = "", image, histo
       } else if (WRITE_TOOLS.has(name)) {
         const key = `${name}:${JSON.stringify(args)}`;
         let rateNote = null;
+        if (args.rate && !numbersIn(message).has(Number(args.rate))) delete args.rate;
         const code = name === "record_sale" && args.paid_amount ? currencyCode(args.paid_currency) : "USD";
-        if (name === "record_sale" && !saysHowPaid(message) && !image) {
+        const stale = fromLatestMessage(name, args, message, photo);
+        if (stale) {
+          failures += 1;
+          result = { error: stale };
+        } else if (name === "record_sale" && !saysHowPaid(message) && !image) {
           result = { question: "How did the customer pay: cash, mobile money or on credit?" };
         } else if (code === null) {
           result = { question: `Which currency was that, ZiG, rand, pula or kwacha?` };
