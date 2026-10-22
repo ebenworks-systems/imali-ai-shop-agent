@@ -110,7 +110,7 @@ function renderThread() {
 
 function renderItem(item) {
   if (item.type === "owner") {
-    return el("li", { class: "msg msg-owner" }, el("div", { class: "bubble" }, item.image ? el("img", { src: item.image, alt: "Photo sent to the agent" }) : null, item.text || ""));
+    return el("li", { class: "msg msg-owner" }, el("div", { class: "bubble" }, item.image ? el("img", { src: item.image, alt: "Photo sent to the agent", width: 320, height: 240 }) : null, item.text || ""));
   }
   if (item.type === "error") return el("li", { class: "msg msg-agent msg-error" }, el("div", { class: "bubble" }, item.text));
   const li = el("li", { class: "msg msg-agent", "data-id": item.id });
@@ -346,8 +346,8 @@ function history() {
 
 function thinking(withPhoto) {
   const stages = withPhoto
-    ? ["Nemotron 3.5 Super VL is reading the photo", "Nemotron 3 Nano is matching it to your stock", "Checking the double entry"]
-    : ["Nemotron 3 Nano is reading your message", "Checking the double entry"];
+    ? ["Nemotron 3.5 Super VL is reading the photo…", "Nemotron 3 Nano is matching it to your stock…", "Checking the double entry…"]
+    : ["Nemotron 3 Nano is reading your message…", "Checking the double entry…"];
   const label = el("span", {}, stages[0]);
   const li = el("li", { class: "msg msg-agent" }, el("div", { class: "thinking" }, el("span", { class: "pulse", "aria-hidden": "true" }, el("i"), el("i"), el("i")), label));
   let i = 0;
@@ -440,6 +440,17 @@ function setPhoto(dataUrl) {
   if (dataUrl) $('[data-role="thumb"]').src = dataUrl;
 }
 
+function resetDemo() {
+  const before = state.books;
+  state = fresh();
+  save();
+  renderThread();
+  renderBooks(before);
+  bind("route").replaceChildren(el("li", { class: "route-empty" }, "Send a message to see which Nemotron model handles each step, how long it took and what it cost on Token Factory."));
+  bind("session-cost").textContent = "This session: $0.0000";
+  toast("The demo shop is back to the start of the day.");
+}
+
 // ---- wiring --------------------------------------------------------------------------------
 
 function wire() {
@@ -499,14 +510,7 @@ function wire() {
 
   document.querySelectorAll('[data-action="reset"]').forEach((b) =>
     b.addEventListener("click", () => {
-      const before = state.books;
-      state = fresh();
-      save();
-      renderThread();
-      renderBooks(before);
-      bind("route").replaceChildren(el("li", { class: "route-empty" }, "Send a message to see which Nemotron model handles each step, how long it took and what it cost on Token Factory."));
-      bind("session-cost").textContent = "This session: $0.0000";
-      toast("The demo shop is back to the start of the day.");
+      if (window.confirm("Start the demo shop's day again? This clears the chat and the books in this browser.")) resetDemo();
     }),
   );
 
@@ -570,4 +574,4 @@ const lastAgent = [...state.thread].reverse().find((t) => t.type === "agent");
 if (lastAgent) renderRoute(lastAgent.trace);
 bind("session-cost").textContent = `This session: ${fmtCost(state.session.cost)}`;
 health();
-if (new URLSearchParams(location.search).has("reset")) document.querySelector('[data-action="reset"]').click();
+if (new URLSearchParams(location.search).has("reset")) resetDemo();

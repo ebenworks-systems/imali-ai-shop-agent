@@ -107,6 +107,11 @@ const speech = (scene) => {
       await sleep(1500);
       await recordAll();
 
+      await scene("zig");
+      await ask("Paid in ZiG");
+      await sleep(1200);
+      await recordAll();
+
       await scene("costs");
       await ask("Paid electricity and transport");
       await recordAll();
