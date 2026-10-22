@@ -10,6 +10,7 @@ import {
   balances,
   buildCashCount,
   daySummary,
+  localItemWords,
   money,
   partyBalances,
   snapshotForModel,
@@ -75,16 +76,17 @@ export function routerPrompt(snapshot) {
     "",
     "Rules:",
     "- One tool call per transaction. A message can hold several transactions: two costs paid are two record_expense calls.",
-    "- Use catalogue ids for items. Owners write in English, chiShona, isiNdebele or a mix; also_called lists the local names (mazai is eggs, mukaka is milk, chingwa is bread).",
-    "- Never invent a price or a quantity. Leave unit_price out to use the catalogue price. Pass amount_received only when the owner states the total they received.",
-    "- Mobile money covers EcoCash, OneMoney, InnBucks and bank transfers. On credit, chikwereti or 'will pay later' means payment credit, with the customer's name.",
+    "- Use catalogue ids for items, and record every item the message names. Owners write in English, chiShona, isiNdebele or a mix; also_called lists the local names (mazai is eggs, mukaka is milk, chingwa is bread, sipo is soap, munyu is salt).",
+    "- Words to know. chiShona: ndatengesa = I sold, ndatenga = I bought, ndabhadhara = I paid, ndabhadharwa = I was paid, chikwereti = on credit, mari = money. isiNdebele: ngithengise = I sold, ngithenge = I bought, isikwelede = on credit, imali = money. Both join 'and' to the next word: nemukaka = ne + mukaka (and milk), nemunyu = ne + munyu (and salt), lamaqanda = la + amaqanda (and eggs).",
+    "- Never invent a price, a quantity or how a customer paid. Leave unit_price out to use the catalogue price. Pass amount_received only when the owner states the total they received. If a sale does not say cash, mobile money or credit, record nothing for it and ask how the customer paid.",
+    "- Mobile money covers EcoCash, OneMoney, InnBucks and bank transfers. On credit, chikwereti, isikwelede or 'will pay later' means payment credit, with the customer's name.",
     "- A photo reading arrives as JSON after the owner's words. A supplier invoice or delivery note becomes one record_stock_in with each line's unit cost. Take how it was paid from the owner's words first, then the invoice; if neither says, ask.",
     "- Questions about today's figures, stock, money on hand or who owes: call get_figures and answer with its numbers.",
     "- Advice or analysis (what to restock, what sells slowly, why, how to price): call ask_analyst.",
     "- Closing the day or a till count: call close_day with the counted cash.",
     "- A customer who paid in ZiG, rand, pula or kwacha: pass paid_currency and paid_amount on record_sale; the system looks up today's official rate. Pass rate only when the owner says which rate was used.",
     "- When a tool answers with a question, ask the owner that question and record nothing else for that transaction.",
-    "- Reply in the language the owner wrote in. Plain words, no markdown, no emoji. Say what will be recorded; the owner confirms each record with one tap.",
+    "- Reply in the language the owner wrote in. Plain words, no markdown, no emoji, item names rather than ids. Say what will be recorded; the owner confirms each record with one tap.",
     "",
     "The books right now:",
     JSON.stringify(snapshot),
@@ -117,11 +119,24 @@ export function toolCallsOf(message) {
   return out;
 }
 
+// Words that say how a customer paid, in English, chiShona and isiNdebele. A sale whose message has none of them is
+// asked about instead of recorded, so a model's guess never lands in the till.
+const PAYMENT_WORDS = /(cash|mari|imali|mobile|eco ?cash|one ?money|innbucks|swipe|card|transfer|bank|credit|chikwereti|isikwelede|later|owe|tab|paid|pay|bhadhar|bhadal|zig|zwg|rand|usd|\$)/i;
+
+export function saysHowPaid(text) {
+  return PAYMENT_WORDS.test(String(text || ""));
+}
+
 function normaliseArgs(name, args) {
   const a = { ...args };
   for (const k of ["payment", "method", "paid"]) if (a[k] === "mobile_money") a[k] = "mobile";
   if (name === "record_stock_in" && a.paid === "on_account") a.paid = "credit";
   return a;
+}
+
+function hinted(books, words) {
+  const local = localItemWords(books, words.split("\n\nPhoto reading")[0]);
+  return local.length ? `${words}\n\n(Local item names in this message: ${local.join("; ")}.)` : words;
 }
 
 export function figures(books, about) {
@@ -163,7 +178,7 @@ async function askAnalyst({ chat, models, books, question, ownerWords }) {
   const res = await chat({
     model: models.analyst,
     purpose: "analyst",
-    maxTokens: 1200,
+    maxTokens: 4000,
     temperature: 0.3,
     messages: [
       {
@@ -190,7 +205,7 @@ async function closeDay({ chat, models, books, counted, ownerWords }) {
   const res = await chat({
     model: models.closer,
     purpose: "closer",
-    maxTokens: 1500,
+    maxTokens: 5000,
     temperature: 0.2,
     timeout: 55_000,
     messages: [
@@ -267,7 +282,7 @@ export async function runAgent({ chat, models, books, message = "", image, histo
   const messages = [
     { role: "system", content: routerPrompt(snapshotForModel(working)) },
     ...history.slice(-LIMITS.historyItems).map((h) => ({ role: h.role, content: h.content.slice(0, LIMITS.historyText) })),
-    { role: "user", content: words },
+    { role: "user", content: hinted(working, words) },
   ];
 
   let model = models.router;
@@ -276,7 +291,7 @@ export async function runAgent({ chat, models, books, message = "", image, histo
   const done = (reply, extra = {}) => ({ reply, proposals, trace, photo, escalated, ...extra });
 
   for (let round = 0; round < 6; round += 1) {
-    const res = await chat({ model, purpose: escalated ? "router, retried on Super" : "router", messages, tools: TOOLS, maxTokens: 1200, temperature: 0.1 });
+    const res = await chat({ model, purpose: escalated ? "router, retried on Super" : "router", messages, tools: TOOLS, maxTokens: escalated ? 4000 : 1200, temperature: 0.1 });
     trace.push(res.trace);
     const calls = toolCallsOf(res.message);
     if (!calls.length) {
@@ -304,7 +319,9 @@ export async function runAgent({ chat, models, books, message = "", image, histo
         const key = `${name}:${JSON.stringify(args)}`;
         let rateNote = null;
         const code = name === "record_sale" && args.paid_amount ? currencyCode(args.paid_currency) : "USD";
-        if (code === null) {
+        if (name === "record_sale" && !saysHowPaid(message) && !image) {
+          result = { question: "How did the customer pay: cash, mobile money or on credit?" };
+        } else if (code === null) {
           result = { question: `Which currency was that, ZiG, rand, pula or kwacha?` };
         } else if (code !== "USD" && !args.rate) {
           const r = rates ? await rates(code) : { error: "Live exchange rates are switched off on this copy." };

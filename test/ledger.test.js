@@ -187,3 +187,11 @@ test("the full demo script keeps the books balanced and ends with the expected t
   assert.ok(trialBalance(applyEntry(b, count.entry)).balanced);
   assert.ok(SAMPLE_MESSAGES.some((m) => m.text.includes("$47.30")));
 });
+
+test("local item names are found, with chiShona and isiNdebele 'and' joined on the front", async () => {
+  const { localItemWords } = await import("../public/js/ledger.js");
+  const b = books();
+  assert.deepEqual(localItemWords(b, "Ndatengesa sipo 3 nemunyu 1, cash"), ["sipo = soap-bar", "nemunyu = salt-1kg"]);
+  assert.deepEqual(localItemWords(b, "Ngithengise isinkwa 4 lamaqanda 1 tray"), ["isinkwa = bread", "lamaqanda = eggs-tray"]);
+  assert.deepEqual(localItemWords(b, "Sold 3 bread and 2 cooking oil, cash"), []);
+});

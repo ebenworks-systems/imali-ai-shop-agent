@@ -77,6 +77,28 @@ export function findItem(books, query) {
   return scored[0].best >= 0.5 ? scored[0].it : null;
 }
 
+// Local item names in a message, including chiShona and isiNdebele words with "and" joined on the front
+// (nemunyu = ne + munyu, lamaqanda = la + amaqanda). The agent hands these to the model as hints.
+const JOINED = ["ne", "na", "no", "la", "le", "lo", "l"];
+
+export function localItemWords(books, text) {
+  const local = new Map();
+  for (const it of Object.values(books.items)) {
+    const english = new Set(words(it.name));
+    for (const a of it.aliases) {
+      const n = normalise(a);
+      if (!n.includes(" ") && !english.has(singular(n))) local.set(n, it.id);
+    }
+  }
+  const found = new Set();
+  for (const word of normalise(text).split(" ")) {
+    const tries = [word, ...JOINED.filter((p) => word.startsWith(p) && word.length > p.length + 2).map((p) => word.slice(p.length))];
+    const hit = tries.find((t) => local.has(t));
+    if (hit) found.add(`${word} = ${local.get(hit)}`);
+  }
+  return [...found];
+}
+
 export function findParty(list, name) {
   if (!name) return null;
   const q = normalise(name);

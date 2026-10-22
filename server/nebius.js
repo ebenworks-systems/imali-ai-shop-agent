@@ -5,15 +5,25 @@ export const DEFAULT_BASE_URL = "https://api.tokenfactory.nebius.com/v1";
 
 // NVIDIA open models on Token Factory's public endpoints, with list prices per million tokens
 // (input, output) as the Token Factory catalogue showed them on 23 October 2026.
+// The router and the photo reader answer with reasoning switched off, so every message stays quick;
+// the analyst and the day-closer think before they answer.
+const NO_THINKING = { chat_template_kwargs: { enable_thinking: false } };
 export const MODELS = {
-  router: { id: "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B", label: "Nemotron 3 Nano", price: [0.06, 0.24] },
-  vision: { id: "nvidia/Nemotron-3.5-Super-VL", label: "Nemotron 3.5 Super VL", price: [0.3, 0.9] },
-  analyst: { id: "nvidia/nemotron-3-super-120b-a12b", label: "Nemotron 3 Super", price: [0.3, 0.9] },
-  closer: { id: "nvidia/Nemotron-3-Ultra-550b-a55b", label: "Nemotron 3 Ultra", price: [1, 3] },
+  router: { id: "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B", label: "Nemotron 3 Nano", price: [0.06, 0.24], extra: NO_THINKING },
+  vision: { id: "nvidia/Nemotron-3.5-Super-VL", label: "Nemotron 3.5 Super VL", price: [0.3, 0.9], extra: NO_THINKING },
+  analyst: { id: "nvidia/nemotron-3-super-120b-a12b", label: "Nemotron 3 Super", price: [0.3, 0.9], extra: {} },
+  closer: { id: "nvidia/Nemotron-3-Ultra-550b-a55b", label: "Nemotron 3 Ultra", price: [1, 3], extra: {} },
 };
 
 export function modelsFromEnv(env = process.env) {
-  const pick = (role, name) => ({ ...MODELS[role], id: env[name] || MODELS[role].id });
+  const json = (v, d) => {
+    try {
+      return v ? JSON.parse(v) : d;
+    } catch {
+      return d;
+    }
+  };
+  const pick = (role, name) => ({ ...MODELS[role], id: env[name] || MODELS[role].id, extra: json(env[`${name}_EXTRA`], MODELS[role].extra) });
   return {
     router: pick("router", "NEBIUS_ROUTER_MODEL"),
     vision: pick("vision", "NEBIUS_VISION_MODEL"),
@@ -68,7 +78,7 @@ export function createClient({ apiKey, baseUrl = DEFAULT_BASE_URL, fetchImpl = f
   // chat() returns the assistant message and a trace line: which model, why, how long, how many tokens.
   return async function chat({ model, purpose, messages, tools, toolChoice, maxTokens = 700, temperature = 0.2, json = false, extra = {}, timeout = timeoutMs }) {
     if (!apiKey) throw new ModelError("NEBIUS_API_KEY is not set", 500);
-    const body = { model: model.id, messages, max_tokens: maxTokens, temperature, ...extra };
+    const body = { model: model.id, messages, max_tokens: maxTokens, temperature, ...(model.extra || {}), ...extra };
     if (tools) {
       body.tools = tools;
       body.tool_choice = toolChoice || "auto";

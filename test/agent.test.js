@@ -103,6 +103,13 @@ test("when Nano's tool calls fail twice, Nemotron 3 Super takes over the message
   assert.equal(out.proposals.length, 1);
 });
 
+test("a sale whose message never says how it was paid is asked about, whatever the model guessed", async () => {
+  const { chat, asked } = scripted({ tool_calls: [call("record_sale", { items: [{ item: "candles-6", qty: 1 }], payment: "cash" })] }, "How did the customer pay?");
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Sold a pack of candles", now: NOW });
+  assert.equal(out.proposals.length, 0);
+  assert.match(asked[1].messages.at(-1).content, /How did the customer pay/);
+});
+
 test("a question from the ledger is passed back so the agent asks the owner", async () => {
   const { chat, asked } = scripted({ tool_calls: [call("record_sale", { items: [{ item: "sugar-2kg", qty: 1 }], payment: "credit" })] }, "Who took it on credit?");
   const out = await runAgent({ chat, models: MODELS, books: books(), message: "sugar on credit", now: NOW });
@@ -113,7 +120,7 @@ test("a question from the ledger is passed back so the agent asks the owner", as
 test("the same transaction called twice in one message is proposed once", async () => {
   const sale = { items: [{ item: "bread", qty: 1 }], payment: "cash" };
   const { chat } = scripted({ tool_calls: [call("record_sale", sale, "a"), call("record_sale", sale, "b")] }, "One bread.");
-  const out = await runAgent({ chat, models: MODELS, books: books(), message: "1 bread", now: NOW });
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "1 bread cash", now: NOW });
   assert.equal(out.proposals.length, 1);
 });
 
