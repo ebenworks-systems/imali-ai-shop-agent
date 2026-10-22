@@ -328,7 +328,7 @@ export async function runAgent({ chat, models, books, message = "", image, histo
         } else if (code === null) {
           result = { question: `Which currency was that, ZiG, rand, pula or kwacha?` };
         } else if (code !== "USD" && !args.rate) {
-          const r = rates ? await rates(code) : { error: "Live exchange rates are switched off on this copy." };
+          const r = rates ? await rates(code, working.today) : { error: "Live exchange rates are switched off on this copy." };
           trace.push(...(r.trace || []));
           if (r.error) result = { question: r.error };
           else {
@@ -368,7 +368,7 @@ export async function runAgent({ chat, models, books, message = "", image, histo
         }
       } else if (name === "get_exchange_rate") {
         const code = currencyCode(args.currency);
-        const r = code && code !== "USD" && rates ? await rates(code) : { error: "Ask about ZiG, rand, pula or kwacha." };
+        const r = code && code !== "USD" && rates ? await rates(code, working.today) : { error: "Ask about ZiG, rand, pula or kwacha." };
         trace.push(...(r.trace || []));
         result = r.error ? { error: r.error } : { currency: r.name, units_per_us_dollar: r.unitsPerUsd, as_of: r.asOf, kind: r.kind, source: r.source };
       } else if (name === "get_figures") {

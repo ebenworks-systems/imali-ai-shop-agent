@@ -68,6 +68,6 @@ test("a sale paid in ZiG looks the rate up before the ledger builds it", async (
   const rates = createRates({ apiKey: "k", chat: routed, models: MODELS, fetchImpl: fakeFetch([]) });
   const out = await runAgent({ chat: routed, models: MODELS, books: sampleBooks(), message: "Sold 2 bread, the customer paid 60 ZiG on mobile money", now: "2026-10-23T10:00:00.000Z", rates });
   assert.equal(out.proposals[0].amount, 226);
-  assert.equal(out.proposals[0].rate.source, "IDBZ");
+  assert.equal(out.proposals[0].rate.source, "idbz.co.zw");
   assert.deepEqual(out.trace.map((t) => t.role), ["router", "rate search", "rate reader", "router"]);
 });
