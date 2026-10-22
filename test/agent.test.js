@@ -124,6 +124,27 @@ test("the same transaction called twice in one message is proposed once", async 
   assert.equal(out.proposals.length, 1);
 });
 
+test("the first router call must use a tool, and a reply that claims a record without one is sent back", async () => {
+  const { chat, asked } = scripted(
+    { tool_calls: [call("reply", { text: "Recorded: 2 bread, cash." })] },
+    { tool_calls: [call("record_sale", { items: [{ item: "bread", qty: 2 }], payment: "cash" })] },
+    "Two bread, $2.20 cash. Tap Record.",
+  );
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "2 bread cash", now: NOW });
+  assert.equal(asked[0].toolChoice, "required");
+  assert.equal(asked[1].toolChoice, "auto");
+  assert.match(asked[1].messages.at(-1).content, /Nothing was recorded/);
+  assert.equal(out.proposals.length, 1);
+  assert.match(out.reply, /Tap Record/);
+});
+
+test("a greeting is answered through the reply tool with no record", async () => {
+  const { chat } = scripted({ tool_calls: [call("reply", { text: "Hello Rudo. Tell me what you sold." })] });
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Hi", now: NOW });
+  assert.equal(out.reply, "Hello Rudo. Tell me what you sold.");
+  assert.equal(out.proposals.length, 0);
+});
+
 test("tool calls written as text in the reply are read too", () => {
   const calls = toolCallsOf({ content: 'ok <tool_call>{"name":"record_expense","arguments":{"category":"Transport","amount":2,"payment":"cash"}}</tool_call>' });
   assert.equal(calls.length, 1);

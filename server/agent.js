@@ -63,6 +63,7 @@ export const TOOLS = [
   fn("get_figures", "Read figures from the books: today's sales and profit, stock levels, who owes the shop, or money on hand.", { about: { type: "string", enum: ["today", "stock", "who_owes", "money"] } }, ["about"]),
   fn("ask_analyst", "Pass a question that needs thought (what to restock, what sells slowly, why profit moved, pricing advice) to a stronger model that reads the whole book.", { question: { type: "string" } }, ["question"]),
   fn("close_day", "Close the day: compare the cash the owner counted with what the books expect, and write the day's summary.", { counted_cash: { type: "number" } }, ["counted_cash"]),
+  fn("reply", "Answer the owner without recording anything: a greeting, a question back to the owner, or an answer that needs no figures from the books.", { text: { type: "string" } }, ["text"]),
 ];
 
 const WRITE_TOOLS = new Set(Object.keys(BUILDERS));
@@ -72,7 +73,7 @@ export function routerPrompt(snapshot) {
   const { shop } = snapshot;
   return [
     `You are the agent inside Imali AI. You keep the books for ${shop.owner}, who runs ${shop.name} in ${shop.place}. Money is in US dollars. Today is ${snapshot.today}.`,
-    "Turn each message into the right records with the tools, then reply in one to three short sentences.",
+    "Turn each message into the right records with the tools, then reply in one to three short sentences. Every message starts with a tool call: records are made only through the record tools, never by saying so, and a message that needs no record or figure gets the reply tool.",
     "",
     "Rules:",
     "- One tool call per transaction. A message can hold several transactions: two costs paid are two record_expense calls.",
@@ -291,7 +292,9 @@ export async function runAgent({ chat, models, books, message = "", image, histo
   const done = (reply, extra = {}) => ({ reply, proposals, trace, photo, escalated, ...extra });
 
   for (let round = 0; round < 6; round += 1) {
-    const res = await chat({ model, purpose: escalated ? "router, retried on Super" : "router", messages, tools: TOOLS, maxTokens: escalated ? 4000 : 1200, temperature: 0.1 });
+    // The first call must use a tool, so a model that has seen earlier replies such as "Recorded ..." in the history
+    // cannot answer as if it had recorded something without calling a record tool.
+    const res = await chat({ model, purpose: escalated ? "router, retried on Super" : "router", messages, tools: TOOLS, toolChoice: round === 0 ? "required" : "auto", maxTokens: escalated ? 4000 : 1200, temperature: 0.1 });
     trace.push(res.trace);
     const calls = toolCallsOf(res.message);
     if (!calls.length) {
@@ -303,6 +306,7 @@ export async function runAgent({ chat, models, books, message = "", image, histo
     }
     messages.push({ role: "assistant", content: res.message.content || "", tool_calls: calls.map((c) => ({ id: c.id, type: "function", function: c.function })) });
 
+    let replyText = null;
     for (const call of calls) {
       const name = call.function?.name;
       let args;
@@ -353,6 +357,15 @@ export async function runAgent({ chat, models, books, message = "", image, histo
             result = { ok: true, will_record: proposal.summary, warnings: proposal.warnings };
           }
         }
+      } else if (name === "reply") {
+        const text = stripThinking(args.text);
+        if (!proposals.length && /\b(recorded|added|saved|logged)\b/i.test(text) && round < 2) {
+          failures += 1;
+          result = { error: "Nothing was recorded. Call the record tool for each transaction, then reply." };
+        } else {
+          replyText = text;
+          result = { ok: true };
+        }
       } else if (name === "get_exchange_rate") {
         const code = currencyCode(args.currency);
         const r = code && code !== "USD" && rates ? await rates(code) : { error: "Ask about ZiG, rand, pula or kwacha." };
@@ -381,6 +394,7 @@ export async function runAgent({ chat, models, books, message = "", image, histo
       messages.push({ role: "tool", tool_call_id: call.id, content: JSON.stringify(result) });
     }
 
+    if (replyText) return done(replyText);
     if (failures >= 2 && !escalated) {
       model = models.analyst;
       escalated = true;
