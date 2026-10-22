@@ -213,6 +213,8 @@ h1 em, h2 em { font-style: italic; color: var(--green-accent); }
 .prop-text { flex: 1; min-width: 0; font-size: 13.5px; line-height: 1.45; }
 .prop-amount { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--house); white-space: nowrap; }
 .prop-warn { margin: 8px 0 0; padding: 7px 10px; border-radius: 10px; background: var(--amber-wash); color: var(--amber); font-size: 12.5px; }
+.prop-rate { margin: 8px 0 0; padding: 7px 10px; border-radius: 10px; background: #eef2fb; color: #2c3e6b; font-size: 12.5px; }
+.prop-rate a { color: inherit; }
 .prop-lines { margin: 8px 0 0; padding: 0; list-style: none; font-size: 11.5px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .prop-lines li { display: grid; grid-template-columns: 22px 1fr auto; gap: 6px; padding: 1px 0; }
 .prop-lines .dc { color: var(--ink-faint); }
@@ -323,6 +325,7 @@ h1 em, h2 em { font-style: italic; color: var(--green-accent); }
 .route .r-role { font-size: 12.5px; color: var(--ink-soft); }
 .route .r-num { text-align: right; font-size: 12.5px; color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .route .tier-vision .r-n { background: var(--gold-wash); color: #7a5c22; }
+.route .tier-tavily .r-n { background: #eef2fb; color: #2c3e6b; }
 .route .tier-analyst .r-n, .route .tier-retry .r-n { background: #e6eef6; color: #1d4f7a; }
 .route .tier-closer .r-n { background: #f3e9d4; color: #6b5020; box-shadow: inset 0 0 0 1px rgba(203, 162, 88, 0.6); }
 .route .r-total { font-size: 12.5px; color: var(--ink-soft); padding: 4px 4px 0; display: flex; justify-content: space-between; }

@@ -257,7 +257,16 @@ export function buildSale(books, args = {}) {
     else if (left <= item.reorderAt) warnings.push(`${item.name} is down to ${fmtQty(left)}. Time to reorder.`);
   }
   let total = listTotal;
-  const received = toCents(args.amount_received);
+  let received = toCents(args.amount_received);
+  let foreign = "";
+  if (args.paid_amount !== undefined && args.paid_amount !== null && args.rate) {
+    const units = Number(args.paid_amount);
+    const rate = Number(args.rate);
+    if (!(units > 0) || !(rate > 0)) return fail("How much did they pay, and at what rate?");
+    received = Math.round((units / rate) * 100);
+    foreign = `${fmtQty(units)} ${args.paid_currency_name || args.paid_currency}`;
+    warnings.unshift(`${foreign} at ${rate} to the US dollar${args.rate_note ? ` (${args.rate_note})` : ""} is ${money(received)}.`);
+  }
   if (received !== null && received > 0 && received !== listTotal) {
     if (Math.abs(received - listTotal) > Math.max(500, listTotal * 0.5)) return fail(`Your prices add up to ${money(listTotal)} but you said ${money(received)}. Which is right?`);
     warnings.push(`Price list total is ${money(listTotal)}; recording the ${money(received)} you received.`);
@@ -274,7 +283,7 @@ export function buildSale(books, args = {}) {
   lines.push({ account: "sales", credit: total });
   lines.push({ account: "cogs", debit: costTotal });
   lines.push({ account: "stock", credit: costTotal });
-  const how = method === "credit" ? `on credit to ${party}` : method === "mobile" ? "by mobile money" : "in cash";
+  const how = (method === "credit" ? `on credit to ${party}` : method === "mobile" ? "by mobile money" : "in cash") + (foreign ? `, paid ${foreign}` : "");
   return { ok: true, entry: entry(books, "sale", `Sold ${parts.join(", ")} ${how}`, lines, stock, { amount: total, method, party }), warnings };
 }
 

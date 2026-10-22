@@ -3,6 +3,7 @@
 // questions that need thought and takes over when Nano's tool calls keep failing; Nemotron 3 Ultra
 // closes the day. Nothing reaches the books until the owner confirms in the app.
 
+import { currencyCode } from "./rates.js";
 import {
   BUILDERS,
   applyEntry,
@@ -31,7 +32,10 @@ export const TOOLS = [
       },
       payment: PAYMENT,
       customer: { type: "string", description: "needed when payment is credit" },
-      amount_received: { type: "number", description: "only when the owner states the total received" },
+      amount_received: { type: "number", description: "only when the owner states the total received in US dollars" },
+      paid_currency: { type: "string", description: "when the customer paid in another currency: ZiG, ZAR (rand), BWP or ZMW" },
+      paid_amount: { type: "number", description: "the amount paid in that currency" },
+      rate: { type: "number", description: "only when the owner states the rate used: units of that currency per US dollar" },
     },
     ["items", "payment"],
   ),
@@ -54,6 +58,7 @@ export const TOOLS = [
   fn("record_supplier_payment", "Record paying a supplier what the shop owes them.", { supplier: { type: "string" }, amount: { type: "number" }, method: METHOD }, ["supplier", "amount", "method"]),
   fn("record_owner_withdrawal", "Record money the owner took out of the business for themselves.", { amount: { type: "number" }, method: METHOD, note: { type: "string" } }, ["amount", "method"]),
   fn("set_price", "Change the selling price of one catalogue item.", { item: { type: "string" }, sell_price: { type: "number" } }, ["item", "sell_price"]),
+  fn("get_exchange_rate", "Look up today's official exchange rate of ZiG, rand, pula or kwacha to the US dollar, with its source.", { currency: { type: "string" } }, ["currency"]),
   fn("get_figures", "Read figures from the books: today's sales and profit, stock levels, who owes the shop, or money on hand.", { about: { type: "string", enum: ["today", "stock", "who_owes", "money"] } }, ["about"]),
   fn("ask_analyst", "Pass a question that needs thought (what to restock, what sells slowly, why profit moved, pricing advice) to a stronger model that reads the whole book.", { question: { type: "string" } }, ["question"]),
   fn("close_day", "Close the day: compare the cash the owner counted with what the books expect, and write the day's summary.", { counted_cash: { type: "number" } }, ["counted_cash"]),
@@ -77,6 +82,7 @@ export function routerPrompt(snapshot) {
     "- Questions about today's figures, stock, money on hand or who owes: call get_figures and answer with its numbers.",
     "- Advice or analysis (what to restock, what sells slowly, why, how to price): call ask_analyst.",
     "- Closing the day or a till count: call close_day with the counted cash.",
+    "- A customer who paid in ZiG, rand, pula or kwacha: pass paid_currency and paid_amount on record_sale; the system looks up today's official rate. Pass rate only when the owner says which rate was used.",
     "- When a tool answers with a question, ask the owner that question and record nothing else for that transaction.",
     "- Reply in the language the owner wrote in. Plain words, no markdown, no emoji. Say what will be recorded; the owner confirms each record with one tap.",
     "",
@@ -243,7 +249,7 @@ export function validateRequest(body) {
   return null;
 }
 
-export async function runAgent({ chat, models, books, message = "", image, history = [], now = new Date().toISOString() }) {
+export async function runAgent({ chat, models, books, message = "", image, history = [], now = new Date().toISOString(), rates }) {
   const trace = [];
   const proposals = [];
   const seen = new Set();
@@ -296,14 +302,30 @@ export async function runAgent({ chat, models, books, message = "", image, histo
         result = { error: `The call to ${name || "an unknown tool"} could not be read. Use one of the tools with valid JSON arguments.` };
       } else if (WRITE_TOOLS.has(name)) {
         const key = `${name}:${JSON.stringify(args)}`;
-        if (seen.has(key)) {
+        let rateNote = null;
+        const code = name === "record_sale" && args.paid_amount ? currencyCode(args.paid_currency) : "USD";
+        if (code === null) {
+          result = { question: `Which currency was that, ZiG, rand, pula or kwacha?` };
+        } else if (code !== "USD" && !args.rate) {
+          const r = rates ? await rates(code) : { error: "Live exchange rates are switched off on this copy." };
+          trace.push(...(r.trace || []));
+          if (r.error) result = { question: r.error };
+          else {
+            Object.assign(args, { rate: r.unitsPerUsd, paid_currency_name: r.name, rate_note: `${r.source}${r.asOf ? `, ${r.asOf}` : ""}` });
+            rateNote = { source: r.source, url: r.url, asOf: r.asOf, unitsPerUsd: r.unitsPerUsd, currency: r.name };
+          }
+        } else if (code !== "USD") {
+          args.paid_currency_name = currencyCode(args.paid_currency) === "ZIG" ? "ZiG" : args.paid_currency;
+          args.rate_note = "the rate you gave";
+        }
+        if (!result && seen.has(key)) {
           result = { ok: true, note: "Already recorded above." };
-        } else {
+        } else if (!result) {
           seen.add(key);
           const built = BUILDERS[name](working, args);
           if (!built.ok) result = { question: built.question };
           else {
-            const proposal = { id: `p${proposals.length + 1}-${Date.now().toString(36)}`, tool: name, warnings: built.warnings || [] };
+            const proposal = { id: `p${proposals.length + 1}-${Date.now().toString(36)}`, tool: name, warnings: built.warnings || [], ...(rateNote ? { rate: rateNote } : {}) };
             if (built.entry) {
               working = applyEntry(working, built.entry);
               Object.assign(proposal, { entry: built.entry, summary: built.entry.memo, amount: built.entry.amount });
@@ -314,6 +336,11 @@ export async function runAgent({ chat, models, books, message = "", image, histo
             result = { ok: true, will_record: proposal.summary, warnings: proposal.warnings };
           }
         }
+      } else if (name === "get_exchange_rate") {
+        const code = currencyCode(args.currency);
+        const r = code && code !== "USD" && rates ? await rates(code) : { error: "Ask about ZiG, rand, pula or kwacha." };
+        trace.push(...(r.trace || []));
+        result = r.error ? { error: r.error } : { currency: r.name, units_per_us_dollar: r.unitsPerUsd, as_of: r.asOf, kind: r.kind, source: r.source };
       } else if (name === "get_figures") {
         result = figures(working, args.about);
       } else if (name === "ask_analyst") {

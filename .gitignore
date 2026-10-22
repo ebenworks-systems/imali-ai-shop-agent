@@ -8,3 +8,4 @@ CLAUDE.local.md
 submission/work/
 *.log
 .vercel
+submission/*.mp4

@@ -62,6 +62,7 @@ export const SAMPLE_MESSAGES = [
   { label: "Shona: eggs and milk by mobile money", text: "Ndatengesa mazai tray 1 nemukaka 2, ndabhadharwa ne mobile money" },
   { label: "Mai Tendai, on credit", text: "Mai Tendai took 2 sugar and a 10kg mealie meal on credit, she'll pay Friday" },
   { label: "Photo of a supplier invoice", photo: "samples/invoice-kudzai-wholesale.jpg", text: "Kudzai Wholesale just delivered this. I will pay them on Friday." },
+  { label: "Paid in ZiG", text: "Sold 2 bread, the customer paid 60 ZiG on mobile money" },
   { label: "Paid electricity and transport", text: "Paid $5 for electricity and $2 transport to town" },
   { label: "Baba Farai paid back", text: "Baba Farai paid back his $4 in cash" },
   { label: "How much did I make today?", text: "How much did I make today?" },

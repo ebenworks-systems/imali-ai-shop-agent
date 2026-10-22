@@ -3,12 +3,14 @@
 import { runAgent, validateRequest } from "./agent.js";
 import { checkLimits, limitsFromEnv, storeFromEnv, unitsFor } from "./limits.js";
 import { createClient, modelsFromEnv, DEFAULT_BASE_URL } from "./nebius.js";
+import { createRates } from "./rates.js";
 
 export function makeHandler({ env = process.env, fetchImpl = fetch, store } = {}) {
   const chat = createClient({ apiKey: env.NEBIUS_API_KEY, baseUrl: env.NEBIUS_BASE_URL || DEFAULT_BASE_URL, fetchImpl });
   const models = modelsFromEnv(env);
   const limits = limitsFromEnv(env);
   const limitStore = store || storeFromEnv(env, fetchImpl);
+  const rates = createRates({ apiKey: env.TAVILY_API_KEY, chat, models, fetchImpl });
 
   async function health() {
     return {
@@ -16,6 +18,7 @@ export function makeHandler({ env = process.env, fetchImpl = fetch, store } = {}
       body: {
         ok: true,
         live: Boolean(env.NEBIUS_API_KEY),
+        rates: Boolean(env.TAVILY_API_KEY),
         provider: "Nebius Token Factory",
         models: Object.fromEntries(Object.entries(models).map(([role, m]) => [role, { label: m.label, id: m.id, price: m.price }])),
         limits: { ...limits, store: limitStore.kind },
@@ -31,7 +34,7 @@ export function makeHandler({ env = process.env, fetchImpl = fetch, store } = {}
     if (blocked) return { status: 429, body: { error: blocked } };
     try {
       const now = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/.test(String(body.now)) ? body.now : undefined;
-      const result = await runAgent({ chat, models, books: body.books, message: body.message || "", image: body.image, history: body.history || [], now });
+      const result = await runAgent({ chat, models, books: body.books, message: body.message || "", image: body.image, history: body.history || [], now, rates });
       return { status: 200, body: result };
     } catch (err) {
       const status = err.status === 504 ? 504 : 502;

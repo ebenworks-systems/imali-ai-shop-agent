@@ -23,6 +23,8 @@ const ROLE_TEXT = {
   "photo reader": ["tier-vision", "read the photo"],
   analyst: ["tier-analyst", "answered from the whole book"],
   closer: ["tier-closer", "closed the day"],
+  "rate search": ["tier-tavily", "searched the web for today's official rate"],
+  "rate reader": ["tier-router", "read the rate, its date and source"],
 };
 
 let state = load();
@@ -127,6 +129,7 @@ function renderProposal(item, p) {
   const amount = p.amount ? money(p.amount) : p.price ? money(p.price.to) : "";
   card.append(el("div", { class: "prop-top" }, el("span", { class: "prop-icon" }, svg(ICONS[p.tool] || ICONS.record_sale)), el("span", { class: "prop-text" }, p.summary), amount ? el("span", { class: "prop-amount" }, amount) : null));
   for (const w of p.warnings || []) card.append(el("p", { class: "prop-warn" }, w));
+  if (p.rate?.url) card.append(el("p", { class: "prop-rate" }, `Rate found by live search: ${p.rate.unitsPerUsd} ${p.rate.currency} to the US dollar, `, el("a", { href: p.rate.url, target: "_blank", rel: "noopener" }, p.rate.source), p.rate.asOf ? `, ${p.rate.asOf}` : ""));
   if (p.entry) {
     card.append(
       el(
@@ -324,10 +327,10 @@ function renderRoute(trace) {
         { class: `step ${tier}`, style: `animation-delay:${i * 90}ms` },
         el("span", { class: "r-n" }, String(i + 1)),
         el("span", { class: "r-main" }, el("span", { class: "r-model" }, t.model), el("span", { class: "r-role" }, words)),
-        el("span", { class: "r-num" }, `${fmtMs(t.ms)}`, el("br"), `${fmtTok(t.tokensIn + t.tokensOut)} · ${fmtCost(t.cost)}`),
+        el("span", { class: "r-num" }, `${fmtMs(t.ms)}`, el("br"), t.modelId?.startsWith("tavily") ? "1 search credit" : `${fmtTok(t.tokensIn + t.tokensOut)} · ${fmtCost(t.cost)}`),
       );
     }),
-    el("li", { class: "r-total" }, el("span", {}, `This message: ${trace.length} call${trace.length > 1 ? "s" : ""} on Token Factory`), el("span", {}, `${fmtMs(total.ms)} · ${fmtCost(total.cost)}`)),
+    el("li", { class: "r-total" }, el("span", {}, `This message: ${trace.filter((t) => !t.modelId?.startsWith("tavily")).length} call${trace.length > 1 ? "s" : ""} on Token Factory${trace.some((t) => t.modelId?.startsWith("tavily")) ? ", 1 Tavily search" : ""}`), el("span", {}, `${fmtMs(total.ms)} · ${fmtCost(total.cost)}`)),
   );
   bind("session-cost").textContent = `This session: ${fmtCost(state.session.cost)}`;
 }
