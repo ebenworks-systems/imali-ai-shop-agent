@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.vercel/
+CLAUDE.local.md
+.claude/
+submission/work/
+*.log

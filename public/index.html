@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Imali AI shop agent on NVIDIA Nemotron · Say what you sold. Ask what you made.</title>
+    <meta name="description" content="A shop owner's message or photo becomes the sale, the stock and double-entry books. Imali AI's agent running on NVIDIA Nemotron models served by Nebius Token Factory." />
+    <meta name="theme-color" content="#f2f0eb" />
+    <meta name="color-scheme" content="light" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="preload" href="fonts/Geist-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="fonts/Newsreader-Display.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#demo">Skip to the demo</a>
+
+    <header class="nav" aria-label="Site">
+      <a class="brand" href="#top" aria-label="Imali AI shop agent, top of page">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M7 23V9.5l9 7 9-7V23" /><circle cx="16" cy="16.5" r="1.6" /></svg></span>
+        <span class="brand-name">Imali AI <span class="brand-sub">Shop agent</span></span>
+      </a>
+      <nav class="nav-links" aria-label="Sections">
+        <a href="#demo">Try it</a>
+        <a href="#how">How it works</a>
+        <a href="#why">Why it matters</a>
+      </nav>
+      <button class="nav-reset" type="button" data-action="reset">Reset demo</button>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="eyebrow reveal"><span class="dot" aria-hidden="true"></span>NVIDIA Nemotron on Nebius Token Factory</p>
+        <h1 id="hero-title" class="reveal">Say what you sold.<br /><em>Ask what you made.</em></h1>
+        <p class="lede reveal">
+          A shop owner types a line, speaks it or photographs an invoice. Imali AI's agent turns it into the sale, the stock and double-entry books, checks every figure in plain code, and waits for one tap before anything is recorded.
+        </p>
+        <ul class="model-strip reveal" aria-label="The four NVIDIA models the agent uses">
+          <li><span class="m-name">Nemotron 3 Nano</span><span class="m-role">reads every message</span></li>
+          <li><span class="m-name">Nemotron 3.5 Super VL</span><span class="m-role">reads the photo</span></li>
+          <li><span class="m-name">Nemotron 3 Super</span><span class="m-role">thinks it through</span></li>
+          <li><span class="m-name">Nemotron 3 Ultra</span><span class="m-role">closes the day</span></li>
+        </ul>
+      </section>
+
+      <section id="demo" class="workspace" aria-label="Live demo">
+        <div class="switcher" role="tablist" aria-label="Show">
+          <button role="tab" id="tab-chat" aria-controls="panel-chat" aria-selected="true" data-tab="chat">Chat</button>
+          <button role="tab" id="tab-books" aria-controls="panel-books" aria-selected="false" data-tab="books">Books <span class="tab-count" data-bind="entries">0</span></button>
+        </div>
+
+        <div class="shell phone reveal" id="panel-chat" role="tabpanel" aria-labelledby="tab-chat">
+          <div class="core phone-core">
+            <div class="chat-head">
+              <span class="avatar" aria-hidden="true">R</span>
+              <div class="chat-title">
+                <strong data-bind="shop">Rudo's Corner Shop</strong>
+                <span class="chat-sub"><span class="live-dot" data-bind="live-dot" aria-hidden="true"></span><span data-bind="live">Checking the model service…</span></span>
+              </div>
+            </div>
+            <ol class="thread" aria-live="polite" aria-label="Conversation with the agent"></ol>
+            <div class="suggest" aria-label="Try one of these"></div>
+            <form class="composer" autocomplete="off">
+              <label class="icon-btn" title="Add a photo">
+                <input type="file" accept="image/*" capture="environment" class="visually-hidden" data-role="photo" />
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.8l1.4-2h4.6l1.4 2h1.8A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5z" /><circle cx="12" cy="12.5" r="3.2" /></svg>
+                <span class="visually-hidden">Add a photo</span>
+              </label>
+              <div class="field">
+                <div class="attached" hidden>
+                  <img alt="" data-role="thumb" />
+                  <button type="button" class="attached-x" data-action="drop-photo" aria-label="Remove the photo">×</button>
+                </div>
+                <textarea rows="1" maxlength="600" placeholder="Say what you sold…" aria-label="Message to the agent" data-role="text"></textarea>
+              </div>
+              <button type="button" class="icon-btn mic" title="Speak" data-action="mic" hidden>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3.5" width="6" height="11" rx="3" /><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5" /></svg>
+                <span class="visually-hidden">Speak your message</span>
+              </button>
+              <button type="submit" class="send" aria-label="Send">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6.5 18.5 12 13 17.5" /></svg>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="books" id="panel-books" role="tabpanel" aria-labelledby="tab-books">
+          <article class="shell card-today reveal">
+            <div class="core">
+              <header class="card-head"><span class="kicker">Today</span><span class="day" data-bind="day"></span></header>
+              <p class="takings"><span class="takings-label">Takings</span><span class="takings-value" data-bind="sales">$0.00</span></p>
+              <dl class="split">
+                <div><dt>Cash</dt><dd data-bind="cash-sales">$0.00</dd></div>
+                <div><dt>Mobile money</dt><dd data-bind="mobile-sales">$0.00</dd></div>
+                <div><dt>On credit</dt><dd data-bind="credit-sales">$0.00</dd></div>
+                <div><dt>Gross profit</dt><dd data-bind="gross">$0.00</dd></div>
+                <div><dt>Running costs</dt><dd data-bind="costs">$0.00</dd></div>
+                <div><dt>Profit after costs</dt><dd data-bind="net">$0.00</dd></div>
+              </dl>
+            </div>
+          </article>
+
+          <article class="shell card-balance reveal">
+            <div class="core">
+              <header class="card-head"><span class="kicker">The books</span><span class="balanced" data-bind="balanced">Balanced</span></header>
+              <ul class="accounts" data-bind="accounts"></ul>
+              <p class="fine" data-bind="tb"></p>
+            </div>
+          </article>
+
+          <article class="shell card-stock reveal">
+            <div class="core">
+              <header class="card-head"><span class="kicker">Stock</span><span class="hint" data-bind="low-count"></span></header>
+              <ul class="stock" data-bind="stock"></ul>
+            </div>
+          </article>
+
+          <article class="shell card-owed reveal">
+            <div class="core">
+              <header class="card-head"><span class="kicker">Who owes whom</span></header>
+              <ul class="owed" data-bind="owed"></ul>
+            </div>
+          </article>
+
+          <article class="shell card-journal reveal">
+            <div class="core">
+              <header class="card-head"><span class="kicker">Journal</span><span class="hint">Every record is a balanced double entry</span></header>
+              <ol class="journal" data-bind="journal"></ol>
+            </div>
+          </article>
+
+          <article class="shell card-trace reveal">
+            <div class="core">
+              <header class="card-head"><span class="kicker">Model route</span><span class="hint" data-bind="session-cost">This session: $0.0000</span></header>
+              <ol class="route" data-bind="route"><li class="route-empty">Send a message to see which Nemotron model handles each step, how long it took and what it cost on Token Factory.</li></ol>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="how" class="how" aria-labelledby="how-title">
+        <p class="eyebrow reveal"><span class="dot" aria-hidden="true"></span>How it works</p>
+        <h2 id="how-title" class="reveal">Four NVIDIA models.<br /><em>One shop's day.</em></h2>
+        <div class="steps">
+          <article class="shell step reveal">
+            <div class="core">
+              <span class="step-n">01</span>
+              <h3>Nemotron 3 Nano reads every message</h3>
+              <p>English, chiShona, isiNdebele or all three in one line. Nano calls typed tools: record a sale, stock received, a cost paid, a customer paying back, a till count. It is fast and costs a fraction of a cent, so every message can use it.</p>
+            </div>
+          </article>
+          <article class="shell step reveal">
+            <div class="core">
+              <span class="step-n">02</span>
+              <h3>Nemotron 3.5 Super VL reads the photo</h3>
+              <p>A supplier's invoice or delivery note becomes structured lines: item, quantity, unit cost, total. Nano maps them to the shop's own stock list and flags a price that moved or a total that does not add up.</p>
+            </div>
+          </article>
+          <article class="shell step reveal">
+            <div class="core">
+              <span class="step-n">03</span>
+              <h3>Nemotron 3 Super thinks it through</h3>
+              <p>"What should I restock before the weekend?" goes to Super with the whole book and a week of sales. Super also takes over a message when Nano's tool calls fail twice, so a hard message still gets recorded.</p>
+            </div>
+          </article>
+          <article class="shell step reveal">
+            <div class="core">
+              <span class="step-n">04</span>
+              <h3>Nemotron 3 Ultra closes the day</h3>
+              <p>The owner counts the till. Code works out what the cash should be; Ultra reads the day's records, names the likeliest reasons for a shortfall and writes tomorrow's reorder list.</p>
+            </div>
+          </article>
+        </div>
+        <div class="shell principle reveal">
+          <div class="core">
+            <p><strong>The model proposes. Code checks. The owner confirms.</strong> Every proposal is built by a small, tested ledger: debits must equal credits, stock moves at cost, prices come from the shop's list unless the owner says otherwise. Nothing is written until the owner taps Record, and every record can be undone.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="why" class="why" aria-labelledby="why-title">
+        <p class="eyebrow reveal"><span class="dot" aria-hidden="true"></span>Why it matters</p>
+        <h2 id="why-title" class="reveal">Africa runs on WhatsApp.<br /><em>Now its businesses do too.</em></h2>
+        <div class="why-grid">
+          <p class="reveal">Most small shops keep no records or a paper book, so they cannot see their profit, chase what they are owed or show a lender a history. Imali AI is Africa's smartest AI Business OS: one AI agent runs sales, stock, staff, suppliers and double-entry books from a text, voice note or photo, in nine languages. A second agent answers your customers, and payments land in your own account.</p>
+          <p class="reveal">Imali AI was built, tested and piloted with users from April 2026, and launched on 21 October 2026. This hackathon build rebuilds its core loop on open NVIDIA models served by Nebius Token Factory, with the router, the photo reader, the analyst and the day-closer each on the model that fits the job. The shop, names and figures in this demo are invented.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="foot-inner">
+        <p class="foot-brand">Imali AI <span>Records you own.</span></p>
+        <p class="foot-line">An Ebenworks product. Better Products. Better People. Better Tomorrow.</p>
+        <p class="foot-meta">Built for the Nebius × NVIDIA Global AI Hackathon. Open source under the MIT licence: <a href="https://gitlab.com/ebenworks-systems/imali-ai-shop-agent">source code</a>.</p>
+      </div>
+    </footer>
+    <div class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<!-- The sample supplier invoice the demo photographs. Supplier, shop, people and figures are invented. -->
+<html><head><meta charset="utf-8">
+<style>
+  @font-face { font-family: "Geist"; src: url("../../public/fonts/Geist-400.woff2"); font-weight: 400; }
+  @font-face { font-family: "Geist"; src: url("../../public/fonts/Geist-600.woff2"); font-weight: 600; }
+  @font-face { font-family: "Newsreader Display"; src: url("../../public/fonts/Newsreader-DisplayItalic.woff2"); font-style: italic; }
+  html, body { margin: 0; width: 1600px; height: 1200px; overflow: hidden; }
+  body {
+    background:
+      radial-gradient(120% 90% at 30% 20%, rgba(255,255,255,0.18), transparent 60%),
+      repeating-linear-gradient(92deg, #a9825a 0 14px, #9f7850 14px 30px, #b08a61 30px 41px, #a27b52 41px 60px);
+    display: grid; place-items: center; font-family: "Geist", sans-serif;
+  }
+  body::after { content: ""; position: fixed; inset: 0; background: radial-gradient(90% 80% at 50% 45%, transparent 55%, rgba(40,25,10,0.45)); }
+  .paper {
+    width: 820px; padding: 56px 60px 48px; background: #fbf8f1; color: #2a2620;
+    transform: perspective(1800px) rotateX(9deg) rotateZ(-3.2deg) translateY(10px);
+    box-shadow: 0 2px 3px rgba(0,0,0,0.2), 0 30px 60px rgba(30,15,0,0.45);
+    border-radius: 3px; position: relative;
+  }
+  .paper::before { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.35) 52%, rgba(0,0,0,0.04) 70%); pointer-events: none; }
+  .top { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #2a2620; padding-bottom: 18px; }
+  .name { font-size: 40px; font-weight: 600; letter-spacing: 0.04em; }
+  .tag { font-size: 17px; color: #5b554b; margin-top: 4px; }
+  .inv { text-align: right; font-size: 18px; line-height: 1.6; }
+  .inv b { font-size: 26px; letter-spacing: 0.08em; display: block; }
+  .bill { margin: 20px 0 14px; font-size: 19px; }
+  table { width: 100%; border-collapse: collapse; font-size: 21px; }
+  th { text-align: left; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #6b6458; border-bottom: 1.5px solid #2a2620; padding: 8px 6px; }
+  td { padding: 13px 6px; border-bottom: 1px solid #d8d1c3; }
+  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+  .total { display: flex; justify-content: flex-end; gap: 40px; margin-top: 18px; font-size: 26px; font-weight: 600; }
+  .terms { margin-top: 26px; font-size: 17px; color: #5b554b; display: flex; justify-content: space-between; align-items: flex-end; }
+  .sign { font-family: "Newsreader Display", serif; font-style: italic; font-size: 34px; color: #1d3a8a; transform: rotate(-4deg); }
+</style></head>
+<body>
+  <div class="paper">
+    <div class="top">
+      <div><div class="name">KUDZAI WHOLESALE</div><div class="tag">Groceries and household goods · Harare</div></div>
+      <div class="inv"><b>INVOICE</b>No. 4417<br>Date: 23/10/2026</div>
+    </div>
+    <div class="bill">Bill to: <b>Rudo's Corner Shop</b></div>
+    <table>
+      <thead><tr><th>Qty</th><th>Description</th><th class="n">Unit price</th><th class="n">Amount</th></tr></thead>
+      <tbody>
+        <tr><td>12</td><td>Cooking oil 2 L</td><td class="n">3.60</td><td class="n">43.20</td></tr>
+        <tr><td>10</td><td>Sugar 2 kg</td><td class="n">2.10</td><td class="n">21.00</td></tr>
+        <tr><td>24</td><td>Bath soap bar</td><td class="n">0.55</td><td class="n">13.20</td></tr>
+        <tr><td>6</td><td>Peanut butter 375 g</td><td class="n">1.85</td><td class="n">11.10</td></tr>
+      </tbody>
+    </table>
+    <div class="total"><span>TOTAL USD</span><span>88.50</span></div>
+    <div class="terms"><span>Payment due within 7 days. Thank you for your business.</span><span>Delivered by <span class="sign">T. Moyo</span></span></div>
+  </div>
+</body></html>
