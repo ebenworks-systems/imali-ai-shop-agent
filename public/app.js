@@ -67,6 +67,7 @@ function el(tag, attrs = {}, ...children) {
   for (const [k, v] of Object.entries(attrs)) {
     if (v === undefined || v === null || v === false) continue;
     if (k === "class") node.className = v;
+    else if (k === "style") node.style.cssText = v;
     else if (k === "html") node.innerHTML = v;
     else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
     else node.setAttribute(k, v === true ? "" : v);
