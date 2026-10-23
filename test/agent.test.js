@@ -181,6 +181,28 @@ test("a price changes only when the owner names the item and the new price", asy
   assert.equal(changed.proposals[0].price.to, 120);
 });
 
+test("a message that records something gets no figures tool, only a confirmation", async () => {
+  const { chat, asked } = scripted(
+    { tool_calls: [call("get_figures", { about: "today" }), call("record_sale", { items: [{ item: "bread", qty: 3 }], payment: "cash" })] },
+    "3 bread, $3.30 cash. Tap Record to add it.",
+  );
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Sold 3 bread, cash", now: NOW });
+  assert.equal(out.proposals.length, 1);
+  assert.equal(out.reply, "3 bread, $3.30 cash. Tap Record to add it.");
+  assert.match(asked[1].messages.find((m) => m.tool_call_id === "c-get_figures").content, /figures are for the owner's questions/);
+});
+
+test("a reply that adds figures of its own is replaced by a confirmation from the checked records", async () => {
+  const { chat } = scripted(
+    { tool_calls: [call("record_sale", { items: [{ item: "bread", qty: 3 }, { item: "cooking-oil-2l", qty: 2 }], payment: "cash" })] },
+    "Recorded: 3 bread and 2 cooking oil for cash. Today's sales are now $15.90, gross profit $4.70.",
+  );
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Sold 3 bread and 2 cooking oil, cash", now: NOW });
+  assert.doesNotMatch(out.reply, /15\.90|4\.70/);
+  assert.match(out.reply, /\$12\.30/);
+  assert.match(out.reply, /Tap Record/);
+});
+
 test("the same transaction called twice in one message is proposed once", async () => {
   const sale = { items: [{ item: "bread", qty: 1 }], payment: "cash" };
   const { chat } = scripted({ tool_calls: [call("record_sale", sale, "a"), call("record_sale", sale, "b")] }, "One bread.");

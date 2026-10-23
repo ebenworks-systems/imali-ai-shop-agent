@@ -90,7 +90,7 @@ export function routerPrompt(snapshot) {
     "- A customer who paid in ZiG, rand, pula or kwacha: pass paid_currency and paid_amount on record_sale; the system looks up today's official rate. Pass rate only when the owner says which rate was used.",
     "- Record only what the owner's latest message says. Earlier messages are there to explain short answers; never record them again.",
     "- When a tool answers with a question, ask the owner that question and record nothing else for that transaction.",
-    "- Reply in the language the owner wrote in. Plain words, no markdown, no emoji, item names rather than ids. Say what will be recorded; the owner confirms each record with one tap.",
+    "- Reply in the language the owner wrote in. Plain words, no markdown, no emoji, item names rather than ids. Say what will be recorded and any warning a tool gave; the owner confirms each record with one tap. Do not list stock or figures the owner did not ask for.",
     "",
     "The books right now:",
     JSON.stringify(snapshot),
@@ -159,6 +159,19 @@ export function fromLatestMessage(name, args, message, photo, books) {
     if (missing) return `${missing.name} is not in the owner's latest message. Record only the items it names; if it names an item the shop does not stock, ask about it.`;
   }
   return null;
+}
+
+// Every number in a reply about new records must come from the owner's words or a tool's answer. A reply that
+// adds its own totals is replaced by a confirmation written from the checked records.
+export function figuresGrounded(reply, grounds) {
+  const known = new Set(grounds.flatMap((g) => [...numbersIn(g)]));
+  return [...numbersIn(reply)].every((n) => known.has(n));
+}
+
+export function confirmation(proposals, questions = []) {
+  const lines = proposals.map((p) => `${p.summary}${p.amount && !/\$/.test(p.summary) ? `, ${money(p.amount)}` : ""}.`);
+  const warnings = proposals.flatMap((p) => p.warnings || []);
+  return [...lines, ...warnings, ...questions.slice(0, 1), "Tap Record to add it."].join(" ");
 }
 
 function normaliseArgs(name, args) {
@@ -322,8 +335,17 @@ export async function runAgent({ chat, models, books, message = "", image, histo
   let model = models.router;
   let failures = 0;
   const questions = [];
+  const grounds = [words];
   let escalated = false;
   const done = (reply, extra = {}) => ({ reply, proposals, trace, photo, escalated, ...extra });
+  // The reply that reaches the owner: a question from the ledger is never dropped, and a reply about new records
+  // that brings figures of its own is replaced by a confirmation written from the checked records.
+  const finish = (text) => {
+    let out = text;
+    if (questions.length && !/\?/.test(out)) out = proposals.length ? `${out} ${questions[0]}` : questions[0];
+    if (proposals.length && !figuresGrounded(out, grounds)) out = confirmation(proposals, questions);
+    return done(out);
+  };
 
   for (let round = 0; round < 6; round += 1) {
     // The first call must use a tool, so a model that has seen earlier replies such as "Recorded ..." in the history
@@ -333,7 +355,7 @@ export async function runAgent({ chat, models, books, message = "", image, histo
     const calls = toolCallsOf(res.message);
     if (!calls.length) {
       const text = stripThinking(res.message.content);
-      if (text) return done(text);
+      if (text) return finish(text);
       failures += 1;
       messages.push({ role: "user", content: "Reply to the owner in one to three short sentences." });
       continue;
@@ -341,6 +363,7 @@ export async function runAgent({ chat, models, books, message = "", image, histo
     messages.push({ role: "assistant", content: res.message.content || "", tool_calls: calls.map((c) => ({ id: c.id, type: "function", function: c.function })) });
 
     let replyText = null;
+    const writes = proposals.length > 0 || calls.some((c) => WRITE_TOOLS.has(c.function?.name));
     for (const call of calls) {
       const name = call.function?.name;
       let args;
@@ -393,7 +416,7 @@ export async function runAgent({ chat, models, books, message = "", image, histo
               Object.assign(proposal, { price: built.price, summary: `New price for ${built.price.name}: ${money(built.price.to)}` });
             }
             proposals.push(proposal);
-            result = { ok: true, will_record: proposal.summary, warnings: proposal.warnings };
+            result = { ok: true, will_record: proposal.summary, ...(proposal.amount ? { amount: money(proposal.amount) } : {}), warnings: proposal.warnings };
           }
         }
       } else if (name === "reply") {
@@ -413,6 +436,8 @@ export async function runAgent({ chat, models, books, message = "", image, histo
         const r = code && code !== "USD" && rates ? await rates(code, working.today) : { error: "Ask about ZiG, rand, pula or kwacha." };
         trace.push(...(r.trace || []));
         result = r.error ? { error: r.error } : { currency: r.name, units_per_us_dollar: r.unitsPerUsd, as_of: r.asOf, kind: r.kind, source: r.source };
+      } else if (name === "get_figures" && writes) {
+        result = { error: "This message records transactions. Reply with what will be recorded and any warning; figures are for the owner's questions." };
       } else if (name === "get_figures") {
         result = figures(working, args.about);
       } else if (name === "ask_analyst" && proposals.length) {
@@ -439,12 +464,12 @@ export async function runAgent({ chat, models, books, message = "", image, histo
         }
       }
       if (result?.question) questions.push(result.question);
+      grounds.push(JSON.stringify(result));
       messages.push({ role: "tool", tool_call_id: call.id, content: JSON.stringify(result) });
     }
 
     // A question from the ledger reaches the owner even when the model's reply skips it.
-    if (replyText && questions.length && !/\?/.test(replyText)) replyText = proposals.length ? `${replyText} ${questions[0]}` : questions[0];
-    if (replyText) return done(replyText);
+    if (replyText) return finish(replyText);
     if (failures >= 2 && !escalated) {
       model = models.analyst;
       escalated = true;
