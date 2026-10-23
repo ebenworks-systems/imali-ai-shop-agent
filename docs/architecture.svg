@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <title>How the Imali AI shop agent works: four NVIDIA Nemotron models on Nebius Token Factory, Tavily for exchange rates, and a ledger that checks every record</title>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#5b6b64"/></marker>
+    <style>
+      .t { font-size: 17px; font-weight: 650; fill: #1e3932; }
+      .s { font-size: 14px; fill: #4b5a54; }
+      .m { font-size: 13px; font-weight: 600; fill: #00754a; }
+      .l { font-size: 13px; fill: #5b6b64; }
+      .line { stroke: #5b6b64; stroke-width: 1.6; fill: none; marker-end: url(#a); }
+    </style>
+  </defs>
+  <rect width="1200" height="760" fill="#f7f5f0"/>
+  <text x="40" y="52" font-size="26" font-weight="700" fill="#1e3932">The model proposes, code checks, the owner confirms</text>
+  <text x="40" y="80" class="s">Every model call goes to Nebius Token Factory. Times and costs are medians per call, measured on 23 October 2026.</text>
+
+  <!-- owner -->
+  <rect x="40" y="120" width="220" height="92" rx="16" fill="#fff" stroke="#d9d4c7"/>
+  <text x="60" y="152" class="t">Owner's message</text>
+  <text x="60" y="176" class="s">text, voice or a photo,</text>
+  <text x="60" y="196" class="s">English, chiShona, isiNdebele</text>
+
+  <!-- vision -->
+  <rect x="40" y="262" width="220" height="104" rx="16" fill="#eef6f1" stroke="#b9d9c6"/>
+  <text x="60" y="292" class="t">Nemotron 3.5 Super VL</text>
+  <text x="60" y="316" class="s">reads an invoice photo</text>
+  <text x="60" y="336" class="s">into JSON lines</text>
+  <text x="60" y="356" class="m">2.1 s · $0.0008</text>
+  <path class="line" d="M150 212 V256"/>
+  <text x="160" y="240" class="l">photo</text>
+
+  <!-- router -->
+  <rect x="330" y="160" width="270" height="150" rx="18" fill="#00754a"/>
+  <text x="352" y="196" font-size="19" font-weight="700" fill="#fff">Nemotron 3.5 Lightning</text>
+  <text x="352" y="222" font-size="14" fill="#e3f3ea">reads every message and calls</text>
+  <text x="352" y="242" font-size="14" fill="#e3f3ea">typed tools: sale, stock in, cost,</text>
+  <text x="352" y="262" font-size="14" fill="#e3f3ea">payment, price, till count, reply</text>
+  <text x="352" y="290" font-size="14" font-weight="650" fill="#fff">1.9 s · $0.0003 a call</text>
+  <path class="line" d="M260 166 H324"/>
+  <path class="line" d="M260 314 H300 V270 H324"/>
+
+  <!-- ledger -->
+  <rect x="680" y="120" width="480" height="196" rx="18" fill="#fff" stroke="#1e3932" stroke-width="1.6"/>
+  <text x="702" y="154" class="t">Ledger in plain code: every record checked</text>
+  <text x="702" y="182" class="s">whole cents; an entry that does not balance is refused</text>
+  <text x="702" y="204" class="s">items, amounts, people and prices must be in the latest message</text>
+  <text x="702" y="226" class="s">a missing payment method or unknown item becomes a question</text>
+  <text x="702" y="248" class="s">every figure in a reply is checked against the tools' answers</text>
+  <text x="702" y="282" class="t" fill="#00754a">Proposal card  →  owner taps Record  →  books</text>
+  <text x="702" y="304" class="l">The books stay in the owner's own browser; every record can be undone.</text>
+  <path class="line" d="M600 200 H674"/>
+  <text x="612" y="190" class="l">record_*</text>
+
+  <!-- tavily chain -->
+  <rect x="330" y="392" width="830" height="150" rx="18" fill="#eef2fb" stroke="#c4cfea"/>
+  <text x="352" y="424" class="t" fill="#2c3e6b">Paid in ZiG or rand: the rate is found live and checked in code</text>
+  <rect x="352" y="440" width="170" height="84" rx="12" fill="#fff" stroke="#c4cfea"/>
+  <text x="366" y="466" font-size="15" font-weight="650" fill="#2c3e6b">Tavily search</text>
+  <text x="366" y="488" class="s">official bank pages</text>
+  <text x="366" y="508" class="m" fill="#2c3e6b">0.7 s</text>
+  <rect x="546" y="440" width="170" height="84" rx="12" fill="#fff" stroke="#c4cfea"/>
+  <text x="560" y="466" font-size="15" font-weight="650" fill="#2c3e6b">Tavily extract</text>
+  <text x="560" y="488" class="s">pages read live</text>
+  <text x="560" y="508" class="m" fill="#2c3e6b">1.8 s</text>
+  <rect x="740" y="440" width="170" height="84" rx="12" fill="#fff" stroke="#c4cfea"/>
+  <text x="754" y="466" font-size="15" font-weight="650" fill="#2c3e6b">Lightning</text>
+  <text x="754" y="488" class="s">copies rate and date</text>
+  <text x="754" y="508" class="s">as JSON</text>
+  <rect x="934" y="440" width="206" height="84" rx="12" fill="#fff" stroke="#2c3e6b"/>
+  <text x="948" y="464" font-size="14" font-weight="650" fill="#2c3e6b">Code accepts it only if</text>
+  <text x="948" y="484" font-size="13" fill="#4b5a54">the number is on the page,</text>
+  <text x="948" y="502" font-size="13" fill="#4b5a54">dated this week, and a second</text>
+  <text x="948" y="520" font-size="13" fill="#4b5a54">bank agrees within 3%</text>
+  <path class="line" d="M522 482 H540"/><path class="line" d="M716 482 H734"/><path class="line" d="M910 482 H928"/>
+  <path class="line" d="M465 310 V386"/>
+  <text x="474" y="352" class="l">paid_currency</text>
+  <path class="line" d="M1037 440 V322"/>
+  <text x="1046" y="370" class="l">rate, source, read time</text>
+  <text x="1046" y="388" class="l">and page fingerprint</text>
+  <text x="1046" y="406" class="l">go into the journal</text>
+
+  <!-- analyst and closer -->
+  <rect x="40" y="590" width="350" height="110" rx="16" fill="#fff" stroke="#d9d4c7"/>
+  <text x="60" y="622" class="t">Nemotron 3 Super</text>
+  <text x="60" y="646" class="s">"What should I restock?": the whole book</text>
+  <text x="60" y="666" class="s">and a week of sales; retries a hard message</text>
+  <text x="60" y="688" class="m">5.3 s · $0.0011</text>
+  <rect x="420" y="590" width="360" height="110" rx="16" fill="#fff" stroke="#d9d4c7"/>
+  <text x="440" y="622" class="t">Nemotron 3 Ultra closes the day</text>
+  <text x="440" y="646" class="s">code counts the till first; Ultra names the</text>
+  <text x="440" y="666" class="s">likeliest reasons for a gap and the reorder list</text>
+  <text x="440" y="688" class="m">3.4 s · $0.0034</text>
+  <path class="line" d="M350 310 V352 H300 V584"/>
+  <text x="212" y="470" class="l">a question</text>
+  <path class="line" d="M400 310 V366 H318 V562 H600 V584"/>
+  <text x="612" y="580" class="l">close the day</text>
+
+  <rect x="810" y="590" width="350" height="110" rx="16" fill="#f2efe7" stroke="#d9d4c7"/>
+  <text x="830" y="622" class="t">Nebius Token Factory</text>
+  <text x="830" y="646" class="s">one key and one OpenAI-compatible API</text>
+  <text x="830" y="666" class="s">for all four models; each call's cost is</text>
+  <text x="830" y="686" class="s">counted against the demo's budget</text>
+  <text x="40" y="738" class="l">Measured on 23 October 2026: 81 of 81 owner messages passed their checks; median reply 1.9 s; about $0.0096 for a whole demo day at list prices.</text>
+</svg>
