@@ -15,8 +15,9 @@ function scripted(...replies) {
     asked.push({ ...req, messages: structuredClone(req.messages) });
     const next = replies.shift();
     if (!next) throw new Error(`no scripted reply for ${req.purpose}`);
-    const message = typeof next === "string" ? { role: "assistant", content: next } : { role: "assistant", content: "", ...next };
-    return { message, trace: { role: req.purpose, model: req.model.label, modelId: req.model.id, ms: 5, tokensIn: 100, tokensOut: 20, cost: 0.00001 } };
+    const { finish, ...rest } = typeof next === "string" ? {} : next;
+    const message = typeof next === "string" ? { role: "assistant", content: next } : { role: "assistant", content: "", ...rest };
+    return { message, finish, trace: { role: req.purpose, model: req.model.label, modelId: req.model.id, ms: 5, tokensIn: 100, tokensOut: 20, cost: 0.00001 } };
   };
   return { chat, asked };
 }
@@ -227,6 +228,18 @@ test("a delivery already proposed in full is not proposed again for one of its l
   );
   const out = await runAgent({ chat, models: MODELS, books: books(), message: "Delivered, I pay Friday", image: "data:image/jpeg;base64,AAAA", now: NOW });
   assert.equal(out.proposals.length, 1);
+});
+
+test("a run of repeated calls cut off at the token limit counts each call once and keeps the first reply", async () => {
+  const loop = [call("record_sale", { items: [{ item: "bread", qty: 3 }], payment: "cash" }, "r0")];
+  for (let i = 1; i < 20; i += 1) loop.push(call("get_figures", { about: "today" }, `g${i}`), call("reply", { text: `Reply number ${i}.` }, `p${i}`));
+  loop.push({ id: "cut", type: "function", function: { name: "reply", arguments: '{"text": "Today' } });
+  const { chat, asked } = scripted({ tool_calls: loop, finish: "length" });
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Sold 3 bread, cash", now: NOW });
+  assert.equal(asked.length, 1);
+  assert.equal(out.proposals.length, 1);
+  assert.match(out.reply, /\$3\.30|3 × Bread loaf/);
+  assert.doesNotMatch(out.reply, /Reply number [2-9]/);
 });
 
 test("the same transaction called twice in one message is proposed once", async () => {

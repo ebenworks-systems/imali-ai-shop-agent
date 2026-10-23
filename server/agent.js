@@ -367,12 +367,20 @@ export async function runAgent({ chat, models, books, message = "", image, histo
   for (let round = 0; round < 6; round += 1) {
     // The first call must use a tool, so a model that has seen earlier replies such as "Recorded ..." in the history
     // cannot answer as if it had recorded something without calling a record tool.
-    const res = await chat({ model, purpose: escalated ? "router, retried on Super" : "router", messages, tools: TOOLS, toolChoice: round === 0 ? "required" : "auto", maxTokens: escalated ? 4000 : 1200, temperature: 0.1 });
+    const res = await chat({ model, purpose: escalated ? "router, retried on Super" : "router", messages, tools: TOOLS, toolChoice: round === 0 ? "required" : "auto", maxTokens: escalated ? 4000 : 450, temperature: 0.1 });
     trace.push(res.trace);
-    // An answer cut off at the token limit is usually a run of needless calls. Keep only the record calls that
-    // arrived whole; the confirmation is then written from the checked records.
+    // Lightning sometimes repeats its calls until it reaches the token limit (41 calls for one sale on 23 Oct 2026).
+    // Each distinct call is kept once, with the first reply only; a call cut off at the limit is dropped.
     const truncated = res.finish === "length";
-    const calls = toolCallsOf(res.message).filter((c) => !truncated || (WRITE_TOOLS.has(c.function?.name) && parses(c.function?.arguments)));
+    const distinct = new Set();
+    let replied = false;
+    const calls = toolCallsOf(res.message).filter((c) => {
+      const name = c.function?.name;
+      if (truncated && !parses(c.function?.arguments)) return false;
+      if (name === "reply") return !replied && (replied = true);
+      const key = `${name}:${c.function?.arguments}`;
+      return !distinct.has(key) && Boolean(distinct.add(key));
+    });
     if (truncated && !calls.length) {
       failures += 1;
       messages.push({ role: "user", content: "Your answer was cut off. Call only the tools this message needs: one record per transaction, then reply." });
@@ -510,8 +518,8 @@ export async function runAgent({ chat, models, books, message = "", image, histo
     }
 
     // A question from the ledger reaches the owner even when the model's reply skips it.
-    if (truncated && proposals.length) return done(confirmation(proposals, questions));
     if (replyText) return finish(replyText);
+    if (truncated && proposals.length) return done(confirmation(proposals, questions));
     if (failures >= 2 && !escalated) {
       model = models.analyst;
       escalated = true;
