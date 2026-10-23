@@ -152,6 +152,24 @@ function names(text, name) {
 
 // Records come only from the owner's latest message (and its photo). A model that reaches back into the history,
 // or fills in a number the owner never gave, is sent back with the reason.
+// How the owner's latest message says the money moved. A record that says otherwise is sent back.
+export function methodsSaid(text) {
+  const t = String(text || "").toLowerCase();
+  const out = new Set();
+  if (/\bcash\b|\bnotes\b/.test(t)) out.add("cash");
+  if (/mobile|eco ?cash|one ?money|innbucks|mpesa|transfer|swipe|\bcard\b|\bbank\b/.test(t)) out.add("mobile");
+  if (/credit|chikwereti|isikwelede|\btab\b|on account|will pay|'ll pay|pay (them |her |him )?(on|by|later|next)|\bowe/.test(t)) out.add("credit");
+  return out;
+}
+
+function methodIn(args) {
+  const v = String(args.payment ?? args.method ?? args.paid ?? "").toLowerCase();
+  if (/credit|account|owe|later|tab/.test(v)) return "credit";
+  if (/mobile|ecocash|onemoney|innbucks|transfer|swipe|card|bank/.test(v)) return "mobile";
+  if (/cash/.test(v)) return "cash";
+  return null;
+}
+
 export function fromLatestMessage(name, args, message, photo, books) {
   const nums = numbersIn(message);
   const said = (n) => n === undefined || n === null || nums.has(Number(n));
@@ -160,6 +178,9 @@ export function fromLatestMessage(name, args, message, photo, books) {
   if (name === "record_sale" && args.payment === "credit" && args.customer && !names(message, args.customer)) return `${args.customer} is not named in the owner's latest message. Ask who took it on credit.`;
   if (["record_expense", "record_customer_payment", "record_supplier_payment", "record_owner_withdrawal"].includes(name) && !said(args.amount)) return "That amount is not in the owner's latest message. Use the owner's own figure or ask.";
   if (name === "record_stock_in" && !photo && !names(message, args.supplier) && !(args.items || []).some((it) => said(it.unit_cost))) return "This stock is not in the owner's latest message. Record only what it says.";
+  const told = methodsSaid(message);
+  const method = WRITE_TOOLS.has(name) ? methodIn(args) : null;
+  if (method && told.size && !told.has(method)) return `The owner's latest message says it was paid ${[...told].map((m) => (m === "credit" ? "on credit" : m === "mobile" ? "by mobile money" : "in cash")).join(" or ")}, not ${method === "credit" ? "on credit" : method === "mobile" ? "by mobile money" : "in cash"}. Record what it says.`;
   if (name === "set_price" && (!said(args.sell_price ?? args.price) || (books && !mentionsItem(findItem(books, args.item), message)))) return "The owner's latest message does not ask for this price change. Change a price only when the owner names the item and the new price.";
   if (["record_sale", "record_stock_in"].includes(name) && !photo && books) {
     const missing = (args.items || []).map((it) => findItem(books, it.item)).find((item) => item && !mentionsItem(item, message));
@@ -194,6 +215,10 @@ export function confirmation(proposals, questions = []) {
   const lines = proposals.map((p) => `${p.summary}${p.amount && !/\$/.test(p.summary) ? `, ${money(p.amount)}` : ""}.`);
   const warnings = proposals.flatMap((p) => p.warnings || []);
   return [...lines, ...warnings, ...questions.slice(0, 1), "Tap Record to add it."].join(" ");
+}
+
+function sameStock(a = [], b = []) {
+  return a.length > 0 && a.length === b.length && a.every((x) => b.some((y) => y.item === x.item && y.qty === x.qty));
 }
 
 function normaliseArgs(name, args) {
@@ -461,6 +486,8 @@ export async function runAgent({ chat, models, books, message = "", image, histo
               (p) =>
                 p.tool === name &&
                 ((p.summary === built.entry.memo && p.amount === built.entry.amount) ||
+                  // the same items sold twice in one message, whatever payment the repeat names
+                  (name === "record_sale" && sameStock(p.entry.stock, built.entry.stock)) ||
                   // a delivery already proposed in full, called again for some of its lines
                   (name === "record_stock_in" && p.entry.party === built.entry.party && built.entry.stock.every((s) => p.entry.stock.some((q) => q.item === s.item && q.qty === s.qty)))),
             );

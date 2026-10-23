@@ -250,6 +250,24 @@ test("a rate question is answered from the checked lookup, in one sentence", asy
   assert.equal(out.lookups.length, 1);
 });
 
+test("a sale is recorded the way the owner said it was paid, and only once", async () => {
+  const { chat } = scripted(
+    {
+      tool_calls: [
+        call("record_sale", { items: [{ item: "eggs-tray", qty: 1 }, { item: "milk-1l", qty: 2 }], payment: "mobile_money" }, "a"),
+        call("record_sale", { items: [{ item: "eggs-tray", qty: 1 }, { item: "milk-1l", qty: 2 }], payment: "cash" }, "b"),
+      ],
+    },
+    "Eggs and two milks, mobile money.",
+  );
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Ndatengesa mazai tray 1 nemukaka 2, ndabhadharwa ne mobile money", now: NOW });
+  assert.deepEqual(out.proposals.map((p) => p.entry.method), ["mobile"]);
+  const cashOnly = scripted({ tool_calls: [call("record_sale", { items: [{ item: "bread", qty: 1 }], payment: "cash" })] }, { tool_calls: [call("record_sale", { items: [{ item: "bread", qty: 1 }], payment: "mobile" })] }, "One bread, mobile money.");
+  const out2 = await runAgent({ chat: cashOnly.chat, models: MODELS, books: books(), message: "Sold 1 bread by ecocash", now: NOW });
+  assert.deepEqual(out2.proposals.map((p) => p.entry.method), ["mobile"]);
+  assert.match(cashOnly.asked[1].messages.find((m) => m.role === "tool").content, /says it was paid by mobile money, not in cash/);
+});
+
 test("the same transaction called twice in one message is proposed once", async () => {
   const sale = { items: [{ item: "bread", qty: 1 }], payment: "cash" };
   const { chat } = scripted({ tool_calls: [call("record_sale", sale, "a"), call("record_sale", sale, "b")] }, "One bread.");

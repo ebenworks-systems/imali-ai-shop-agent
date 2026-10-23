@@ -133,8 +133,10 @@ const speech = (scene) => {
       await sleep(1200);
       await recordAll();
 
-      await scene("rand");
+      // The rate question takes a live search, so its line is spoken once the checked answer is on screen.
+      await scene("rand-q");
       await ask("Rand rate today?");
+      await scene("rand");
 
       await scene("costs");
       await ask("Paid electricity and transport");
