@@ -20,7 +20,7 @@ const END_CARD = `(() => {
   d.innerHTML = \`<div style="text-align:center;max-width:980px;padding:0 40px">
     <p style="margin:0;font:400 104px/1 'Newsreader Display',Georgia,serif;letter-spacing:-.03em;color:#1e3932">Imali AI</p>
     <p style="margin:14px 0 0;font:italic 400 44px/1.1 'Newsreader Display',Georgia,serif;color:#00754a">Records you own.</p>
-    <p style="margin:34px 0 0;font:500 20px/1.5 Geist,sans-serif;color:rgba(35,32,28,.72)">Nemotron 3 Nano · Nemotron 3.5 Super VL · Nemotron 3 Super · Nemotron 3 Ultra<br>served by Nebius Token Factory</p>
+    <p style="margin:34px 0 0;font:500 20px/1.5 Geist,sans-serif;color:rgba(35,32,28,.72)">Nemotron 3.5 Lightning · Nemotron 3.5 Super VL · Nemotron 3 Super · Nemotron 3 Ultra<br>served by Nebius Token Factory</p>
     <div style="margin:40px auto 0;display:inline-grid;gap:10px;text-align:left;font:400 20px/1.4 Geist,sans-serif;color:#23201c">
       <span><span style="display:inline-block;width:92px;color:rgba(35,32,28,.55)">Try it</span>imali-ai-shop-agent.vercel.app</span>
       <span><span style="display:inline-block;width:92px;color:rgba(35,32,28,.55)">Code</span>gitlab.com/ebenworks-systems/imali-ai-shop-agent</span>

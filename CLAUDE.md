@@ -17,7 +17,7 @@ A stand-alone demo built for the Nebius x NVIDIA Global AI Hackathon (Best Apps 
 ## Rules for this code
 
 - The models only propose. Every record is built and checked by `public/js/ledger.js` in whole cents, and the owner confirms it. Figures the agent quotes come from the ledger through a read tool.
-- Keep each job on its model: Nano routes every message, Super VL reads photos, Super answers questions and retries failed tool calls, Ultra closes the day. A change of model or role updates the README table in the same commit.
+- Keep each job on its model: Lightning routes every message, Super VL reads photos, Super answers questions and retries failed tool calls, Ultra closes the day. A change of model or role updates the README table in the same commit.
 - The demo shop, people, invoice and figures are invented. Never put a real merchant, customer or figure into the demo, the tests or the film.
 - No keys in code, tests, logs or commits. The server never sends a key to the browser.
 - Light theme only. Imali AI's lines on the page are the company's approved wording; change them only from that source, and write Imali AI in full.

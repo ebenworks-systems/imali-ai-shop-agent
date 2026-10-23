@@ -26,14 +26,14 @@ test("currency words map to codes", () => {
   assert.equal(currencyCode("euro"), null);
 });
 
-test("a rate comes from a Tavily search read by Nemotron 3 Nano, and is kept for a while", async () => {
+test("a rate comes from a Tavily search read by Nemotron 3.5 Lightning, and is kept for a while", async () => {
   clearRateCache();
   const calls = [];
   const rates = createRates({ apiKey: "tvly-test", chat: fakeChat(reading), models: MODELS, fetchImpl: fakeFetch(calls) });
   const r = await rates("ZIG");
   assert.equal(r.unitsPerUsd, 26.5975);
   assert.equal(r.url, "https://www.idbz.co.zw/rates");
-  assert.deepEqual(r.trace.map((t) => t.model), ["Tavily search", "Nemotron 3 Nano"]);
+  assert.deepEqual(r.trace.map((t) => t.model), ["Tavily search", "Nemotron 3.5 Lightning"]);
   assert.equal(calls[0].url, "https://api.tavily.com/search");
   assert.equal(calls[0].auth, "Bearer tvly-test");
   const again = await rates("ZIG");

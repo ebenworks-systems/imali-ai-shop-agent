@@ -9,7 +9,7 @@ export const DEFAULT_BASE_URL = "https://api.tokenfactory.nebius.com/v1";
 // the analyst and the day-closer think before they answer.
 const NO_THINKING = { chat_template_kwargs: { enable_thinking: false } };
 export const MODELS = {
-  router: { id: "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B", label: "Nemotron 3 Nano", price: [0.06, 0.24], extra: NO_THINKING },
+  router: { id: "nvidia/Nemotron-3_5-Lightning", label: "Nemotron 3.5 Lightning", price: [0.06, 0.24], extra: NO_THINKING },
   vision: { id: "nvidia/Nemotron-3.5-Super-VL", label: "Nemotron 3.5 Super VL", price: [0.3, 0.9], extra: NO_THINKING },
   analyst: { id: "nvidia/nemotron-3-super-120b-a12b", label: "Nemotron 3 Super", price: [0.3, 0.9], extra: {} },
   closer: { id: "nvidia/Nemotron-3-Ultra-550b-a55b", label: "Nemotron 3 Ultra", price: [1, 3], extra: {} },

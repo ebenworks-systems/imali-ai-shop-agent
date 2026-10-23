@@ -14,25 +14,25 @@ This repository is new code written for the hackathon. It rebuilds Imali AI's co
 
 ## How it uses NVIDIA Nemotron on Nebius Token Factory
 
-Every message makes runtime calls to the Token Factory inference API (`https://api.tokenfactory.nebius.com/v1/chat/completions`). Each job goes to the Nemotron model that fits it, the way the track brief suggests: Nano for the fast everyday calls, the bigger models only where they earn their cost.
+Every message makes runtime calls to the Token Factory inference API (`https://api.tokenfactory.nebius.com/v1/chat/completions`). Each job goes to the Nemotron model that fits it, the way the track brief suggests: Lightning for the fast everyday calls, the bigger models only where they earn their cost.
 
 | Job | Model on Token Factory | Why this size |
 | --- | --- | --- |
-| Read every message and call typed tools (record a sale, stock in, a cost, a payment, a till count, a price change) | `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B` | 3B active parameters: quick, multilingual and about $0.06 per million input tokens, so every message can use it |
+| Read every message and call typed tools (record a sale, stock in, a cost, a payment, a till count, a price change) | `nvidia/Nemotron-3_5-Lightning` | 3B active parameters: quick, multilingual and about $0.06 per million input tokens, so every message can use it |
 | Read a photo of an invoice, delivery note or stock list into structured lines | `nvidia/Nemotron-3.5-Super-VL` | Reads text and images; JSON mode gives clean line items |
-| Answer questions that need thought ("what should I restock?"), and take over a message when Nano's tool calls fail twice | `nvidia/nemotron-3-super-120b-a12b` | Stronger reasoning over the whole book and a week of sales |
+| Answer questions that need thought ("what should I restock?"), and take over a message when Lightning's tool calls fail twice | `nvidia/nemotron-3-super-120b-a12b` | Stronger reasoning over the whole book and a week of sales |
 | Close the day: explain a till shortfall from the day's records and write tomorrow's reorder list | `nvidia/Nemotron-3-Ultra-550b-a55b` | The hardest reasoning of the day, once a day, so its price stays small |
 
 The page shows the route for every message: which model ran, why, how long it took, how many tokens and what it cost at Token Factory's list prices.
 
 ### The model proposes, code checks, the owner confirms
 
-The models never write to the books. Nano's tool calls go to a small ledger (`public/js/ledger.js`) that builds each entry in whole cents and refuses anything that does not balance. It uses the shop's price list unless the owner names a price, moves stock at cost, flags a price that moved on an invoice or a total that does not add up, and answers with a question instead of guessing (an unknown item, a credit sale with no customer, a missing payment method). Figures the agent quotes come from the ledger through a read tool, not from the model's memory. The owner confirms each record with one tap and can undo any of them.
+The models never write to the books. Lightning's tool calls go to a small ledger (`public/js/ledger.js`) that builds each entry in whole cents and refuses anything that does not balance. It uses the shop's price list unless the owner names a price, moves stock at cost, flags a price that moved on an invoice or a total that does not add up, and answers with a question instead of guessing (an unknown item, a credit sale with no customer, a missing payment method). Figures the agent quotes come from the ledger through a read tool, not from the model's memory. The owner confirms each record with one tap and can undo any of them.
 
 ```
 owner's words or photo
   ├─ photo? ─▶ Nemotron 3.5 Super VL ─▶ JSON lines ─┐
-  └──────────────────────────────────────────────────┴─▶ Nemotron 3 Nano + tools
+  └──────────────────────────────────────────────────┴─▶ Nemotron 3.5 Lightning + tools
                                                           ├─ record_* ─▶ ledger checks ─▶ proposal card ─▶ owner taps Record
                                                           ├─ get_figures ─▶ ledger figures
                                                           ├─ ask_analyst ─▶ Nemotron 3 Super

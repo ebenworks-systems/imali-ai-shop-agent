@@ -23,7 +23,7 @@ function scripted(...replies) {
 
 const books = () => sampleBooks("2026-10-23");
 
-test("a sale message becomes one checked proposal and a short reply, on Nemotron 3 Nano", async () => {
+test("a sale message becomes one checked proposal and a short reply, on Nemotron 3.5 Lightning", async () => {
   const { chat, asked } = scripted(
     { tool_calls: [call("record_sale", { items: [{ item: "bread", qty: 3 }, { item: "cooking-oil-2l", qty: 2 }], payment: "cash" })] },
     "Got it: 3 bread and 2 cooking oil, $12.30 cash. Tap Record to add it.",
@@ -33,8 +33,8 @@ test("a sale message becomes one checked proposal and a short reply, on Nemotron
   assert.equal(out.proposals[0].amount, 1230);
   assert.equal(out.proposals[0].entry.at, NOW);
   assert.match(out.reply, /12.30/);
-  assert.deepEqual(out.trace.map((t) => t.model), ["Nemotron 3 Nano", "Nemotron 3 Nano"]);
-  assert.equal(asked[0].model.id, "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B");
+  assert.deepEqual(out.trace.map((t) => t.model), ["Nemotron 3.5 Lightning", "Nemotron 3.5 Lightning"]);
+  assert.equal(asked[0].model.id, "nvidia/Nemotron-3_5-Lightning");
   assert.ok(asked[0].tools.some((t) => t.function.name === "record_sale"));
   const toolMsg = asked[1].messages.at(-1);
   assert.equal(toolMsg.role, "tool");
@@ -89,7 +89,7 @@ test("figures come from the ledger, not from the model", async () => {
   assert.match(asked[1].messages.at(-1).content, /"cash_in_till":"\$40.00"/);
 });
 
-test("when Nano's tool calls fail twice, Nemotron 3 Super takes over the message", async () => {
+test("when Lightning's tool calls fail twice, Nemotron 3 Super takes over the message", async () => {
   const { chat, asked } = scripted(
     { tool_calls: [call("record_sale", "{not json")] },
     { tool_calls: [call("record_sael", { items: [] })] },

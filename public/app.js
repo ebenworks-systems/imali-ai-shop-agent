@@ -19,7 +19,7 @@ const ICONS = {
 };
 const ROLE_TEXT = {
   router: ["tier-router", "read the message and called the tools"],
-  "router, retried on Super": ["tier-retry", "took over after Nano's tool calls failed"],
+  "router, retried on Super": ["tier-retry", "took over after Lightning's tool calls failed"],
   "photo reader": ["tier-vision", "read the photo"],
   analyst: ["tier-analyst", "answered from the whole book"],
   closer: ["tier-closer", "closed the day"],
@@ -347,8 +347,8 @@ function history() {
 
 function thinking(withPhoto) {
   const stages = withPhoto
-    ? ["Nemotron 3.5 Super VL is reading the photo…", "Nemotron 3 Nano is matching it to your stock…", "Checking the double entry…"]
-    : ["Nemotron 3 Nano is reading your message…", "Checking the double entry…"];
+    ? ["Nemotron 3.5 Super VL is reading the photo…", "Nemotron 3.5 Lightning is matching it to your stock…", "Checking the double entry…"]
+    : ["Nemotron 3.5 Lightning is reading your message…", "Checking the double entry…"];
   const label = el("span", {}, stages[0]);
   const li = el("li", { class: "msg msg-agent" }, el("div", { class: "thinking" }, el("span", { class: "pulse", "aria-hidden": "true" }, el("i"), el("i"), el("i")), label));
   let i = 0;

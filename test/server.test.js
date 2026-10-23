@@ -75,7 +75,7 @@ test("a message runs the agent against Token Factory with the key in the header 
     assert.equal(out.proposals[0].entry.at, "2026-10-23T11:00:00.000Z");
     assert.equal(seen[0].url, "https://api.tokenfactory.nebius.com/v1/chat/completions");
     assert.equal(seen[0].auth, "Bearer k-123");
-    assert.equal(seen[0].body.model, "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B");
+    assert.equal(seen[0].body.model, "nvidia/Nemotron-3_5-Lightning");
     assert.ok(!JSON.stringify(out).includes("k-123"));
   });
 });

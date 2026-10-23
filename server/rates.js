@@ -1,5 +1,5 @@
 // Today's exchange rate for a sale paid in another currency. Tavily searches the web for the official rate;
-// Nemotron 3 Nano reads the rate, its date and its source out of the results as JSON; code checks the number is
+// Nemotron 3.5 Lightning reads the rate, its date and its source out of the results as JSON; code checks the number is
 // plausible before the ledger converts with it. One answer per currency is kept for six hours.
 
 export const CURRENCIES = {
