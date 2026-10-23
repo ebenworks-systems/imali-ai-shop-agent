@@ -30,6 +30,7 @@ const CASES = [
   { name: "unknown item is asked, not guessed", message: "Sold 2 paraffin, cash", expect: (o) => o.proposals.length === 0 },
   { name: "price change", message: "Change the bread price to $1.20", expect: (o) => kinds(o).join() === "price" && o.proposals[0].price.to === 120 },
   { name: "figures from the ledger", message: "How much cash is in the till right now?", expect: (o) => o.proposals.length === 0 && /40(\.00)?/.test(o.reply) },
+  { name: "rand rate, checked on the banks' pages", message: "What is the rand rate today?", expect: (o) => o.proposals.length === 0 && o.lookups?.[0]?.currency === "South African rand" && o.lookups[0].sources.length >= 1 },
   { name: "photo of a supplier invoice", message: "Kudzai Wholesale just delivered this. I will pay them on Friday.", photo: "public/samples/invoice-kudzai-wholesale.jpg", expect: (o) => kinds(o).join() === "stock-in" && o.proposals[0].amount === 8850 && o.proposals[0].entry.method === "credit" },
   { name: "restock advice from the analyst", message: "What should I restock before the weekend, and what is selling slowly?", expect: (o) => o.answeredBy === "Nemotron 3 Super" && /candle|egg|maize/i.test(o.reply) },
   { name: "closing the day with a short till", message: "Closing up now. I counted $38 in the till.", expect: (o) => o.answeredBy === "Nemotron 3 Ultra" && o.till?.diff === -200 && o.proposals.some((p) => p.tool === "close_day") },
@@ -58,9 +59,33 @@ const models = modelsFromEnv();
 const results = [];
 const { createRates } = await import("../server/rates.js");
 const rates = createRates({ apiKey: process.env.TAVILY_API_KEY, chat, models });
+const callsOf = (trace) => trace.map((t) => ({ model: t.model, role: t.role, ms: t.ms, tokensIn: t.tokensIn, tokensOut: t.tokensOut, cost: t.cost }));
 const record = (out) => {
   const trace = out?.trace ?? [];
-  return { cost: trace.reduce((a, t) => a + t.cost, 0), models: trace.map((t) => `${t.model} (${t.role})`), escalated: out?.escalated ?? false, reply: out?.reply, proposals: out?.proposals.map((p) => ({ summary: p.summary, amount: p.amount, warnings: p.warnings })) };
+  return { cost: trace.reduce((a, t) => a + t.cost, 0), models: trace.map((t) => `${t.model} (${t.role})`), calls: callsOf(trace), escalated: out?.escalated ?? false, reply: out?.reply, proposals: out?.proposals.map((p) => ({ summary: p.summary, amount: p.amount, warnings: p.warnings })) };
+};
+
+// Per model: how many calls, the median and 90th-percentile time of one call, tokens and cost per call at list prices.
+function perModel(results) {
+  const groups = {};
+  for (const r of results) for (const c of r.calls || []) (groups[c.model] ||= []).push(c);
+  const q = (xs, f) => xs.slice().sort((a, b) => a - b)[Math.min(xs.length - 1, Math.floor(xs.length * f))];
+  return Object.fromEntries(
+    Object.entries(groups).map(([m, cs]) => [
+      m,
+      {
+        calls: cs.length,
+        medianMs: q(cs.map((c) => c.ms), 0.5),
+        p90Ms: q(cs.map((c) => c.ms), 0.9),
+        meanTokensIn: Math.round(cs.reduce((a, c) => a + c.tokensIn, 0) / cs.length),
+        meanTokensOut: Math.round(cs.reduce((a, c) => a + c.tokensOut, 0) / cs.length),
+        meanCost: cs.reduce((a, c) => a + c.cost, 0) / cs.length,
+      },
+    ]),
+  );
+}
+const printPerModel = (pm) => {
+  for (const [m, s] of Object.entries(pm)) console.log(`   ${m.padEnd(26)} ${String(s.calls).padStart(4)} calls  median ${s.medianMs} ms  p90 ${s.p90Ms} ms  ${s.meanTokensIn} in / ${s.meanTokensOut} out  $${s.meanCost.toFixed(5)} a call`);
 };
 
 if (args.includes("--day")) {
@@ -93,8 +118,9 @@ if (args.includes("--day")) {
     console.log(`   till at the end of run ${run}: ${(balances(books).cash / 100).toFixed(2)}`);
   }
   const passed = results.filter((r) => r.pass).length;
-  const summary = { when: new Date().toISOString(), mode: "day", provider: process.env.NEBIUS_BASE_URL || "Nebius Token Factory", models: Object.fromEntries(Object.entries(models).map(([k, m]) => [k, m.id])), runs, steps: SCRIPT.length, passed, total: results.length, medianMs: results.map((r) => r.ms).sort((a, b) => a - b)[Math.floor(results.length / 2)], totalCost: results.reduce((a, r) => a + r.cost, 0) };
+  const summary = { when: new Date().toISOString(), mode: "day", provider: process.env.NEBIUS_BASE_URL || "Nebius Token Factory", models: Object.fromEntries(Object.entries(models).map(([k, m]) => [k, m.id])), runs, steps: SCRIPT.length, passed, total: results.length, medianMs: results.map((r) => r.ms).sort((a, b) => a - b)[Math.floor(results.length / 2)], totalCost: results.reduce((a, r) => a + r.cost, 0), perModel: perModel(results) };
   console.log(`\n${passed} of ${results.length} steps passed. Median ${summary.medianMs} ms. Spent $${summary.totalCost.toFixed(4)} at list prices.`);
+  printPerModel(summary.perModel);
   await mkdir(`${ROOT}submission`, { recursive: true });
   await writeFile(`${ROOT}submission/eval-day-results.json`, JSON.stringify({ summary, results }, null, 2));
   process.exit(0);
@@ -121,6 +147,7 @@ for (let run = 1; run <= runs; run += 1) {
       ms: Date.now() - started,
       cost: trace.reduce((a, t) => a + t.cost, 0),
       models: trace.map((t) => `${t.model} (${t.role})`),
+      calls: callsOf(trace),
       escalated: out?.escalated ?? false,
       reply: out?.reply,
       proposals: out?.proposals.map((p) => ({ summary: p.summary, amount: p.amount, warnings: p.warnings })),
@@ -146,7 +173,9 @@ const summary = {
   medianMs: results.map((r) => r.ms).sort((a, b) => a - b)[Math.floor(results.length / 2)],
   totalCost: results.reduce((a, r) => a + r.cost, 0),
   calls: byModel,
+  perModel: perModel(results),
 };
 console.log(`\n${passed} of ${results.length} passed. Median ${summary.medianMs} ms per message. Spent $${summary.totalCost.toFixed(4)} at list prices.`);
+printPerModel(summary.perModel);
 await mkdir(`${ROOT}submission`, { recursive: true });
 await writeFile(`${ROOT}submission/eval-results.json`, JSON.stringify({ summary, results }, null, 2));
