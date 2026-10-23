@@ -241,6 +241,12 @@ test("a greeting is answered through the reply tool with no record", async () =>
   assert.equal(out.proposals.length, 0);
 });
 
+test("tool calls written in the XML style, or cut off, never reach the owner as text", () => {
+  const xml = { content: "<tool_call>\n<function=reply>\n<parameter=text>\nThree bread, cash.\n</parameter>\n</function>\n</tool_call>" };
+  assert.deepEqual(toolCallsOf(xml).map((c) => [c.function.name, JSON.parse(c.function.arguments).text]), [["reply", "Three bread, cash."]]);
+  assert.equal(stripThinking("Sold 3 bread. <tool_call>\n<function=get_fig"), "Sold 3 bread.");
+});
+
 test("tool calls written as text in the reply are read too", () => {
   const calls = toolCallsOf({ content: 'ok <tool_call>{"name":"record_expense","arguments":{"category":"Transport","amount":2,"payment":"cash"}}</tool_call>' });
   assert.equal(calls.length, 1);

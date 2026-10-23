@@ -78,7 +78,7 @@ export function routerPrompt(snapshot) {
     "Turn each message into the right records with the tools, then reply in one to three short sentences. Every message starts with a tool call: records are made only through the record tools, never by saying so, and a message that needs no record or figure gets the reply tool.",
     "",
     "Rules:",
-    "- One tool call per transaction. A message can hold several transactions: two costs paid are two record_expense calls.",
+    "- One tool call per transaction. A message can hold several transactions: two costs paid are two record_expense calls. Call only the tools the message needs; look up figures or rates only when the owner asks or pays in another currency.",
     "- Use catalogue ids for items, and record every item the message names. Owners write in English, chiShona, isiNdebele or a mix; also_called lists the local names (mazai is eggs, mukaka is milk, chingwa is bread, sipo is soap, munyu is salt).",
     "- Words to know. chiShona: ndatengesa = I sold, ndatenga = I bought, ndabhadhara = I paid, ndabhadharwa = I was paid, chikwereti = on credit, mari = money. isiNdebele: ngithengise = I sold, ngithenge = I bought, isikwelede = on credit, imali = money. Both join 'and' to the next word: nemukaka = ne + mukaka (and milk), nemunyu = ne + munyu (and salt), lamaqanda = la + amaqanda (and eggs).",
     "- Never invent a price, a quantity or how a customer paid. Leave unit_price out to use the catalogue price. Pass amount_received only when the owner states the total they received. If a sale does not say cash, mobile money or credit, record nothing for it and ask how the customer paid.",
@@ -102,6 +102,7 @@ export function stripThinking(text) {
     .replace(/<think>[\s\S]*?<\/think>/gi, "")
     .replace(/^[\s\S]*?<\/think>/i, "")
     .replace(/<tool_call>[\s\S]*?<\/tool_call>/gi, "")
+    .replace(/<tool_call>[\s\S]*$/i, "")
     .replace(/\*\*/g, "")
     .trim();
 }
@@ -113,6 +114,12 @@ export function toolCallsOf(message) {
   const re = /<tool_call>\s*([\s\S]*?)\s*<\/tool_call>/gi;
   let m;
   while ((m = re.exec(String(message.content ?? "")))) {
+    const xml = /^<function=([\w-]+)>([\s\S]*?)(?:<\/function>|$)/.exec(m[1]);
+    if (xml) {
+      const params = Object.fromEntries([...xml[2].matchAll(/<parameter=([\w-]+)>\s*([\s\S]*?)\s*<\/parameter>/g)].map(([, k, v]) => [k, v]));
+      out.push({ id: `text-${out.length}`, type: "function", function: { name: xml[1], arguments: JSON.stringify(params) } });
+      continue;
+    }
     try {
       const parsed = JSON.parse(m[1]);
       out.push({ id: `text-${out.length}`, type: "function", function: { name: parsed.name, arguments: JSON.stringify(parsed.arguments ?? parsed.parameters ?? {}) } });
@@ -163,6 +170,15 @@ export function fromLatestMessage(name, args, message, photo, books) {
 
 // Every number in a reply about new records must come from the owner's words or a tool's answer. A reply that
 // adds its own totals is replaced by a confirmation written from the checked records.
+function parses(json) {
+  try {
+    JSON.parse(json || "{}");
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function figuresGrounded(reply, grounds) {
   const known = new Set(grounds.flatMap((g) => [...numbersIn(g)]));
   return [...numbersIn(reply)].every((n) => known.has(n));
@@ -352,7 +368,15 @@ export async function runAgent({ chat, models, books, message = "", image, histo
     // cannot answer as if it had recorded something without calling a record tool.
     const res = await chat({ model, purpose: escalated ? "router, retried on Super" : "router", messages, tools: TOOLS, toolChoice: round === 0 ? "required" : "auto", maxTokens: escalated ? 4000 : 1200, temperature: 0.1 });
     trace.push(res.trace);
-    const calls = toolCallsOf(res.message);
+    // An answer cut off at the token limit is usually a run of needless calls. Keep only the record calls that
+    // arrived whole; the confirmation is then written from the checked records.
+    const truncated = res.finish === "length";
+    const calls = toolCallsOf(res.message).filter((c) => !truncated || (WRITE_TOOLS.has(c.function?.name) && parses(c.function?.arguments)));
+    if (truncated && !calls.length) {
+      failures += 1;
+      messages.push({ role: "user", content: "Your answer was cut off. Call only the tools this message needs: one record per transaction, then reply." });
+      continue;
+    }
     if (!calls.length) {
       const text = stripThinking(res.message.content);
       if (text) return finish(text);
@@ -471,6 +495,7 @@ export async function runAgent({ chat, models, books, message = "", image, histo
     }
 
     // A question from the ledger reaches the owner even when the model's reply skips it.
+    if (truncated && proposals.length) return done(confirmation(proposals, questions));
     if (replyText) return finish(replyText);
     if (failures >= 2 && !escalated) {
       model = models.analyst;
