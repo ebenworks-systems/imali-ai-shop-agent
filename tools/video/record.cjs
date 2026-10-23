@@ -40,7 +40,7 @@ const END_CARD = `(() => {
       <span><span style="display:inline-block;width:92px;color:rgba(35,32,28,.55)">Try it</span>imali-ai-shop-agent.vercel.app</span>
       <span><span style="display:inline-block;width:92px;color:rgba(35,32,28,.55)">Code</span>gitlab.com/ebenworks-systems/imali-ai-shop-agent</span>
     </div>
-    <p style="margin:36px 0 0;font:500 18px/1.5 Geist,sans-serif;color:#1e3932">Measured on Token Factory, 23 October 2026: 81 of 81 test messages passed their checks,<br>median reply 1.9 s, about one cent for a whole demo day.</p>
+    <p style="margin:36px 0 0;font:500 18px/1.5 Geist,sans-serif;color:#1e3932">Measured on Token Factory, 23 October 2026: 81 of 81 test messages passed their checks,<br>median reply 2.2 s, about one cent for a whole demo day.</p>
     <p style="margin:26px 0 0;font:400 16px/1.4 Geist,sans-serif;color:rgba(35,32,28,.55)">An Ebenworks product. The demo shop, names and figures are invented.</p>
   </div>\`;
   document.body.append(d);

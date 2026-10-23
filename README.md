@@ -15,17 +15,17 @@ Measured on 23 October 2026 with `tools/eval-live.mjs` against the live Token Fa
 
 | Check | Messages | Passed | Median reply | Slowest |
 | --- | --- | --- | --- | --- |
-| The demo day as one conversation (9 messages, each record confirmed before the next), run 3 times | 27 | 27 | 2.0 s | 7.2 s |
-| 18 single messages (English, chiShona, isiNdebele, a photo, an unknown item, no payment method, a rate question), run 3 times | 54 | 54 | 1.9 s | 7.9 s |
+| The demo day as one conversation (9 messages, each record confirmed before the next), run 3 times | 27 | 27 | 2.1 s | 6.8 s |
+| 18 single messages (English, chiShona, isiNdebele, a photo, an unknown item, no payment method, a rate question), run 3 times | 54 | 54 | 2.2 s | 8.6 s |
 
 | Model on Token Factory | Job | Calls | Median per call | Cost per call (list price) |
 | --- | --- | --- | --- | --- |
-| Nemotron 3.5 Lightning | reads every message, calls typed tools | 84 | 1.9 s | $0.00033 |
-| Nemotron 3.5 Super VL | reads an invoice photo into JSON lines | 6 | 2.1 s | $0.00081 |
-| Nemotron 3 Super | answers "what should I restock?", retries a hard message | 6 | 5.3 s | $0.00108 |
-| Nemotron 3 Ultra | closes the day | 6 | 3.4 s | $0.00340 |
+| Nemotron 3.5 Lightning | reads every message, calls typed tools | 83 | 2.0 s | $0.00033 |
+| Nemotron 3.5 Super VL | reads an invoice photo into JSON lines | 6 | 2.4 s | $0.00081 |
+| Nemotron 3 Super | answers "what should I restock?", retries a hard message | 6 | 5.5 s | $0.00104 |
+| Nemotron 3 Ultra | closes the day | 6 | 3.5 s | $0.00325 |
 
-A whole demo day of nine messages cost $0.0096 at Token Factory's list prices. With Nemotron 3 Nano as the router, an earlier run of 17 of these messages passed 42 of 51: it answered a credit sale with a question, invented a delivery when the owner paid a supplier, and recorded paraffin as candles. Nemotron 3.5 Lightning, at the same price, passed those, and became the router.
+A whole demo day of nine messages cost $0.0095 at Token Factory's list prices. Tavily search took a median 0.7 s and Tavily extract 2.3 s per lookup. With Nemotron 3 Nano as the router, an earlier run of 17 of these messages passed 42 of 51: it answered a credit sale with a question, invented a delivery when the owner paid a supplier, and recorded paraffin as candles. Nemotron 3.5 Lightning, at the same price, passed those, and became the router.
 
 ## How it works
 
@@ -71,7 +71,7 @@ NEBIUS_API_KEY=your-key TAVILY_API_KEY=your-tavily-key npm start
 Open http://localhost:5180 and tap the examples under the chat, in order, tapping Record on each card. `TAVILY_API_KEY` is optional: without it, a payment in another currency asks the owner for the rate. `.env.example` lists the other settings: model ids per job and the limits for a public copy.
 
 ```sh
-npm test                                  # 66 tests: ledger, agent loop, rates, server and limits, no network
+npm test                                  # 68 tests: ledger, agent loop, rates, server and limits, no network
 NEBIUS_API_KEY=your-key npm run eval      # the 18 messages against Token Factory; add -- --day for the demo day, -- --runs 3 to repeat
 ```
 

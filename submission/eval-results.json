@@ -1,6 +1,6 @@
 {
   "summary": {
-    "when": "2026-10-23T04:56:50.621Z",
+    "when": "2026-10-23T05:24:49.383Z",
     "provider": "Nebius Token Factory",
     "models": {
       "router": "nvidia/Nemotron-3_5-Lightning",
@@ -13,10 +13,10 @@
     "passed": 54,
     "total": 54,
     "escalations": 0,
-    "medianMs": 1895,
-    "totalCost": 0.03061788,
+    "medianMs": 2219,
+    "totalCost": 0.0295971,
     "calls": {
-      "Nemotron 3.5 Lightning (router)": 55,
+      "Nemotron 3.5 Lightning (router)": 54,
       "Tavily search (rate search)": 1,
       "Tavily extract (rate page)": 1,
       "Nemotron 3.5 Lightning (rate reader)": 1,
@@ -26,52 +26,52 @@
     },
     "perModel": {
       "Nemotron 3.5 Lightning": {
-        "calls": 56,
-        "medianMs": 1884,
-        "p90Ms": 1970,
-        "meanTokensIn": 3645,
-        "meanTokensOut": 439,
-        "meanCost": 0.00032396571428571424
+        "calls": 55,
+        "medianMs": 2184,
+        "p90Ms": 2285,
+        "meanTokensIn": 3644,
+        "meanTokensOut": 447,
+        "meanCost": 0.00032597999999999997
       },
       "Tavily search": {
         "calls": 1,
-        "medianMs": 661,
-        "p90Ms": 661,
+        "medianMs": 658,
+        "p90Ms": 658,
         "meanTokensIn": 0,
         "meanTokensOut": 0,
         "meanCost": 0
       },
       "Tavily extract": {
         "calls": 1,
-        "medianMs": 1750,
-        "p90Ms": 1750,
+        "medianMs": 2278,
+        "p90Ms": 2278,
         "meanTokensIn": 0,
         "meanTokensOut": 0,
         "meanCost": 0
       },
       "Nemotron 3.5 Super VL": {
         "calls": 3,
-        "medianMs": 2080,
-        "p90Ms": 2267,
+        "medianMs": 2138,
+        "p90Ms": 2374,
         "meanTokensIn": 2054,
         "meanTokensOut": 210,
         "meanCost": 0.0008052
       },
       "Nemotron 3 Super": {
         "calls": 3,
-        "medianMs": 4724,
-        "p90Ms": 6068,
-        "meanTokensIn": 1156,
-        "meanTokensOut": 747,
-        "meanCost": 0.0010194
+        "medianMs": 5529,
+        "p90Ms": 6442,
+        "meanTokensIn": 1158,
+        "meanTokensOut": 684,
+        "meanCost": 0.0009632000000000001
       },
       "Nemotron 3 Ultra": {
         "calls": 3,
-        "medianMs": 2390,
-        "p90Ms": 2465,
+        "medianMs": 1990,
+        "p90Ms": 2381,
         "meanTokensIn": 341,
-        "meanTokensOut": 664,
-        "meanCost": 0.002334
+        "meanTokensOut": 593,
+        "meanCost": 0.002121
       }
     }
   },
@@ -80,7 +80,7 @@
       "run": 1,
       "name": "cash sale",
       "pass": true,
-      "ms": 2551,
+      "ms": 2923,
       "cost": 0.00032574000000000004,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -89,14 +89,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 2539,
+          "ms": 2911,
           "tokensIn": 3629,
           "tokensOut": 450,
           "cost": 0.00032574000000000004
         }
       ],
       "escalated": false,
-      "reply": "Sold 3 bread and 2 cooking oil for cash.",
+      "reply": "Sold 3 bread and 2 cooking oil, cash.",
       "proposals": [
         {
           "summary": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash",
@@ -109,7 +109,7 @@
       "run": 1,
       "name": "Shona sale, mobile money",
       "pass": true,
-      "ms": 1984,
+      "ms": 1883,
       "cost": 0.0003279,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -118,14 +118,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1982,
+          "ms": 1881,
           "tokensIn": 3665,
           "tokensOut": 450,
           "cost": 0.0003279
         }
       ],
       "escalated": false,
-      "reply": "Ndatengesa mazai 1 nemukaka 2 ne mobile money. Sales recorded.",
+      "reply": "Ndatengesa mazai 1 tray nemukaka 2, ndabhadharwa ne mobile money. Sales recorded.",
       "proposals": [
         {
           "summary": "Sold 1 × Eggs, tray of 30, 2 × Fresh milk 1 L by mobile money",
@@ -140,7 +140,7 @@
       "run": 1,
       "name": "credit sale",
       "pass": true,
-      "ms": 1880,
+      "ms": 1950,
       "cost": 0.00032646,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -149,14 +149,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1879,
+          "ms": 1949,
           "tokensIn": 3641,
           "tokensOut": 450,
           "cost": 0.00032646
         }
       ],
       "escalated": false,
-      "reply": "Recorded: Mai Tendai bought 2 sugar and 1 mealie meal on credit. She will pay Friday.",
+      "reply": "Recorded: Mai Tendai bought 2 sugar and 10kg mealie meal on credit. She will pay Friday.",
       "proposals": [
         {
           "summary": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai",
@@ -171,7 +171,7 @@
       "run": 1,
       "name": "two expenses in one line",
       "pass": true,
-      "ms": 1853,
+      "ms": 2191,
       "cost": 0.00032574000000000004,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -180,7 +180,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1853,
+          "ms": 2190,
           "tokensIn": 3629,
           "tokensOut": 450,
           "cost": 0.00032574000000000004
@@ -205,7 +205,7 @@
       "run": 1,
       "name": "customer pays back",
       "pass": true,
-      "ms": 1883,
+      "ms": 2066,
       "cost": 0.00032574000000000004,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -214,7 +214,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1881,
+          "ms": 2065,
           "tokensIn": 3629,
           "tokensOut": 450,
           "cost": 0.00032574000000000004
@@ -234,7 +234,7 @@
       "run": 1,
       "name": "sale with a wallet's brand name",
       "pass": true,
-      "ms": 1894,
+      "ms": 2115,
       "cost": 0.00032706,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -243,14 +243,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1893,
+          "ms": 2114,
           "tokensIn": 3651,
           "tokensOut": 450,
           "cost": 0.00032706
         }
       ],
       "escalated": false,
-      "reply": "Recorded: 2 loaves and a 2L soft drink sold for $4 via EcoCash. Today's sales now total $4.",
+      "reply": "Sold 2 × Bread loaf, 1 × Soft drink 2 L by mobile money, $4.00. Tap Record to add it.",
       "proposals": [
         {
           "summary": "Sold 2 × Bread loaf, 1 × Soft drink 2 L by mobile money",
@@ -263,7 +263,7 @@
       "run": 1,
       "name": "Shona sale, cash",
       "pass": true,
-      "ms": 1899,
+      "ms": 2249,
       "cost": 0.00032736,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -272,14 +272,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1898,
+          "ms": 2249,
           "tokensIn": 3656,
           "tokensOut": 450,
           "cost": 0.00032736
         }
       ],
       "escalated": false,
-      "reply": "Ndatengesa sipo 3 nemunyu 1 cash. Sales recorded.",
+      "reply": "Sipo 3, munyu 1, cash. Total sales recorded.",
       "proposals": [
         {
           "summary": "Sold 3 × Bath soap, 1 × Salt 1 kg in cash",
@@ -292,7 +292,7 @@
       "run": 1,
       "name": "isiNdebele and English mixed",
       "pass": true,
-      "ms": 1880,
+      "ms": 2261,
       "cost": 0.00032742,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -301,7 +301,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1878,
+          "ms": 2260,
           "tokensIn": 3657,
           "tokensOut": 450,
           "cost": 0.00032742
@@ -323,7 +323,7 @@
       "run": 1,
       "name": "owner takes money out",
       "pass": true,
-      "ms": 1910,
+      "ms": 2212,
       "cost": 0.00032591999999999994,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -332,7 +332,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1909,
+          "ms": 2211,
           "tokensIn": 3632,
           "tokensOut": 450,
           "cost": 0.00032591999999999994
@@ -352,7 +352,7 @@
       "run": 1,
       "name": "pays a supplier",
       "pass": true,
-      "ms": 1969,
+      "ms": 2200,
       "cost": 0.00032586000000000003,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -361,7 +361,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1969,
+          "ms": 2200,
           "tokensIn": 3631,
           "tokensOut": 450,
           "cost": 0.00032586000000000003
@@ -381,7 +381,7 @@
       "run": 1,
       "name": "missing payment method is asked, not guessed",
       "pass": true,
-      "ms": 1885,
+      "ms": 2219,
       "cost": 0.00032567999999999996,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -390,7 +390,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1884,
+          "ms": 2219,
           "tokensIn": 3628,
           "tokensOut": 450,
           "cost": 0.00032567999999999996
@@ -404,7 +404,7 @@
       "run": 1,
       "name": "unknown item is asked, not guessed",
       "pass": true,
-      "ms": 1895,
+      "ms": 1898,
       "cost": 0.00032544,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -413,7 +413,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1895,
+          "ms": 1897,
           "tokensIn": 3624,
           "tokensOut": 450,
           "cost": 0.00032544
@@ -427,7 +427,7 @@
       "run": 1,
       "name": "price change",
       "pass": true,
-      "ms": 1884,
+      "ms": 1865,
       "cost": 0.00032567999999999996,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -436,7 +436,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1883,
+          "ms": 1865,
           "tokensIn": 3628,
           "tokensOut": 450,
           "cost": 0.00032567999999999996
@@ -455,40 +455,31 @@
       "run": 1,
       "name": "figures from the ledger",
       "pass": true,
-      "ms": 2831,
-      "cost": 0.00059622,
+      "ms": 1965,
+      "cost": 0.00032567999999999996,
       "models": [
-        "Nemotron 3.5 Lightning (router)",
         "Nemotron 3.5 Lightning (router)"
       ],
       "calls": [
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1863,
+          "ms": 1964,
           "tokensIn": 3628,
           "tokensOut": 450,
           "cost": 0.00032567999999999996
-        },
-        {
-          "model": "Nemotron 3.5 Lightning",
-          "role": "router",
-          "ms": 967,
-          "tokensIn": 4409,
-          "tokensOut": 25,
-          "cost": 0.00027053999999999994
         }
       ],
       "escalated": false,
-      "reply": "The till has $40.00 in cash. Mobile money on hand is $12.50.",
+      "reply": "The till has $40.00 cash. Total money on hand (cash + mobile money) is $52.50.",
       "proposals": []
     },
     {
       "run": 1,
       "name": "rand rate, checked on the banks' pages",
       "pass": true,
-      "ms": 5453,
-      "cost": 0.0005451599999999999,
+      "ms": 6247,
+      "cost": 0.00060252,
       "models": [
         "Nemotron 3.5 Lightning (router)",
         "Tavily search (rate search)",
@@ -499,7 +490,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1903,
+          "ms": 1929,
           "tokensIn": 3625,
           "tokensOut": 450,
           "cost": 0.0003255
@@ -507,7 +498,7 @@
         {
           "model": "Tavily search",
           "role": "rate search",
-          "ms": 661,
+          "ms": 658,
           "tokensIn": 0,
           "tokensOut": 0,
           "cost": 0
@@ -515,7 +506,7 @@
         {
           "model": "Tavily extract",
           "role": "rate page",
-          "ms": 1750,
+          "ms": 2278,
           "tokensIn": 0,
           "tokensOut": 0,
           "cost": 0
@@ -523,21 +514,21 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "rate reader",
-          "ms": 1136,
-          "tokensIn": 2729,
-          "tokensOut": 233,
-          "cost": 0.00021965999999999997
+          "ms": 1380,
+          "tokensIn": 3441,
+          "tokensOut": 294,
+          "cost": 0.00027702
         }
       ],
       "escalated": false,
-      "reply": "The official rand rate today is 18.74 ZAR per USD. The till has $40 cash and $12.50 mobile money.",
+      "reply": "One US dollar is 16.406 South African rand: the mid rate on idbz.co.zw, dated 2026-10-21, and cabs.co.zw agrees at 16.2218.",
       "proposals": []
     },
     {
       "run": 1,
       "name": "photo of a supplier invoice",
       "pass": true,
-      "ms": 3984,
+      "ms": 4047,
       "cost": 0.0011441399999999999,
       "models": [
         "Nemotron 3.5 Super VL (photo reader)",
@@ -547,7 +538,7 @@
         {
           "model": "Nemotron 3.5 Super VL",
           "role": "photo reader",
-          "ms": 2079,
+          "ms": 2138,
           "tokensIn": 2054,
           "tokensOut": 210,
           "cost": 0.0008052
@@ -555,21 +546,21 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1903,
+          "ms": 1907,
           "tokensIn": 3849,
           "tokensOut": 450,
           "cost": 0.00033894
         }
       ],
       "escalated": false,
-      "reply": "Stock received from Kudzai Wholesale: 12 cooking oil, 10 sugar, 24 bath soap, 6 peanut butter. Total on invoice $88.50, marked on_account. You said you'll pay on Friday. Current stock levels and money on hand are ready if you need them.",
+      "reply": "Stock received from Kudzai Wholesale: 12 cooking oil, 10 sugar, 24 bath soap, 6 peanut butter. Total on invoice $88.50, marked on_account. You said you will pay on Friday. Current stock levels and money on hand are ready if you need them.",
       "proposals": [
         {
-          "summary": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375g, on account with Kudzai Wholesale",
+          "summary": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375 g, on account with Kudzai Wholesale",
           "amount": 8850,
           "warnings": [
             "Sugar 2 kg cost $2.10 this time, up from $2.05.",
-            "Peanut butter 375g is new to your stock list. Tell me what you will sell it for."
+            "Peanut butter 375 g is new to your stock list. Tell me what you will sell it for."
           ]
         }
       ]
@@ -578,8 +569,8 @@
       "run": 1,
       "name": "restock advice from the analyst",
       "pass": true,
-      "ms": 6604,
-      "cost": 0.0014233800000000001,
+      "ms": 7485,
+      "cost": 0.00132408,
       "models": [
         "Nemotron 3.5 Lightning (router)",
         "Nemotron 3 Super (analyst)"
@@ -588,7 +579,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1879,
+          "ms": 1955,
           "tokensIn": 3633,
           "tokensOut": 450,
           "cost": 0.00032598
@@ -596,22 +587,22 @@
         {
           "model": "Nemotron 3 Super",
           "role": "analyst",
-          "ms": 4724,
-          "tokensIn": 1156,
-          "tokensOut": 834,
-          "cost": 0.0010974000000000001
+          "ms": 5529,
+          "tokensIn": 1161,
+          "tokensOut": 722,
+          "cost": 0.0009981
         }
       ],
       "escalated": false,
-      "reply": "Before the weekend you should top up maize‑meal 10 kg (only 4 left, reorder at 3), eggs tray of 30 (just 3 left, reorder at 2) and candles pack of 6 (exactly at the reorder point of 3). These items are closest to their minimum levels and will likely sell through Saturday.\n\nLooking at the last week’s sales, the slowest movers are rice 2 kg (only 3 sold), salt 1 kg (2 sold), eggs tray (6 sold) and soft‑drink 2 L (5 sold). Consider ordering less of these until demand picks up.",
+      "reply": "Before the weekend Rudo should restock candles because the shop has exactly three packs left, which matches the reorder point of three. He may also want to top up eggs and maize meal as they are near their reorder levels. The slowest‑moving items over the past week are rice 2 kg (only three trays sold), salt 1 kg (just two kilos sold) and soft drink 2 L (five bottles sold). These products are turning over much faster than they are selling, so ordering smaller quantities or promoting them could help clear excess stock.",
       "proposals": []
     },
     {
       "run": 1,
       "name": "closing the day with a short till",
       "pass": true,
-      "ms": 4329,
-      "cost": 0.00286886,
+      "ms": 3843,
+      "cost": 0.0023828599999999997,
       "models": [
         "Nemotron 3.5 Lightning (router)",
         "Nemotron 3 Ultra (closer)"
@@ -620,7 +611,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1864,
+          "ms": 1852,
           "tokensIn": 3631,
           "tokensOut": 450,
           "cost": 0.00032586000000000003
@@ -628,14 +619,14 @@
         {
           "model": "Nemotron 3 Ultra",
           "role": "closer",
-          "ms": 2465,
+          "ms": 1990,
           "tokensIn": 341,
-          "tokensOut": 734,
-          "cost": 0.002543
+          "tokensOut": 572,
+          "cost": 0.002057
         }
       ],
       "escalated": false,
-      "reply": "Today there were no sales and profit after costs was $0. The till is $2 short; the most likely causes are an unrecorded cash expense paid from the till and incorrect change given to a customer; check the expense log and verify change transactions. Reorder candles (pack of 6) tomorrow.",
+      "reply": "Today there were no sales and profit after costs was $0. The till is $2 short. Most likely a cost was paid from the till without being recorded, or change was given incorrectly; check the expense log and the cash‑handling notes. Reorder candles (pack of 6).",
       "proposals": [
         {
           "summary": "Till count $38.00: short by $2.00",
@@ -648,7 +639,7 @@
       "run": 2,
       "name": "cash sale",
       "pass": true,
-      "ms": 1902,
+      "ms": 1867,
       "cost": 0.00032574000000000004,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -657,14 +648,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1902,
+          "ms": 1867,
           "tokensIn": 3629,
           "tokensOut": 450,
           "cost": 0.00032574000000000004
         }
       ],
       "escalated": false,
-      "reply": "Sold 3 bread and 2 cooking oil for cash.",
+      "reply": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash, $12.30. Tap Record to add it.",
       "proposals": [
         {
           "summary": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash",
@@ -677,7 +668,7 @@
       "run": 2,
       "name": "Shona sale, mobile money",
       "pass": true,
-      "ms": 1860,
+      "ms": 2125,
       "cost": 0.0003279,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -686,7 +677,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1860,
+          "ms": 2125,
           "tokensIn": 3665,
           "tokensOut": 450,
           "cost": 0.0003279
@@ -708,7 +699,7 @@
       "run": 2,
       "name": "credit sale",
       "pass": true,
-      "ms": 1970,
+      "ms": 2392,
       "cost": 0.00032646,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -717,14 +708,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1970,
+          "ms": 2392,
           "tokensIn": 3641,
           "tokensOut": 450,
           "cost": 0.00032646
         }
       ],
       "escalated": false,
-      "reply": "Recorded: Mai Tendai bought 2 sugar and 10kg mealie meal on credit. She will pay on Friday.",
+      "reply": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai, $12.70. Maize meal 10 kg is down to 3. Time to reorder. Tap Record to add it.",
       "proposals": [
         {
           "summary": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai",
@@ -739,7 +730,7 @@
       "run": 2,
       "name": "two expenses in one line",
       "pass": true,
-      "ms": 1895,
+      "ms": 1937,
       "cost": 0.00032574000000000004,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -748,7 +739,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1894,
+          "ms": 1936,
           "tokensIn": 3629,
           "tokensOut": 450,
           "cost": 0.00032574000000000004
@@ -773,7 +764,7 @@
       "run": 2,
       "name": "customer pays back",
       "pass": true,
-      "ms": 1880,
+      "ms": 1895,
       "cost": 0.00032574000000000004,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -782,7 +773,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1879,
+          "ms": 1895,
           "tokensIn": 3629,
           "tokensOut": 450,
           "cost": 0.00032574000000000004
@@ -802,7 +793,7 @@
       "run": 2,
       "name": "sale with a wallet's brand name",
       "pass": true,
-      "ms": 1909,
+      "ms": 1977,
       "cost": 0.00032706,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -811,14 +802,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1908,
+          "ms": 1976,
           "tokensIn": 3651,
           "tokensOut": 450,
           "cost": 0.00032706
         }
       ],
       "escalated": false,
-      "reply": "Recorded: 2 loaves and a 2L soft drink, $4 via EcoCash.",
+      "reply": "Sold 2 × Bread loaf, 1 × Soft drink 2 L by mobile money, $4.00. Tap Record to add it.",
       "proposals": [
         {
           "summary": "Sold 2 × Bread loaf, 1 × Soft drink 2 L by mobile money",
@@ -831,7 +822,7 @@
       "run": 2,
       "name": "Shona sale, cash",
       "pass": true,
-      "ms": 1862,
+      "ms": 2202,
       "cost": 0.00032736,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -840,7 +831,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1862,
+          "ms": 2202,
           "tokensIn": 3656,
           "tokensOut": 450,
           "cost": 0.00032736
@@ -860,7 +851,7 @@
       "run": 2,
       "name": "isiNdebele and English mixed",
       "pass": true,
-      "ms": 1853,
+      "ms": 1973,
       "cost": 0.00032742,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -869,7 +860,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1852,
+          "ms": 1972,
           "tokensIn": 3657,
           "tokensOut": 450,
           "cost": 0.00032742
@@ -891,7 +882,7 @@
       "run": 2,
       "name": "owner takes money out",
       "pass": true,
-      "ms": 1861,
+      "ms": 1888,
       "cost": 0.00032591999999999994,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -900,7 +891,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1861,
+          "ms": 1888,
           "tokensIn": 3632,
           "tokensOut": 450,
           "cost": 0.00032591999999999994
@@ -920,7 +911,7 @@
       "run": 2,
       "name": "pays a supplier",
       "pass": true,
-      "ms": 1847,
+      "ms": 1872,
       "cost": 0.00032586000000000003,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -929,7 +920,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1847,
+          "ms": 1872,
           "tokensIn": 3631,
           "tokensOut": 450,
           "cost": 0.00032586000000000003
@@ -949,7 +940,7 @@
       "run": 2,
       "name": "missing payment method is asked, not guessed",
       "pass": true,
-      "ms": 1875,
+      "ms": 1879,
       "cost": 0.00032567999999999996,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -958,7 +949,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1875,
+          "ms": 1878,
           "tokensIn": 3628,
           "tokensOut": 450,
           "cost": 0.00032567999999999996
@@ -972,7 +963,7 @@
       "run": 2,
       "name": "unknown item is asked, not guessed",
       "pass": true,
-      "ms": 1887,
+      "ms": 1991,
       "cost": 0.00032544,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -981,7 +972,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1887,
+          "ms": 1991,
           "tokensIn": 3624,
           "tokensOut": 450,
           "cost": 0.00032544
@@ -995,7 +986,7 @@
       "run": 2,
       "name": "price change",
       "pass": true,
-      "ms": 2014,
+      "ms": 1916,
       "cost": 0.00032567999999999996,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1004,14 +995,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 2014,
+          "ms": 1916,
           "tokensIn": 3628,
           "tokensOut": 450,
           "cost": 0.00032567999999999996
         }
       ],
       "escalated": false,
-      "reply": "Bread price set to $1.20.",
+      "reply": "Bread price updated to $1.20.",
       "proposals": [
         {
           "summary": "New price for Bread loaf: $1.20",
@@ -1023,7 +1014,7 @@
       "run": 2,
       "name": "figures from the ledger",
       "pass": true,
-      "ms": 1885,
+      "ms": 2338,
       "cost": 0.00032567999999999996,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1032,21 +1023,21 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1884,
+          "ms": 2338,
           "tokensIn": 3628,
           "tokensOut": 450,
           "cost": 0.00032567999999999996
         }
       ],
       "escalated": false,
-      "reply": "The till has $40.00 cash. Total money on hand (cash + mobile money) is $52.50.",
+      "reply": "The till has $40.00 cash.",
       "proposals": []
     },
     {
       "run": 2,
       "name": "rand rate, checked on the banks' pages",
       "pass": true,
-      "ms": 2317,
+      "ms": 1894,
       "cost": 0.0003255,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1055,21 +1046,21 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 2317,
+          "ms": 1894,
           "tokensIn": 3625,
           "tokensOut": 450,
           "cost": 0.0003255
         }
       ],
       "escalated": false,
-      "reply": "The official rand rate today is 18.74 ZAR per USD. Your till has $40 cash and $12.50 mobile money.",
+      "reply": "One US dollar is 16.406 South African rand: the mid rate on idbz.co.zw, dated 2026-10-21, and cabs.co.zw agrees at 16.2218.",
       "proposals": []
     },
     {
       "run": 2,
       "name": "photo of a supplier invoice",
       "pass": true,
-      "ms": 4215,
+      "ms": 4364,
       "cost": 0.0011441399999999999,
       "models": [
         "Nemotron 3.5 Super VL (photo reader)",
@@ -1079,7 +1070,7 @@
         {
           "model": "Nemotron 3.5 Super VL",
           "role": "photo reader",
-          "ms": 2267,
+          "ms": 2374,
           "tokensIn": 2054,
           "tokensOut": 210,
           "cost": 0.0008052
@@ -1087,7 +1078,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1948,
+          "ms": 1990,
           "tokensIn": 3849,
           "tokensOut": 450,
           "cost": 0.00033894
@@ -1110,8 +1101,8 @@
       "run": 2,
       "name": "restock advice from the analyst",
       "pass": true,
-      "ms": 6015,
-      "cost": 0.0013468800000000002,
+      "ms": 7480,
+      "cost": 0.0012118800000000002,
       "models": [
         "Nemotron 3.5 Lightning (router)",
         "Nemotron 3 Super (analyst)"
@@ -1120,7 +1111,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1893,
+          "ms": 1982,
           "tokensIn": 3633,
           "tokensOut": 450,
           "cost": 0.00032598
@@ -1128,22 +1119,22 @@
         {
           "model": "Nemotron 3 Super",
           "role": "analyst",
-          "ms": 4121,
+          "ms": 5498,
           "tokensIn": 1156,
-          "tokensOut": 749,
-          "cost": 0.0010209000000000001
+          "tokensOut": 599,
+          "cost": 0.0008859000000000001
         }
       ],
       "escalated": false,
-      "reply": "Restock maize meal 10 kg (4 units left, reorder at 3), eggs tray of 30 (3 units left, reorder at 2) and candles pack of 6 (3 units left, reorder at 3) before the weekend. The slowest‑selling items are salt 1 kg (only 2 sold in the last 7 days), rice 2 kg (3 sold) and maize meal 10 kg (9 sold); candles and soft drink also move slowly with 9 and 5 sold respectively. Focus on replenishing the low‑stock items while monitoring the low‑turnover products.",
+      "reply": "Restock the candles – you have three packs left and the reorder point is three, so order more before the weekend.  \nItems moving slowly are salt (only two sold in the last week), rice (three sold), eggs (six sold), maize meal (nine sold), candles (nine sold) and soft drink (five sold). These products have low weekly turnover compared with bread, milk or soap, so consider reducing orders or promoting them to improve sales.",
       "proposals": []
     },
     {
       "run": 2,
       "name": "closing the day with a short till",
       "pass": true,
-      "ms": 3801,
-      "cost": 0.00206786,
+      "ms": 4001,
+      "cost": 0.00197786,
       "models": [
         "Nemotron 3.5 Lightning (router)",
         "Nemotron 3 Ultra (closer)"
@@ -1152,7 +1143,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1858,
+          "ms": 2219,
           "tokensIn": 3631,
           "tokensOut": 450,
           "cost": 0.00032586000000000003
@@ -1160,14 +1151,14 @@
         {
           "model": "Nemotron 3 Ultra",
           "role": "closer",
-          "ms": 1943,
+          "ms": 1781,
           "tokensIn": 341,
-          "tokensOut": 467,
-          "cost": 0.001742
+          "tokensOut": 437,
+          "cost": 0.001652
         }
       ],
       "escalated": false,
-      "reply": "Today there were no sales and profit after costs was $0. The till is $2 short; the most likely causes are an unrecorded expense paid from the till and incorrect change given, so check expense receipts and the change log. Reorder candles (pack of 6) tomorrow.",
+      "reply": "Today there were no sales and profit after costs was $0. The till is $2 short; the most likely causes are an unrecorded expense paid from the till or incorrect change given, so check expense receipts and recount change. Reorder candles (pack of 6) tomorrow.",
       "proposals": [
         {
           "summary": "Till count $38.00: short by $2.00",
@@ -1180,7 +1171,7 @@
       "run": 3,
       "name": "cash sale",
       "pass": true,
-      "ms": 1902,
+      "ms": 2230,
       "cost": 0.00032574000000000004,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1189,14 +1180,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1901,
+          "ms": 2230,
           "tokensIn": 3629,
           "tokensOut": 450,
           "cost": 0.00032574000000000004
         }
       ],
       "escalated": false,
-      "reply": "Sold 3 bread and 2 cooking oil, cash. Total sales now recorded.",
+      "reply": "Sold 3 bread and 2 cooking oil for cash.",
       "proposals": [
         {
           "summary": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash",
@@ -1209,7 +1200,7 @@
       "run": 3,
       "name": "Shona sale, mobile money",
       "pass": true,
-      "ms": 1848,
+      "ms": 2195,
       "cost": 0.0003279,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1218,7 +1209,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1848,
+          "ms": 2195,
           "tokensIn": 3665,
           "tokensOut": 450,
           "cost": 0.0003279
@@ -1240,7 +1231,7 @@
       "run": 3,
       "name": "credit sale",
       "pass": true,
-      "ms": 1924,
+      "ms": 2213,
       "cost": 0.00032646,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1249,14 +1240,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1923,
+          "ms": 2213,
           "tokensIn": 3641,
           "tokensOut": 450,
           "cost": 0.00032646
         }
       ],
       "escalated": false,
-      "reply": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai, $12.70. Maize meal 10 kg is down to 3. Time to reorder. Tap Record to add it.",
+      "reply": "Recorded: Mai Tendai bought 2 sugar and 1 mealie meal on credit. She will pay on Friday.",
       "proposals": [
         {
           "summary": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai",
@@ -1271,7 +1262,7 @@
       "run": 3,
       "name": "two expenses in one line",
       "pass": true,
-      "ms": 1863,
+      "ms": 2274,
       "cost": 0.00032574000000000004,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1280,14 +1271,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1863,
+          "ms": 2274,
           "tokensIn": 3629,
           "tokensOut": 450,
           "cost": 0.00032574000000000004
         }
       ],
       "escalated": false,
-      "reply": "Recorded electricity $5 and transport $2 as cash expenses.",
+      "reply": "Recorded $5 electricity and $2 transport expenses.",
       "proposals": [
         {
           "summary": "Paid $5.00 for electricity",
@@ -1305,7 +1296,7 @@
       "run": 3,
       "name": "customer pays back",
       "pass": true,
-      "ms": 1862,
+      "ms": 2225,
       "cost": 0.00032574000000000004,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1314,14 +1305,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1862,
+          "ms": 2225,
           "tokensIn": 3629,
           "tokensOut": 450,
           "cost": 0.00032574000000000004
         }
       ],
       "escalated": false,
-      "reply": "Baba Farai paid $4.00 in cash. Tap Record to add it.",
+      "reply": "Baba Farai paid back his $4 in cash. Today's cash sales are now $4.",
       "proposals": [
         {
           "summary": "Baba Farai paid $4.00 in cash",
@@ -1334,7 +1325,7 @@
       "run": 3,
       "name": "sale with a wallet's brand name",
       "pass": true,
-      "ms": 1873,
+      "ms": 2240,
       "cost": 0.00032706,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1343,14 +1334,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1873,
+          "ms": 2239,
           "tokensIn": 3651,
           "tokensOut": 450,
           "cost": 0.00032706
         }
       ],
       "escalated": false,
-      "reply": "Recorded: 2 loaves and a 2L soft drink sold for $4 via EcoCash. Today's sales now show $4.",
+      "reply": "Sold 2 × Bread loaf, 1 × Soft drink 2 L by mobile money, $4.00. Tap Record to add it.",
       "proposals": [
         {
           "summary": "Sold 2 × Bread loaf, 1 × Soft drink 2 L by mobile money",
@@ -1363,7 +1354,7 @@
       "run": 3,
       "name": "Shona sale, cash",
       "pass": true,
-      "ms": 1874,
+      "ms": 1895,
       "cost": 0.00032736,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1372,14 +1363,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1873,
+          "ms": 1895,
           "tokensIn": 3656,
           "tokensOut": 450,
           "cost": 0.00032736
         }
       ],
       "escalated": false,
-      "reply": "Sipo 3, munyu 1, cash. Total sales recorded.",
+      "reply": "Sold 3 × Bath soap, 1 × Salt 1 kg in cash, $3.00. Tap Record to add it.",
       "proposals": [
         {
           "summary": "Sold 3 × Bath soap, 1 × Salt 1 kg in cash",
@@ -1392,7 +1383,7 @@
       "run": 3,
       "name": "isiNdebele and English mixed",
       "pass": true,
-      "ms": 1883,
+      "ms": 2232,
       "cost": 0.00032742,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1401,7 +1392,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1883,
+          "ms": 2232,
           "tokensIn": 3657,
           "tokensOut": 450,
           "cost": 0.00032742
@@ -1423,7 +1414,7 @@
       "run": 3,
       "name": "owner takes money out",
       "pass": true,
-      "ms": 1897,
+      "ms": 2219,
       "cost": 0.00032591999999999994,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1432,7 +1423,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1897,
+          "ms": 2219,
           "tokensIn": 3632,
           "tokensOut": 450,
           "cost": 0.00032591999999999994
@@ -1452,7 +1443,7 @@
       "run": 3,
       "name": "pays a supplier",
       "pass": true,
-      "ms": 1942,
+      "ms": 2213,
       "cost": 0.00032586000000000003,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1461,7 +1452,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1941,
+          "ms": 2213,
           "tokensIn": 3631,
           "tokensOut": 450,
           "cost": 0.00032586000000000003
@@ -1481,7 +1472,7 @@
       "run": 3,
       "name": "missing payment method is asked, not guessed",
       "pass": true,
-      "ms": 1863,
+      "ms": 2257,
       "cost": 0.00032567999999999996,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1490,7 +1481,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1863,
+          "ms": 2257,
           "tokensIn": 3628,
           "tokensOut": 450,
           "cost": 0.00032567999999999996
@@ -1504,7 +1495,7 @@
       "run": 3,
       "name": "unknown item is asked, not guessed",
       "pass": true,
-      "ms": 1894,
+      "ms": 2242,
       "cost": 0.00032544,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1513,7 +1504,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1893,
+          "ms": 2241,
           "tokensIn": 3624,
           "tokensOut": 450,
           "cost": 0.00032544
@@ -1527,7 +1518,7 @@
       "run": 3,
       "name": "price change",
       "pass": true,
-      "ms": 2041,
+      "ms": 2285,
       "cost": 0.00032567999999999996,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1536,7 +1527,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 2040,
+          "ms": 2285,
           "tokensIn": 3628,
           "tokensOut": 450,
           "cost": 0.00032567999999999996
@@ -1555,7 +1546,7 @@
       "run": 3,
       "name": "figures from the ledger",
       "pass": true,
-      "ms": 1891,
+      "ms": 2234,
       "cost": 0.00032567999999999996,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1564,7 +1555,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1891,
+          "ms": 2234,
           "tokensIn": 3628,
           "tokensOut": 450,
           "cost": 0.00032567999999999996
@@ -1578,7 +1569,7 @@
       "run": 3,
       "name": "rand rate, checked on the banks' pages",
       "pass": true,
-      "ms": 1865,
+      "ms": 2414,
       "cost": 0.0003255,
       "models": [
         "Nemotron 3.5 Lightning (router)"
@@ -1587,21 +1578,21 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1864,
+          "ms": 2413,
           "tokensIn": 3625,
           "tokensOut": 450,
           "cost": 0.0003255
         }
       ],
       "escalated": false,
-      "reply": "The official rand rate today is 18.74 ZAR per 1 USD. Your till has $40 cash and $12.50 mobile money.",
+      "reply": "One US dollar is 16.406 South African rand: the mid rate on idbz.co.zw, dated 2026-10-21, and cabs.co.zw agrees at 16.2218.",
       "proposals": []
     },
     {
       "run": 3,
       "name": "photo of a supplier invoice",
       "pass": true,
-      "ms": 4030,
+      "ms": 4433,
       "cost": 0.0011441399999999999,
       "models": [
         "Nemotron 3.5 Super VL (photo reader)",
@@ -1611,7 +1602,7 @@
         {
           "model": "Nemotron 3.5 Super VL",
           "role": "photo reader",
-          "ms": 2080,
+          "ms": 2097,
           "tokensIn": 2054,
           "tokensOut": 210,
           "cost": 0.0008052
@@ -1619,14 +1610,14 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1949,
+          "ms": 2336,
           "tokensIn": 3849,
           "tokensOut": 450,
           "cost": 0.00033894
         }
       ],
       "escalated": false,
-      "reply": "Stock received from Kudzai Wholesale: 12 cooking oil, 10 sugar, 24 bath soap, 6 peanut butter. Total on invoice $88.50, marked on_account. You said you'll pay on Friday. Current stock levels and money on hand are ready if you need them.",
+      "reply": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375g, on account with Kudzai Wholesale, $88.50. Sugar 2 kg cost $2.10 this time, up from $2.05. Peanut butter 375g is new to your stock list. Tell me what you will sell it for. Tap Record to add it.",
       "proposals": [
         {
           "summary": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375g, on account with Kudzai Wholesale",
@@ -1642,8 +1633,8 @@
       "run": 3,
       "name": "restock advice from the analyst",
       "pass": true,
-      "ms": 7940,
-      "cost": 0.00126588,
+      "ms": 8639,
+      "cost": 0.0013315800000000002,
       "models": [
         "Nemotron 3.5 Lightning (router)",
         "Nemotron 3 Super (analyst)"
@@ -1652,7 +1643,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1871,
+          "ms": 2196,
           "tokensIn": 3633,
           "tokensOut": 450,
           "cost": 0.00032598
@@ -1660,22 +1651,22 @@
         {
           "model": "Nemotron 3 Super",
           "role": "analyst",
-          "ms": 6068,
+          "ms": 6442,
           "tokensIn": 1156,
-          "tokensOut": 659,
-          "cost": 0.0009399000000000001
+          "tokensOut": 732,
+          "cost": 0.0010056000000000002
         }
       ],
       "escalated": false,
-      "reply": "Restock the candles (pack of 6) because you have exactly three left, which hits the reorder point of three.  \nItems moving slowly based on the last seven‑day sales are salt (only two sold), rice (three sold), eggs (six sold) and soft drink (five sold). These sell less than one unit per day on average, so consider ordering smaller quantities or promoting them to boost turnover.",
+      "reply": "Restock the candles – you have 3 packs left and the reorder point is 3, so order more before the weekend. Eggs are close to their limit (3 in stock, reorder at 2) so keep an eye on them and consider a small top‑up if sales pick up. Maize meal and cooking oil are still above their thresholds but are getting low; check them again after Saturday. The slowest‑moving items over the past week are salt (2 sold), rice (3 sold), soft drink (5 sold) and eggs (6 sold). You may want to reduce orders for those until demand rises.",
       "proposals": []
     },
     {
       "run": 3,
       "name": "closing the day with a short till",
       "pass": true,
-      "ms": 4243,
-      "cost": 0.0030428599999999997,
+      "ms": 4565,
+      "cost": 0.00297986,
       "models": [
         "Nemotron 3.5 Lightning (router)",
         "Nemotron 3 Ultra (closer)"
@@ -1684,7 +1675,7 @@
         {
           "model": "Nemotron 3.5 Lightning",
           "role": "router",
-          "ms": 1853,
+          "ms": 2184,
           "tokensIn": 3631,
           "tokensOut": 450,
           "cost": 0.00032586000000000003
@@ -1692,14 +1683,14 @@
         {
           "model": "Nemotron 3 Ultra",
           "role": "closer",
-          "ms": 2390,
+          "ms": 2381,
           "tokensIn": 341,
-          "tokensOut": 792,
-          "cost": 0.002717
+          "tokensOut": 771,
+          "cost": 0.002654
         }
       ],
       "escalated": false,
-      "reply": "Today we made no sales and profit after costs was $0. The till is $2 short; the most likely causes are a cost paid from the till but not recorded and incorrect change given, so check the expense log and the cash‑handling notes. Reorder candles (pack of 6) tomorrow.",
+      "reply": "Today the shop made $0 in sales and $0 profit after costs. The till is $2 short; the most likely causes are an unrecorded expense paid from the till or incorrect change given, so check the expense log and recount the change handed out. Reorder candles (pack of 6) tomorrow.",
       "proposals": [
         {
           "summary": "Till count $38.00: short by $2.00",
