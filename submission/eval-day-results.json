@@ -1,0 +1,579 @@
+{
+  "summary": {
+    "when": "2026-10-23T03:29:52.613Z",
+    "mode": "day",
+    "provider": "Nebius Token Factory",
+    "models": {
+      "router": "nvidia/Nemotron-3_5-Lightning",
+      "vision": "nvidia/Nemotron-3.5-Super-VL",
+      "analyst": "nvidia/nemotron-3-super-120b-a12b",
+      "closer": "nvidia/Nemotron-3-Ultra-550b-a55b"
+    },
+    "runs": 3,
+    "steps": 9,
+    "passed": 27,
+    "total": 27,
+    "medianMs": 4333,
+    "totalCost": 0.03205782
+  },
+  "results": [
+    {
+      "run": 1,
+      "name": "day: cash sale",
+      "pass": true,
+      "ms": 4939,
+      "cost": 0.00050574,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash, $12.30. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash",
+          "amount": 1230,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "name": "day: Shona sale",
+      "pass": true,
+      "ms": 4259,
+      "cost": 0.00051198,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Sold 1 × Eggs, tray of 30, 2 × Fresh milk 1 L by mobile money, $8.10. Eggs, tray of 30 is down to 2. Time to reorder. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 1 × Eggs, tray of 30, 2 × Fresh milk 1 L by mobile money",
+          "amount": 810,
+          "warnings": [
+            "Eggs, tray of 30 is down to 2. Time to reorder."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "name": "day: credit sale",
+      "pass": true,
+      "ms": 4272,
+      "cost": 0.00051618,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai, $12.70. Maize meal 10 kg is down to 3. Time to reorder. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai",
+          "amount": 1270,
+          "warnings": [
+            "Maize meal 10 kg is down to 3. Time to reorder."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "name": "day: invoice photo",
+      "pass": true,
+      "ms": 6676,
+      "cost": 0.00134052,
+      "models": [
+        "Nemotron 3.5 Super VL (photo reader)",
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375 g, on account with Kudzai Wholesale, $88.50. Sugar 2 kg cost $2.10 this time, up from $2.05. Peanut butter 375 g is new to your stock list. Tell me what you will sell it for. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375 g, on account with Kudzai Wholesale",
+          "amount": 8850,
+          "warnings": [
+            "Sugar 2 kg cost $2.10 this time, up from $2.05.",
+            "Peanut butter 375 g is new to your stock list. Tell me what you will sell it for."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "name": "day: paid in ZiG",
+      "pass": true,
+      "ms": 14097,
+      "cost": 0.00076272,
+      "models": [
+        "Nemotron 3.5 Lightning (router)",
+        "Tavily search (rate search)",
+        "Tavily extract (rate page)",
+        "Nemotron 3.5 Lightning (rate reader)"
+      ],
+      "escalated": false,
+      "reply": "Sold 2 × Bread loaf by mobile money, paid 60 ZiG, $2.26. 60 ZiG at 26.5975 to the US dollar (idbz.co.zw, 2026-10-21) is $2.26. Price list total is $2.20; recording the $2.26 you received. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 2 × Bread loaf by mobile money, paid 60 ZiG",
+          "amount": 226,
+          "warnings": [
+            "60 ZiG at 26.5975 to the US dollar (idbz.co.zw, 2026-10-21) is $2.26.",
+            "Price list total is $2.20; recording the $2.26 you received."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "name": "day: two costs",
+      "pass": true,
+      "ms": 4302,
+      "cost": 0.00053358,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Paid $5.00 for electricity. Paid $2.00 for transport. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Paid $5.00 for electricity",
+          "amount": 500,
+          "warnings": []
+        },
+        {
+          "summary": "Paid $2.00 for transport",
+          "amount": 200,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "name": "day: customer pays back",
+      "pass": true,
+      "ms": 4259,
+      "cost": 0.00053094,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Baba Farai paid $4.00 in cash. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Baba Farai paid $4.00 in cash",
+          "amount": 400,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "name": "day: restock question",
+      "pass": true,
+      "ms": 8426,
+      "cost": 0.00179436,
+      "models": [
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3 Super (analyst)"
+      ],
+      "escalated": false,
+      "reply": "Before the weekend you should top‑up maize meal 10 kg (currently 3 units, reorder point 3), eggs tray of 30 (2 units, reorder point 2) and candles pack of 6 (3 units, reorder point 3); these are at or below their reorder levels.  \n\nItems that have been moving slowly over the past week are salt 1 kg (only 2 units sold), rice 2 kg (3 units sold) and soft drink 2 L (5 units sold). Consider ordering smaller quantities of these until demand picks up.",
+      "proposals": []
+    },
+    {
+      "run": 1,
+      "name": "day: close",
+      "pass": true,
+      "ms": 8589,
+      "cost": 0.004726579999999999,
+      "models": [
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3 Ultra (closer)"
+      ],
+      "escalated": false,
+      "reply": "Today you sold $35.36 and made $0.21 profit after costs. The till is $2.00 short; the most likely causes are a mobile‑money sale entered as cash and incorrect change given on a cash sale, so check the mobile‑money log against the till and review each cash transaction for change errors. Reorder tomorrow: Candles (pack of 6), Eggs (tray of 30), Maize meal (10 kg).",
+      "proposals": [
+        {
+          "summary": "Till count $47.30: short by $2.00",
+          "amount": 200,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: cash sale",
+      "pass": true,
+      "ms": 4327,
+      "cost": 0.00050574,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash, $12.30. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash",
+          "amount": 1230,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: Shona sale",
+      "pass": true,
+      "ms": 4276,
+      "cost": 0.00051198,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Sold 1 × Eggs, tray of 30, 2 × Fresh milk 1 L by mobile money, $8.10. Eggs, tray of 30 is down to 2. Time to reorder. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 1 × Eggs, tray of 30, 2 × Fresh milk 1 L by mobile money",
+          "amount": 810,
+          "warnings": [
+            "Eggs, tray of 30 is down to 2. Time to reorder."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: credit sale",
+      "pass": true,
+      "ms": 4313,
+      "cost": 0.00051618,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai, $12.70. Maize meal 10 kg is down to 3. Time to reorder. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai",
+          "amount": 1270,
+          "warnings": [
+            "Maize meal 10 kg is down to 3. Time to reorder."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: invoice photo",
+      "pass": true,
+      "ms": 6656,
+      "cost": 0.00134052,
+      "models": [
+        "Nemotron 3.5 Super VL (photo reader)",
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375 g, on account with Kudzai Wholesale, $88.50. Sugar 2 kg cost $2.10 this time, up from $2.05. Peanut butter 375 g is new to your stock list. Tell me what you will sell it for. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375 g, on account with Kudzai Wholesale",
+          "amount": 8850,
+          "warnings": [
+            "Sugar 2 kg cost $2.10 this time, up from $2.05.",
+            "Peanut butter 375 g is new to your stock list. Tell me what you will sell it for."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: paid in ZiG",
+      "pass": true,
+      "ms": 4284,
+      "cost": 0.0005317200000000001,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Sold 2 × Bread loaf by mobile money, paid 60 ZiG, $2.26. 60 ZiG at 26.5975 to the US dollar (idbz.co.zw, 2026-10-21) is $2.26. Price list total is $2.20; recording the $2.26 you received. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 2 × Bread loaf by mobile money, paid 60 ZiG",
+          "amount": 226,
+          "warnings": [
+            "60 ZiG at 26.5975 to the US dollar (idbz.co.zw, 2026-10-21) is $2.26.",
+            "Price list total is $2.20; recording the $2.26 you received."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: two costs",
+      "pass": true,
+      "ms": 4333,
+      "cost": 0.00053358,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Paid $5.00 for electricity. Paid $2.00 for transport. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Paid $5.00 for electricity",
+          "amount": 500,
+          "warnings": []
+        },
+        {
+          "summary": "Paid $2.00 for transport",
+          "amount": 200,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: customer pays back",
+      "pass": true,
+      "ms": 4276,
+      "cost": 0.00053094,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Baba Farai paid $4.00 in cash. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Baba Farai paid $4.00 in cash",
+          "amount": 400,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: restock question",
+      "pass": true,
+      "ms": 8581,
+      "cost": 0.00191406,
+      "models": [
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3 Super (analyst)"
+      ],
+      "escalated": false,
+      "reply": "Before the weekend you should restock maize‑meal 10 kg (stock 3, reorder 3), eggs tray of 30 (stock 2, reorder 2) and candles pack of 6 (stock 3, reorder 3); each is at or below its reorder point.  \nLooking at the last seven days, the slowest‑selling items are rice 2 kg (only 3 sold), salt 1 kg (just 2 sold) and soft‑drink 2 L (about 5 sold). These move much less than bread, milk or sugar, so consider ordering smaller quantities or promoting them to boost turnover.",
+      "proposals": []
+    },
+    {
+      "run": 2,
+      "name": "day: close",
+      "pass": true,
+      "ms": 7781,
+      "cost": 0.0037079,
+      "models": [
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3 Ultra (closer)"
+      ],
+      "escalated": false,
+      "reply": "Today we made $35.36 in sales and earned $0.21 profit after costs. The till is $2 short; the most likely causes are a mobile‑money sale entered as cash and a cash expense (transport $2) not recorded – check the mobile‑money log and the cash‑out register. Reorder tomorrow: Candles pack of 6, Eggs tray of 30, Maize meal 10 kg.",
+      "proposals": [
+        {
+          "summary": "Till count $47.30: short by $2.00",
+          "amount": 200,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: cash sale",
+      "pass": true,
+      "ms": 4323,
+      "cost": 0.00050574,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash, $12.30. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash",
+          "amount": 1230,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: Shona sale",
+      "pass": true,
+      "ms": 4250,
+      "cost": 0.00051198,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Sold 1 × Eggs, tray of 30, 2 × Fresh milk 1 L by mobile money, $8.10. Eggs, tray of 30 is down to 2. Time to reorder. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 1 × Eggs, tray of 30, 2 × Fresh milk 1 L by mobile money",
+          "amount": 810,
+          "warnings": [
+            "Eggs, tray of 30 is down to 2. Time to reorder."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: credit sale",
+      "pass": true,
+      "ms": 4365,
+      "cost": 0.00051618,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai, $12.70. Maize meal 10 kg is down to 3. Time to reorder. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai",
+          "amount": 1270,
+          "warnings": [
+            "Maize meal 10 kg is down to 3. Time to reorder."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: invoice photo",
+      "pass": true,
+      "ms": 6589,
+      "cost": 0.00134052,
+      "models": [
+        "Nemotron 3.5 Super VL (photo reader)",
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375 g, on account with Kudzai Wholesale, $88.50. Sugar 2 kg cost $2.10 this time, up from $2.05. Peanut butter 375 g is new to your stock list. Tell me what you will sell it for. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375 g, on account with Kudzai Wholesale",
+          "amount": 8850,
+          "warnings": [
+            "Sugar 2 kg cost $2.10 this time, up from $2.05.",
+            "Peanut butter 375 g is new to your stock list. Tell me what you will sell it for."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: paid in ZiG",
+      "pass": true,
+      "ms": 4258,
+      "cost": 0.0005317200000000001,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Sold 2 × Bread loaf by mobile money, paid 60 ZiG, $2.26. 60 ZiG at 26.5975 to the US dollar (idbz.co.zw, 2026-10-21) is $2.26. Price list total is $2.20; recording the $2.26 you received. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 2 × Bread loaf by mobile money, paid 60 ZiG",
+          "amount": 226,
+          "warnings": [
+            "60 ZiG at 26.5975 to the US dollar (idbz.co.zw, 2026-10-21) is $2.26.",
+            "Price list total is $2.20; recording the $2.26 you received."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: two costs",
+      "pass": true,
+      "ms": 4463,
+      "cost": 0.00053358,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Paid $5.00 for electricity. Paid $2.00 for transport. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Paid $5.00 for electricity",
+          "amount": 500,
+          "warnings": []
+        },
+        {
+          "summary": "Paid $2.00 for transport",
+          "amount": 200,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: customer pays back",
+      "pass": true,
+      "ms": 4265,
+      "cost": 0.00053094,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "escalated": false,
+      "reply": "Baba Farai paid $4.00 in cash. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Baba Farai paid $4.00 in cash",
+          "amount": 400,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: restock question",
+      "pass": true,
+      "ms": 10055,
+      "cost": 0.00186636,
+      "models": [
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3 Super (analyst)"
+      ],
+      "escalated": false,
+      "reply": "Before the weekend you should restock maize‑meal 10 kg (stock 3, reorder point 3), eggs tray of 30 (stock 2, reorder point 2) and candles pack of 6 (stock 3, reorder point 3); they are at or below their reorder levels.  \nThe items selling slowly over the past week are salt 1 kg (only 2 units sold), rice 2 kg (3 units sold) and, to a lesser extent, candles pack of 6 (9 units sold). Consider ordering less of these until demand picks up.",
+      "proposals": []
+    },
+    {
+      "run": 3,
+      "name": "day: close",
+      "pass": true,
+      "ms": 8112,
+      "cost": 0.00440558,
+      "models": [
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3 Ultra (closer)"
+      ],
+      "escalated": false,
+      "reply": "Today you sold $35.36 and made $0.21 profit after costs. The till is $2.00 short; the most likely causes are a mobile‑money sale entered as cash and incorrect change given, so check the mobile‑money log against the cash count and recount the change handed out. Reorder tomorrow: Candles pack of 6, Eggs tray of 30, Maize meal 10 kg.",
+      "proposals": [
+        {
+          "summary": "Till count $47.30: short by $2.00",
+          "amount": 200,
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}
