@@ -353,7 +353,8 @@ export async function runAgent({ chat, models, books, message = "", image, histo
   const questions = [];
   const grounds = [words];
   let escalated = false;
-  const done = (reply, extra = {}) => ({ reply, proposals, trace, photo, escalated, ...extra });
+  const lookups = [];
+  const done = (reply, extra = {}) => ({ reply, proposals, trace, photo, escalated, ...(lookups.length ? { lookups } : {}), ...extra });
   // The reply that reaches the owner: a question from the ledger is never dropped, and a reply about new records
   // that brings figures of its own is replaced by a confirmation written from the checked records.
   const finish = (text) => {
@@ -418,8 +419,10 @@ export async function runAgent({ chat, models, books, message = "", image, histo
           trace.push(...(r.trace || []));
           if (r.error) result = { question: r.error };
           else {
-            Object.assign(args, { rate: r.unitsPerUsd, paid_currency_name: r.name, rate_note: `${r.source}${r.asOf ? `, ${r.asOf}` : ""}` });
-            rateNote = { source: r.source, url: r.url, asOf: r.asOf, unitsPerUsd: r.unitsPerUsd, currency: r.name };
+            const main = (r.checks?.sources || []).find((x) => x.url === r.url) || {};
+            const fx = { source: r.source, url: r.url, asOf: r.asOf, kind: r.kind, readAt: main.readAt, fingerprint: main.fingerprint, crossChecked: Boolean(r.checks?.crossChecked), sources: r.checks?.sources || [] };
+            Object.assign(args, { rate: r.unitsPerUsd, paid_currency_name: r.name, rate_note: `${r.source}${r.asOf ? `, ${r.asOf}` : ""}`, rate_source: fx });
+            rateNote = { ...fx, unitsPerUsd: r.unitsPerUsd, currency: r.name };
           }
         } else if (code !== "USD") {
           args.paid_currency_name = currencyCode(args.paid_currency) === "ZIG" ? "ZiG" : args.paid_currency;
@@ -470,7 +473,10 @@ export async function runAgent({ chat, models, books, message = "", image, histo
         const code = currencyCode(args.currency);
         const r = code && code !== "USD" && rates ? await rates(code, working.today) : { error: "Ask about ZiG, rand, pula or kwacha." };
         trace.push(...(r.trace || []));
-        result = r.error ? { error: r.error } : { currency: r.name, units_per_us_dollar: r.unitsPerUsd, as_of: r.asOf, kind: r.kind, source: r.source };
+        if (!r.error) lookups.push({ currency: r.name, unitsPerUsd: r.unitsPerUsd, asOf: r.asOf, kind: r.kind, source: r.source, url: r.url, sources: r.checks?.sources || [] });
+        result = r.error
+          ? { error: r.error }
+          : { currency: r.name, units_per_us_dollar: r.unitsPerUsd, as_of: r.asOf, kind: r.kind, source: r.source, checked_on_page: true, cross_checked_with: (r.checks?.sources || []).filter((x) => x.host !== r.source).map((x) => `${x.host} ${x.unitsPerUsd} (${x.asOf})`) };
       } else if (name === "get_figures" && writes) {
         result = { error: "This message records transactions. Reply with what will be recorded and any warning; figures are for the owner's questions." };
       } else if (name === "get_figures") {

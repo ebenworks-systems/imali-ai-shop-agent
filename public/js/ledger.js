@@ -324,7 +324,10 @@ export function buildSale(books, args = {}) {
   lines.push({ account: "cogs", debit: costTotal });
   lines.push({ account: "stock", credit: costTotal });
   const how = (method === "credit" ? `on credit to ${party}` : method === "mobile" ? "by mobile money" : "in cash") + (foreign ? `, paid ${foreign}` : "");
-  return { ok: true, entry: entry(books, "sale", `Sold ${parts.join(", ")} ${how}`, lines, stock, { amount: total, method, party }), warnings };
+  // A foreign payment keeps its rate and where the rate came from, so the books carry their own audit trail.
+  const src = args.rate_source;
+  const fx = foreign && src ? { paid: foreign, rate: Number(args.rate), source: src.source, url: src.url, asOf: src.asOf, kind: src.kind, readAt: src.readAt, fingerprint: src.fingerprint, crossChecked: Boolean(src.crossChecked) } : undefined;
+  return { ok: true, entry: entry(books, "sale", `Sold ${parts.join(", ")} ${how}`, lines, stock, { amount: total, method, party, ...(fx ? { fx } : {}) }), warnings };
 }
 
 export function buildStockIn(books, args = {}) {

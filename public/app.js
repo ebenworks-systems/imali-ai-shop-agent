@@ -118,6 +118,7 @@ function renderItem(item) {
   const li = el("li", { class: "msg msg-agent", "data-id": item.id });
   li.append(el("div", { class: "bubble" }, item.text));
   if (item.proposals?.length) li.append(el("div", { class: "proposals" }, item.proposals.map((p) => renderProposal(item, p))));
+  for (const r of item.lookups || []) li.append(rateCheck(r));
   if (item.trace?.length) {
     const total = item.trace.reduce((a, t) => ({ ms: a.ms + t.ms, cost: a.cost + t.cost }), { ms: 0, cost: 0 });
     const models = [...new Set(item.trace.map((t) => t.model))];
@@ -126,12 +127,35 @@ function renderItem(item) {
   return li;
 }
 
+// "2026-10-21" as "21 Oct".
+function fmtDate(iso) {
+  const d = new Date(`${iso}T12:00:00Z`);
+  return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+}
+
+// A live exchange-rate check as the owner sees it: the rate, the bank page it was read from and its date, the fact
+// that code found that number printed on the page, and a second bank that agrees when there is one.
+function rateCheck(r) {
+  const link = (u, t) => el("a", { href: u, target: "_blank", rel: "noopener" }, t);
+  const others = (r.sources || []).filter((x) => x.host !== r.source);
+  return el(
+    "p",
+    { class: "prop-rate" },
+    el("strong", {}, "Rate checked live. "),
+    `${r.unitsPerUsd} ${r.currency} to the US dollar, ${r.kind === "midpoint of buy and sell" ? "the midpoint of" : "the"} ${r.kind === "official mid" ? "mid rate" : r.kind === "midpoint of buy and sell" ? "buying and selling rates" : "rate"} on `,
+    link(r.url, r.source),
+    r.asOf ? ` dated ${fmtDate(r.asOf)}` : "",
+    ". Code found the number printed on that page",
+    others.length ? [", and ", link(others[0].url, others[0].host), ` agrees at ${others[0].unitsPerUsd}.`] : ".",
+  );
+}
+
 function renderProposal(item, p) {
   const card = el("div", { class: `prop ${p.state === "done" ? "done" : ""} ${p.state === "skipped" ? "skipped" : ""}`, "data-pid": p.id });
   const amount = p.amount ? money(p.amount) : p.price ? money(p.price.to) : "";
   card.append(el("div", { class: "prop-top" }, el("span", { class: "prop-icon" }, svg(ICONS[p.tool] || ICONS.record_sale)), el("span", { class: "prop-text" }, p.summary), amount ? el("span", { class: "prop-amount" }, amount) : null));
   for (const w of p.warnings || []) card.append(el("p", { class: "prop-warn" }, w));
-  if (p.rate?.url) card.append(el("p", { class: "prop-rate" }, `Rate found by live search: ${p.rate.unitsPerUsd} ${p.rate.currency} to the US dollar, `, el("a", { href: p.rate.url, target: "_blank", rel: "noopener" }, p.rate.source), p.rate.asOf ? `, ${p.rate.asOf}` : ""));
+  if (p.rate?.url) card.append(rateCheck({ ...p.rate, currency: p.rate.currency }));
   if (p.entry) {
     card.append(
       el(
@@ -304,6 +328,19 @@ function renderBooks(before) {
             "li",
             {},
             el("div", { class: "j-top" }, el("span", {}, e.memo), el("span", { class: "j-time" }, e.at.slice(11, 16))),
+            e.fx
+              ? el(
+                  "p",
+                  { class: "j-fx" },
+                  `${e.fx.paid} at ${e.fx.rate} to the US dollar, from `,
+                  el("a", { href: e.fx.url, target: "_blank", rel: "noopener" }, e.fx.source),
+                  e.fx.asOf ? ` dated ${fmtDate(e.fx.asOf)}` : "",
+                  e.fx.crossChecked ? ", agreed by a second bank" : "",
+                  e.fx.readAt ? `; page read ${e.fx.readAt.slice(11, 16)} UTC` : "",
+                  e.fx.fingerprint ? `, fingerprint ${e.fx.fingerprint}` : "",
+                  ".",
+                )
+              : null,
             el(
               "ul",
               { class: "j-lines" },
@@ -384,7 +421,7 @@ async function send(text, image) {
     wait.stop();
     wait.li.remove();
     if (!res.ok) throw new Error(data.error || "The agent did not answer. Try again.");
-    const item = { id: `a${Date.now()}`, type: "agent", text: data.reply, proposals: data.proposals || [], trace: data.trace || [], escalated: data.escalated };
+    const item = { id: `a${Date.now()}`, type: "agent", text: data.reply, proposals: data.proposals || [], lookups: data.lookups || [], trace: data.trace || [], escalated: data.escalated };
     for (const t of item.trace) {
       state.session.cost += t.cost;
       state.session.calls += 1;

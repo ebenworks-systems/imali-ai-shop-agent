@@ -215,6 +215,9 @@ h1 em, h2 em { font-style: italic; color: var(--green-accent); }
 .prop-warn { margin: 8px 0 0; padding: 7px 10px; border-radius: 10px; background: var(--amber-wash); color: var(--amber); font-size: 12.5px; }
 .prop-rate { margin: 8px 0 0; padding: 7px 10px; border-radius: 10px; background: #eef2fb; color: #2c3e6b; font-size: 12.5px; }
 .prop-rate a { color: inherit; }
+.prop-rate strong { font-weight: 600; }
+.journal .j-fx { margin: 4px 0 2px; color: #2c3e6b; font-size: 12px; overflow-wrap: anywhere; }
+.journal .j-fx a { color: inherit; }
 .prop-lines { margin: 8px 0 0; padding: 0; list-style: none; font-size: 11.5px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .prop-lines li { display: grid; grid-template-columns: 22px 1fr auto; gap: 6px; padding: 1px 0; }
 .prop-lines .dc { color: var(--ink-faint); }
