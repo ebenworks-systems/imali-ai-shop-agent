@@ -90,7 +90,7 @@ export function routerPrompt(snapshot) {
     "- A customer who paid in ZiG, rand, pula or kwacha: pass paid_currency and paid_amount on record_sale; the system looks up today's official rate. Pass rate only when the owner says which rate was used.",
     "- Record only what the owner's latest message says. Earlier messages are there to explain short answers; never record them again.",
     "- When a tool answers with a question, ask the owner that question and record nothing else for that transaction.",
-    "- Reply in the language the owner wrote in. Plain words, no markdown, no emoji, item names rather than ids. Say what will be recorded and any warning a tool gave; the owner confirms each record with one tap. Do not list stock or figures the owner did not ask for.",
+    "- Reply in the language the owner wrote in. Plain words, no markdown, no emoji, item names rather than ids. Say what is ready to record and any warning a tool gave. Nothing is in the books until the owner taps Record, so never say done, saved or recorded. Do not list stock or figures the owner did not ask for.",
     "",
     "The books right now:",
     JSON.stringify(snapshot),
@@ -406,7 +406,9 @@ export async function runAgent({ chat, models, books, message = "", image, histo
         } else if (!result) {
           seen.add(key);
           const built = BUILDERS[name](working, args);
+          const again = built.ok && built.entry && proposals.find((p) => p.tool === name && p.summary === built.entry.memo && p.amount === built.entry.amount);
           if (!built.ok) result = { question: built.question };
+          else if (again) result = { ok: true, note: "Already recorded above." };
           else {
             const proposal = { id: `p${proposals.length + 1}-${Date.now().toString(36)}`, tool: name, warnings: built.warnings || [], ...(rateNote ? { rate: rateNote } : {}) };
             if (built.entry) {

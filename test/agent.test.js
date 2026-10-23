@@ -203,6 +203,16 @@ test("a reply that adds figures of its own is replaced by a confirmation from th
   assert.match(out.reply, /Tap Record/);
 });
 
+test("a retry that proposes the same record in other words is not proposed twice", async () => {
+  const { chat } = scripted(
+    { tool_calls: [call("record_expense", { category: "Electricity", amount: 5, payment: "cash" })] },
+    { tool_calls: [call("record_expense", { category: "electricity", amount: 5.0, payment: "cash", note: "" })] },
+    "Electricity, $5.00 cash.",
+  );
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Paid $5 for electricity", now: NOW });
+  assert.equal(out.proposals.length, 1);
+});
+
 test("the same transaction called twice in one message is proposed once", async () => {
   const sale = { items: [{ item: "bread", qty: 1 }], payment: "cash" };
   const { chat } = scripted({ tool_calls: [call("record_sale", sale, "a"), call("record_sale", sale, "b")] }, "One bread.");
