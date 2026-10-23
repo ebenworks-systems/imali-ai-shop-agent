@@ -1,9 +1,14 @@
 // Use limits for the public demo, so a busy day or a script cannot run up the model bill.
-// Per address: a few dozen requests in ten minutes. Site-wide: a daily ceiling of model work.
+// Per address: a few dozen requests in ten minutes. Site-wide: a daily ceiling of model work,
+// and a budget for the whole life of the demo, counted from what each model call cost at list prices.
+// The budget is set below the account's free credits, with room to spare.
 // On the hosted demo the counts live in Upstash Redis (durable across serverless instances);
 // a local run keeps them in memory.
 
-export const DEFAULT_LIMITS = { perAddress: 30, windowSeconds: 600, dailyUnits: 1200 };
+export const DEFAULT_LIMITS = { perAddress: 30, windowSeconds: 600, dailyUnits: 1200, budgetUsd: 5 };
+
+const SPEND_KEY = "imali-demo:spend-micro-usd";
+const SPEND_TTL = 120 * 86_400;
 
 export function unitsFor(body) {
   return body?.image ? 3 : 1;
@@ -57,6 +62,7 @@ export function limitsFromEnv(env = process.env) {
     perAddress: n(env.LIMIT_PER_ADDRESS, DEFAULT_LIMITS.perAddress),
     windowSeconds: n(env.LIMIT_WINDOW_SECONDS, DEFAULT_LIMITS.windowSeconds),
     dailyUnits: n(env.LIMIT_DAILY_UNITS, DEFAULT_LIMITS.dailyUnits),
+    budgetUsd: n(env.LIMIT_BUDGET_USD, DEFAULT_LIMITS.budgetUsd),
   };
 }
 
@@ -69,8 +75,18 @@ export async function checkLimits({ store, limits, address, units, now = new Dat
     if (mine > limits.perAddress) return "You have sent a lot of messages in the last few minutes. Wait a little and try again.";
     const site = await store.incr(`imali-demo:day:${day}`, units, 172_800);
     if (site > limits.dailyUnits) return "The demo has reached today's limit. It opens again tomorrow (UTC).";
+    if ((await spentUsd(store)) >= limits.budgetUsd) return "The demo has used up its model budget. The video on the entry page shows it at work.";
     return null;
   } catch {
     return "The demo cannot check its usage limits right now. Try again in a minute.";
   }
+}
+
+// What the demo's model calls have cost so far, in dollars at list prices (INCRBY 0 reads the count).
+export async function spentUsd(store) {
+  return (await store.incr(SPEND_KEY, 0, SPEND_TTL)) / 1e6;
+}
+
+export async function recordSpend(store, usd) {
+  if (usd > 0) await store.incr(SPEND_KEY, Math.ceil(usd * 1e6), SPEND_TTL);
 }

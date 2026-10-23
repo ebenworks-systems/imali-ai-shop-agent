@@ -54,7 +54,7 @@ NEBIUS_API_KEY=your-key node server/index.js
 
 Open http://localhost:5180 and tap the examples under the chat, in order: a cash sale, a sale in chiShona paid by mobile money, a credit sale, the photo of a supplier's invoice, two costs in one line, a customer paying back, "How much did I make today?", "What should I restock?" and "Close the day". Tap Record on each card and watch the books on the right.
 
-`.env.example` lists the optional settings: other Nemotron model ids per job, and the usage limits for a public copy.
+`.env.example` lists the optional settings: other Nemotron model ids per job, and the usage limits for a public copy, including a lifetime budget in dollars that stops model calls before an account's credits run out.
 
 ## Tests and the live check
 
@@ -80,7 +80,7 @@ The public demo runs on Vercel: the page is static and `api/agent.js` is a Node 
 | `public/js/shop.js` | The invented demo shop and the example messages |
 | `server/agent.js` | Tools, prompts, the routing between the four models |
 | `server/nebius.js` | Token Factory client, model ids and list prices |
-| `server/limits.js` | Per-address and daily limits |
+| `server/limits.js` | Per-address and daily limits, and a lifetime budget counted from each call's cost |
 | `server/index.js`, `api/` | Local server and the hosted functions |
 | `tools/eval-live.mjs` | The live check against Token Factory |
 | `tools/samples/` | The sample invoice and the script that renders its photo |

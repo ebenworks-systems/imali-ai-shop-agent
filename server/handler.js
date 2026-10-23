@@ -1,15 +1,21 @@
 // One handler for the agent endpoint, used by the local server and the hosted function alike.
 
 import { runAgent, validateRequest } from "./agent.js";
-import { checkLimits, limitsFromEnv, storeFromEnv, unitsFor } from "./limits.js";
+import { checkLimits, limitsFromEnv, recordSpend, spentUsd, storeFromEnv, unitsFor } from "./limits.js";
 import { createClient, modelsFromEnv, DEFAULT_BASE_URL } from "./nebius.js";
 import { createRates } from "./rates.js";
 
 export function makeHandler({ env = process.env, fetchImpl = fetch, store } = {}) {
-  const chat = createClient({ apiKey: env.NEBIUS_API_KEY, baseUrl: env.NEBIUS_BASE_URL || DEFAULT_BASE_URL, fetchImpl });
   const models = modelsFromEnv(env);
   const limits = limitsFromEnv(env);
   const limitStore = store || storeFromEnv(env, fetchImpl);
+  // Every model call, the exchange-rate reader's included, adds its cost to the demo's budget count.
+  const client = createClient({ apiKey: env.NEBIUS_API_KEY, baseUrl: env.NEBIUS_BASE_URL || DEFAULT_BASE_URL, fetchImpl });
+  const chat = async (args) => {
+    const out = await client(args);
+    await recordSpend(limitStore, out.trace.cost).catch(() => {});
+    return out;
+  };
   const rates = createRates({ apiKey: env.TAVILY_API_KEY, chat, models, fetchImpl });
 
   async function health() {
@@ -21,7 +27,7 @@ export function makeHandler({ env = process.env, fetchImpl = fetch, store } = {}
         rates: Boolean(env.TAVILY_API_KEY),
         provider: "Nebius Token Factory",
         models: Object.fromEntries(Object.entries(models).map(([role, m]) => [role, { label: m.label, id: m.id, price: m.price }])),
-        limits: { ...limits, store: limitStore.kind },
+        limits: { ...limits, store: limitStore.kind, spentUsd: await spentUsd(limitStore).then((v) => Math.round(v * 100) / 100, () => null) },
       },
     };
   }

@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createApp } from "../server/index.js";
 import { createClient, costOf, MODELS, modelsFromEnv } from "../server/nebius.js";
-import { checkLimits, memoryStore, upstashStore, unitsFor } from "../server/limits.js";
+import { checkLimits, memoryStore, spentUsd, upstashStore, unitsFor } from "../server/limits.js";
 import { sampleBooks } from "../public/js/shop.js";
 
 // A fake Token Factory: records each request and answers like the OpenAI-compatible API.
@@ -100,6 +100,20 @@ test("the per-address limit stops a flood with a plain message", async () => {
     const third = await post(base, { message: "c", books: sampleBooks() });
     assert.equal(third.status, 429);
     assert.match((await third.json()).error, /Wait a little/);
+  });
+});
+
+test("the lifetime budget stops model calls once their list-price cost reaches it", async () => {
+  const { fetchImpl, seen } = fakeTokenFactory(() => ({ content: "Okay." }));
+  const store = memoryStore();
+  await withApp({ env: { NEBIUS_API_KEY: "k", LIMIT_BUDGET_USD: "0.00005" }, fetchImpl, store }, async (base) => {
+    assert.equal((await post(base, { message: "a", books: sampleBooks() })).status, 200);
+    const calls = seen.length;
+    assert.ok((await spentUsd(store)) >= costOf(MODELS.router, { prompt_tokens: 1000, completion_tokens: 100 }));
+    const next = await post(base, { message: "b", books: sampleBooks() });
+    assert.equal(next.status, 429);
+    assert.match((await next.json()).error, /model budget/);
+    assert.equal(seen.length, calls);
   });
 });
 
