@@ -18,6 +18,7 @@ import {
   stockLevels,
   trialBalance,
   unitsSold,
+  mentionsItem,
 } from "../public/js/ledger.js";
 import { sampleBooks, SAMPLE_MESSAGES } from "../public/js/shop.js";
 
@@ -194,4 +195,22 @@ test("local item names are found, with chiShona and isiNdebele 'and' joined on t
   assert.deepEqual(localItemWords(b, "Ndatengesa sipo 3 nemunyu 1, cash"), ["sipo = soap-bar", "nemunyu = salt-1kg"]);
   assert.deepEqual(localItemWords(b, "Ngithengise isinkwa 4 lamaqanda 1 tray"), ["isinkwa = bread", "lamaqanda = eggs-tray"]);
   assert.deepEqual(localItemWords(b, "Sold 3 bread and 2 cooking oil, cash"), []);
+});
+
+test("an item counts as named when the owner's words use its name, an alias or a joined local word", () => {
+  const b = sampleBooks("2026-10-23");
+  const named = [
+    ["Sold 3 bread and 2 cooking oil, cash", ["bread", "cooking-oil-2l"]],
+    ["Ndatengesa mazai tray 1 nemukaka 2, ndabhadharwa ne mobile money", ["eggs-tray", "milk-1l"]],
+    ["Mai Tendai took 2 sugar and a 10kg mealie meal on credit, she'll pay Friday", ["sugar-2kg", "maize-meal-10kg"]],
+    ["sold 2 loaves and a 2L soft drink, $4 via ecocash", ["bread", "soft-drink-2l"]],
+    ["Ndatengesa sipo 3 nemunyu 1, cash", ["soap-bar", "salt-1kg"]],
+    ["Ngithengise isinkwa 4 lamaqanda 1 tray, cash", ["bread", "eggs-tray"]],
+    ["Sold a pack of candles and a box of matches", ["candles-6", "matches"]],
+    ["Sold 2 bread, the customer paid 60 ZiG on mobile money", ["bread"]],
+  ];
+  for (const [text, ids] of named) for (const id of ids) assert.ok(mentionsItem(b.items[id], text), `${id} in "${text}"`);
+  assert.equal(mentionsItem(b.items["candles-6"], "Sold 2 paraffin, cash"), false);
+  assert.equal(mentionsItem(b.items.bread, "Paid $5 for electricity and $2 transport to town"), false);
+  assert.equal(mentionsItem(b.items["salt-1kg"], "Bought a bag of saltines"), false);
 });

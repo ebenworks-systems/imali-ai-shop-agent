@@ -99,6 +99,24 @@ export function localItemWords(books, text) {
   return [...found];
 }
 
+// Whether a message names a catalogue item: its name or an alias, in any of the shop's languages, including a
+// local word with "and" joined on the front. The agent records an item only when the owner's message names it.
+export function mentionsItem(item, text) {
+  if (!item) return false;
+  const msg = normalise(text);
+  const seen = new Set();
+  for (const w of msg.split(" ")) {
+    for (const t of [w, ...JOINED.filter((p) => w.startsWith(p) && w.length > p.length + 2).map((p) => w.slice(p.length))]) {
+      seen.add(t);
+      seen.add(singular(t));
+    }
+  }
+  return [item.name, ...item.aliases].some((form) => {
+    const n = normalise(form);
+    return n.includes(" ") ? ` ${msg} `.includes(` ${n} `) : seen.has(n) || seen.has(singular(n));
+  });
+}
+
 export function findParty(list, name) {
   if (!name) return null;
   const q = normalise(name);

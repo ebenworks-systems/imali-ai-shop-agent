@@ -10,7 +10,9 @@ import {
   balances,
   buildCashCount,
   daySummary,
+  findItem,
   localItemWords,
+  mentionsItem,
   money,
   partyBalances,
   snapshotForModel,
@@ -125,6 +127,9 @@ export function toolCallsOf(message) {
 // asked about instead of recorded, so a model's guess never lands in the till.
 const PAYMENT_WORDS = /(cash|mari|imali|mobile|eco ?cash|one ?money|innbucks|swipe|card|transfer|bank|credit|chikwereti|isikwelede|later|owe|tab|paid|pay|bhadhar|bhadal|zig|zwg|rand|usd|\$)/i;
 
+// Currencies the rate lookup knows, as an owner would write them.
+const CURRENCY_WORDS = /\b(zig|zwg|zimbabwe gold|bond|rand|rands|zar|pula|bwp|kwacha|zmw|exchange rate|rate)\b/i;
+
 export function saysHowPaid(text) {
   return PAYMENT_WORDS.test(String(text || ""));
 }
@@ -140,7 +145,7 @@ function names(text, name) {
 
 // Records come only from the owner's latest message (and its photo). A model that reaches back into the history,
 // or fills in a number the owner never gave, is sent back with the reason.
-export function fromLatestMessage(name, args, message, photo) {
+export function fromLatestMessage(name, args, message, photo, books) {
   const nums = numbersIn(message);
   const said = (n) => n === undefined || n === null || nums.has(Number(n));
   if (name === "record_customer_payment" && !names(message, args.customer)) return `${args.customer || "That customer"} is not named in the owner's latest message. Record only what it says.`;
@@ -148,6 +153,10 @@ export function fromLatestMessage(name, args, message, photo) {
   if (name === "record_sale" && args.payment === "credit" && args.customer && !names(message, args.customer)) return `${args.customer} is not named in the owner's latest message. Ask who took it on credit.`;
   if (["record_expense", "record_customer_payment", "record_supplier_payment", "record_owner_withdrawal"].includes(name) && !said(args.amount)) return "That amount is not in the owner's latest message. Use the owner's own figure or ask.";
   if (name === "record_stock_in" && !photo && !names(message, args.supplier) && !(args.items || []).some((it) => said(it.unit_cost))) return "This stock is not in the owner's latest message. Record only what it says.";
+  if (["record_sale", "record_stock_in"].includes(name) && !photo && books) {
+    const missing = (args.items || []).map((it) => findItem(books, it.item)).find((item) => item && !mentionsItem(item, message));
+    if (missing) return `${missing.name} is not in the owner's latest message. Record only the items it names; if it names an item the shop does not stock, ask about it.`;
+  }
   return null;
 }
 
@@ -348,7 +357,7 @@ export async function runAgent({ chat, models, books, message = "", image, histo
         let rateNote = null;
         if (args.rate && !numbersIn(message).has(Number(args.rate))) delete args.rate;
         const code = name === "record_sale" && args.paid_amount ? currencyCode(args.paid_currency) : "USD";
-        const stale = fromLatestMessage(name, args, message, photo);
+        const stale = fromLatestMessage(name, args, message, photo, working);
         if (stale) {
           failures += 1;
           result = { error: stale };
@@ -395,6 +404,9 @@ export async function runAgent({ chat, models, books, message = "", image, histo
           replyText = text;
           result = { ok: true };
         }
+      } else if (name === "get_exchange_rate" && !CURRENCY_WORDS.test(message)) {
+        failures += 1;
+        result = { error: "The owner's latest message names no other currency. Look up a rate only when the owner was paid in ZiG, rand, pula or kwacha, or asks for a rate." };
       } else if (name === "get_exchange_rate") {
         const code = currencyCode(args.currency);
         const r = code && code !== "USD" && rates ? await rates(code, working.today) : { error: "Ask about ZiG, rand, pula or kwacha." };
@@ -402,6 +414,8 @@ export async function runAgent({ chat, models, books, message = "", image, histo
         result = r.error ? { error: r.error } : { currency: r.name, units_per_us_dollar: r.unitsPerUsd, as_of: r.asOf, kind: r.kind, source: r.source };
       } else if (name === "get_figures") {
         result = figures(working, args.about);
+      } else if (name === "ask_analyst" && proposals.length) {
+        result = { error: "This message records transactions. Reply briefly to confirm them; the analyst answers only the owner's questions." };
       } else if (name === "ask_analyst") {
         const a = await askAnalyst({ chat, models, books: working, question: String(args.question || message).slice(0, 400), ownerWords: message });
         trace.push(a.trace);

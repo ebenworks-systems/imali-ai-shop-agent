@@ -136,6 +136,39 @@ test("the day is closed only with a count the owner gave, never one the model to
   assert.match(asked[1].messages.at(-1).content, /no counted cash/);
 });
 
+test("an item the owner's latest message does not name is sent back, however the model found it", async () => {
+  const { chat, asked } = scripted(
+    { tool_calls: [call("record_expense", { category: "Electricity", amount: 5, payment: "cash" }), call("record_sale", { items: [{ item: "bread", qty: 2 }], payment: "mobile" })] },
+    "Electricity, $5.00 cash.",
+  );
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Paid $5 for electricity", now: NOW });
+  assert.deepEqual(out.proposals.map((p) => p.tool), ["record_expense"]);
+  assert.match(asked[1].messages.at(-1).content, /Bread loaf is not in the owner's latest message/);
+});
+
+test("the analyst answers questions only, not a message that records something", async () => {
+  const { chat, asked } = scripted(
+    { tool_calls: [call("record_expense", { category: "Transport", amount: 2, payment: "cash" }), call("ask_analyst", { question: "What should I restock?" })] },
+    "Transport, $2.00 cash.",
+  );
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Paid $2 transport to town", now: NOW });
+  assert.equal(out.answeredBy, undefined);
+  assert.ok(!asked.some((x) => x.model.label === "Nemotron 3 Super"));
+  assert.equal(out.reply, "Transport, $2.00 cash.");
+});
+
+test("a rate is looked up only when the owner's message names another currency", async () => {
+  let looked = 0;
+  const rates = async () => (looked++, { unitsPerUsd: 26.6, name: "ZiG", source: "example", trace: [] });
+  const { chat, asked } = scripted(
+    { tool_calls: [call("record_sale", { items: [{ item: "bread", qty: 1 }], payment: "mobile" }), call("get_exchange_rate", { currency: "ZiG" })] },
+    "One bread, mobile money.",
+  );
+  await runAgent({ chat, models: MODELS, books: books(), message: "Sold 1 bread on mobile money", now: NOW, rates });
+  assert.equal(looked, 0);
+  assert.match(asked[1].messages.at(-1).content, /names no other currency/);
+});
+
 test("the same transaction called twice in one message is proposed once", async () => {
   const sale = { items: [{ item: "bread", qty: 1 }], payment: "cash" };
   const { chat } = scripted({ tool_calls: [call("record_sale", sale, "a"), call("record_sale", sale, "b")] }, "One bread.");
