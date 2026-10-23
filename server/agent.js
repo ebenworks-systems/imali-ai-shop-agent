@@ -153,6 +153,7 @@ export function fromLatestMessage(name, args, message, photo, books) {
   if (name === "record_sale" && args.payment === "credit" && args.customer && !names(message, args.customer)) return `${args.customer} is not named in the owner's latest message. Ask who took it on credit.`;
   if (["record_expense", "record_customer_payment", "record_supplier_payment", "record_owner_withdrawal"].includes(name) && !said(args.amount)) return "That amount is not in the owner's latest message. Use the owner's own figure or ask.";
   if (name === "record_stock_in" && !photo && !names(message, args.supplier) && !(args.items || []).some((it) => said(it.unit_cost))) return "This stock is not in the owner's latest message. Record only what it says.";
+  if (name === "set_price" && (!said(args.sell_price ?? args.price) || (books && !mentionsItem(findItem(books, args.item), message)))) return "The owner's latest message does not ask for this price change. Change a price only when the owner names the item and the new price.";
   if (["record_sale", "record_stock_in"].includes(name) && !photo && books) {
     const missing = (args.items || []).map((it) => findItem(books, it.item)).find((item) => item && !mentionsItem(item, message));
     if (missing) return `${missing.name} is not in the owner's latest message. Record only the items it names; if it names an item the shop does not stock, ask about it.`;

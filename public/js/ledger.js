@@ -429,6 +429,7 @@ export function buildPrice(books, args = {}) {
   if (!item) return fail(`Which item is "${args.item}"?`);
   const price = toCents(args.sell_price ?? args.price);
   if (!price || price <= 0 || price > MAX_CENTS) return fail(`What price for ${item.name}?`);
+  if (price === item.price) return fail(`${item.name} already sells at ${money(price)}. What should the new price be?`);
   return { ok: true, price: { item: item.id, name: item.name, from: item.price, to: price }, warnings: price < item.cost ? [`${money(price)} is below what ${item.name} costs you (${money(item.cost)}).`] : [] };
 }
 

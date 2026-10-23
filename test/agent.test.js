@@ -169,6 +169,18 @@ test("a rate is looked up only when the owner's message names another currency",
   assert.match(asked[1].messages.at(-1).content, /names no other currency/);
 });
 
+test("a price changes only when the owner names the item and the new price", async () => {
+  const { chat } = scripted(
+    { tool_calls: [call("record_expense", { category: "Electricity", amount: 5, payment: "cash" }), call("set_price", { item: "bread", sell_price: 1.1 })] },
+    "Electricity, $5.00 cash.",
+  );
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Paid $5 for electricity", now: NOW });
+  assert.deepEqual(out.proposals.map((p) => p.tool), ["record_expense"]);
+  const asked = scripted({ tool_calls: [call("set_price", { item: "bread", sell_price: 1.2 })] }, "Bread is now $1.20.");
+  const changed = await runAgent({ chat: asked.chat, models: MODELS, books: books(), message: "Change the bread price to $1.20", now: NOW });
+  assert.equal(changed.proposals[0].price.to, 120);
+});
+
 test("the same transaction called twice in one message is proposed once", async () => {
   const sale = { items: [{ item: "bread", qty: 1 }], payment: "cash" };
   const { chat } = scripted({ tool_calls: [call("record_sale", sale, "a"), call("record_sale", sale, "b")] }, "One bread.");
