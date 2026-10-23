@@ -24,6 +24,7 @@ const ROLE_TEXT = {
   analyst: ["tier-analyst", "answered from the whole book"],
   closer: ["tier-closer", "closed the day"],
   "rate search": ["tier-tavily", "searched the web for today's official rate"],
+  "rate page": ["tier-tavily", "read the rates page as it is now"],
   "rate reader": ["tier-router", "read the rate, its date and source"],
 };
 
@@ -328,10 +329,10 @@ function renderRoute(trace) {
         { class: `step ${tier}`, style: `animation-delay:${i * 90}ms` },
         el("span", { class: "r-n" }, String(i + 1)),
         el("span", { class: "r-main" }, el("span", { class: "r-model" }, t.model), el("span", { class: "r-role" }, words)),
-        el("span", { class: "r-num" }, `${fmtMs(t.ms)}`, el("br"), t.modelId?.startsWith("tavily") ? "1 search credit" : `${fmtTok(t.tokensIn + t.tokensOut)} · ${fmtCost(t.cost)}`),
+        el("span", { class: "r-num" }, `${fmtMs(t.ms)}`, el("br"), t.modelId === "tavily/search" ? "1 search credit" : t.modelId === "tavily/extract" ? "1 page read" : `${fmtTok(t.tokensIn + t.tokensOut)} · ${fmtCost(t.cost)}`),
       );
     }),
-    el("li", { class: "r-total" }, el("span", {}, `This message: ${trace.filter((t) => !t.modelId?.startsWith("tavily")).length} call${trace.length > 1 ? "s" : ""} on Token Factory${trace.some((t) => t.modelId?.startsWith("tavily")) ? ", 1 Tavily search" : ""}`), el("span", {}, `${fmtMs(total.ms)} · ${fmtCost(total.cost)}`)),
+    el("li", { class: "r-total" }, el("span", {}, `This message: ${trace.filter((t) => !t.modelId?.startsWith("tavily")).length} call${trace.length > 1 ? "s" : ""} on Token Factory${trace.some((t) => t.modelId === "tavily/extract") ? ", Tavily search and page read" : trace.some((t) => t.modelId === "tavily/search") ? ", 1 Tavily search" : ""}`), el("span", {}, `${fmtMs(total.ms)} · ${fmtCost(total.cost)}`)),
   );
   bind("session-cost").textContent = `This session: ${fmtCost(state.session.cost)}`;
 }
