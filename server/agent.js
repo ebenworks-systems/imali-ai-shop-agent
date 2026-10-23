@@ -184,6 +184,12 @@ export function figuresGrounded(reply, grounds) {
   return [...numbersIn(reply)].every((n) => known.has(n));
 }
 
+export function rateAnswer(r) {
+  const kind = r.kind === "official mid" ? "the mid rate" : r.kind === "midpoint of buy and sell" ? "the midpoint of the buying and selling rates" : "the rate";
+  const other = (r.sources || []).find((x) => x.host !== r.source);
+  return `One US dollar is ${r.unitsPerUsd} ${r.currency}: ${kind} on ${r.source}${r.asOf ? `, dated ${r.asOf}` : ""}${other ? `, and ${other.host} agrees at ${other.unitsPerUsd}` : ""}.`;
+}
+
 export function confirmation(proposals, questions = []) {
   const lines = proposals.map((p) => `${p.summary}${p.amount && !/\$/.test(p.summary) ? `, ${money(p.amount)}` : ""}.`);
   const warnings = proposals.flatMap((p) => p.warnings || []);
@@ -354,10 +360,17 @@ export async function runAgent({ chat, models, books, message = "", image, histo
   const grounds = [words];
   let escalated = false;
   const lookups = [];
-  const done = (reply, extra = {}) => ({ reply, proposals, trace, photo, escalated, ...(lookups.length ? { lookups } : {}), ...extra });
+  const done = (reply, extra = {}) => {
+    // A rate already shown on a record's card is not shown twice.
+    const onCards = new Set(proposals.filter((p) => p.rate).map((p) => p.rate.currency));
+    const shown = lookups.filter((l) => !onCards.has(l.currency));
+    return { reply, proposals, trace, photo, escalated, ...(shown.length ? { lookups: shown } : {}), ...extra };
+  };
   // The reply that reaches the owner: a question from the ledger is never dropped, and a reply about new records
   // that brings figures of its own is replaced by a confirmation written from the checked records.
   const finish = (text) => {
+    // A rate question gets its answer from the checked lookup, not from the model's wording.
+    if (!proposals.length && lookups.length) return done(lookups.map(rateAnswer).join(" "));
     let out = text;
     if (questions.length && !/\?/.test(out)) out = proposals.length ? `${out} ${questions[0]}` : questions[0];
     if (proposals.length && !figuresGrounded(out, grounds)) out = confirmation(proposals, questions);

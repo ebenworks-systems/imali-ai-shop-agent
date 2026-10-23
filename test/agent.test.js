@@ -242,6 +242,14 @@ test("a run of repeated calls cut off at the token limit counts each call once a
   assert.doesNotMatch(out.reply, /Reply number [2-9]/);
 });
 
+test("a rate question is answered from the checked lookup, in one sentence", async () => {
+  const lookup = { unitsPerUsd: 16.406, name: "South African rand", asOf: "2026-10-21", kind: "official mid", source: "idbz.co.zw", url: "https://www.idbz.co.zw/rates", checks: { sources: [{ host: "idbz.co.zw", unitsPerUsd: 16.406 }, { host: "cabs.co.zw", unitsPerUsd: 16.2218 }] }, trace: [] };
+  const { chat } = scripted({ tool_calls: [call("get_exchange_rate", { currency: "rand" })] }, "Rand rate: 16.406. Today's sales $35.36, cash $12.30, stock: bread 13.");
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "What is the rand rate today?", now: NOW, rates: async () => lookup });
+  assert.equal(out.reply, "One US dollar is 16.406 South African rand: the mid rate on idbz.co.zw, dated 2026-10-21, and cabs.co.zw agrees at 16.2218.");
+  assert.equal(out.lookups.length, 1);
+});
+
 test("the same transaction called twice in one message is proposed once", async () => {
   const sale = { items: [{ item: "bread", qty: 1 }], payment: "cash" };
   const { chat } = scripted({ tool_calls: [call("record_sale", sale, "a"), call("record_sale", sale, "b")] }, "One bread.");

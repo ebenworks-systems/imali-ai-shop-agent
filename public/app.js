@@ -385,8 +385,8 @@ function history() {
 
 function thinking(withPhoto) {
   const stages = withPhoto
-    ? ["Nemotron 3.5 Super VL is reading the photo…", "Nemotron 3.5 Lightning is matching it to your stock…", "Checking the double entry…"]
-    : ["Nemotron 3.5 Lightning is reading your message…", "Checking the double entry…"];
+    ? ["Nemotron 3.5 Super VL is reading the photo…", "Nemotron 3.5 Lightning is matching it to your stock…", "Checking every figure in code…"]
+    : ["Nemotron 3.5 Lightning is reading your message…", "Checking every figure in code…"];
   const label = el("span", {}, stages[0]);
   const li = el("li", { class: "msg msg-agent" }, el("div", { class: "thinking" }, el("span", { class: "pulse", "aria-hidden": "true" }, el("i"), el("i"), el("i")), label));
   let i = 0;

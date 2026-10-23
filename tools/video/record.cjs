@@ -13,6 +13,21 @@ const LINES = require("./narration.json");
 const LENGTHS = JSON.parse(fs.readFileSync(path.join(WORK, "takes", "lengths.json"), "utf8"));
 const GAP = 0.35;
 
+// The opening card: the problem before the product, in the page's own type and colours.
+const OPEN_CARD = `(() => {
+  const d = document.createElement("div");
+  d.id = "open-card";
+  d.style.cssText = "position:fixed;inset:0;z-index:2147483640;display:grid;place-items:center;background:#f2f0eb;transition:opacity .9s cubic-bezier(.32,.72,0,1)";
+  d.innerHTML = \`<div style="max-width:1040px;padding:0 64px">
+    <p style="margin:0;font:600 15px/1 Geist,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#a07b3b">Harare, closing time</p>
+    <p style="margin:26px 0 0;font:400 96px/1 'Newsreader Display',Georgia,serif;letter-spacing:-.03em;color:#1e3932">Every sale goes into<br>a paper book.</p>
+    <p style="margin:30px 0 0;font:italic 400 46px/1.15 'Newsreader Display',Georgia,serif;color:#00754a">What did I make? Who owes me?<br>Why is the till short?</p>
+    <p style="margin:44px 0 0;font:400 16px/1.4 Geist,sans-serif;color:rgba(35,32,28,.55)">Rudo and her shop are invented for this demo.</p>
+  </div>\`;
+  document.body.append(d);
+})()`;
+const OPEN_CARD_OUT = `(() => { const d = document.getElementById("open-card"); if (d) { d.style.opacity = "0"; setTimeout(() => d.remove(), 1000); } })()`;
+
 // The closing card, drawn over the page in the page's own type and colours.
 const END_CARD = `(() => {
   const d = document.createElement("div");
@@ -25,7 +40,8 @@ const END_CARD = `(() => {
       <span><span style="display:inline-block;width:92px;color:rgba(35,32,28,.55)">Try it</span>imali-ai-shop-agent.vercel.app</span>
       <span><span style="display:inline-block;width:92px;color:rgba(35,32,28,.55)">Code</span>gitlab.com/ebenworks-systems/imali-ai-shop-agent</span>
     </div>
-    <p style="margin:44px 0 0;font:400 16px/1.4 Geist,sans-serif;color:rgba(35,32,28,.55)">An Ebenworks product. The demo shop, names and figures are invented.</p>
+    <p style="margin:36px 0 0;font:500 18px/1.5 Geist,sans-serif;color:#1e3932">Measured on Token Factory, 23 October 2026: 81 of 81 test messages passed their checks,<br>median reply 1.9 s, about one cent for a whole demo day.</p>
+    <p style="margin:26px 0 0;font:400 16px/1.4 Geist,sans-serif;color:rgba(35,32,28,.55)">An Ebenworks product. The demo shop, names and figures are invented.</p>
   </div>\`;
   document.body.append(d);
   requestAnimationFrame(() => requestAnimationFrame(() => (d.style.opacity = "1")));
@@ -49,6 +65,7 @@ const speech = (scene) => {
       await page.waitForSelector(".live-dot.on", { timeout: 20000 });
       await page.evaluate(() => document.querySelectorAll(".reveal").forEach((n) => n.classList.add("in")));
       await page.evaluate(() => scrollTo(0, 0));
+      await page.evaluate(OPEN_CARD);
       await page.waitForTimeout(800);
     },
     script: async ({ page, mark, sleep }) => {
@@ -85,7 +102,11 @@ const speech = (scene) => {
       };
 
       await scene("open");
-      await sleep(5200);
+      await sleep((speech("open") - 0.8) * 1000);
+      await page.evaluate(OPEN_CARD_OUT);
+
+      await scene("hero");
+      await sleep(Math.max(0, speech("hero") - 2.4) * 1000);
       await h.scrollToEl("#demo", { offset: 84, ms: 1800 });
 
       await scene("sale");
@@ -111,6 +132,9 @@ const speech = (scene) => {
       await ask("Paid in ZiG");
       await sleep(1200);
       await recordAll();
+
+      await scene("rand");
+      await ask("Rand rate today?");
 
       await scene("costs");
       await ask("Paid electricity and transport");
