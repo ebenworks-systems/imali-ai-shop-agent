@@ -131,9 +131,38 @@ async function compose(browser) {
   await page.close();
 }
 
+// The entry's thumbnail (3:2). The project gallery shows it about 300 pixels wide, so the promise is set in very large
+// type beside two live cards; the title and pitch print under the tile already.
+async function thumbnail(browser) {
+  const page = await browser.newPage({ viewport: { width: 1800, height: 1200 }, deviceScaleFactor: 1 });
+  const card = (name) => `data:image/png;base64,${fs.readFileSync(path.join(CARDS, `${name}.png`)).toString("base64")}`;
+  await page.setContent(`<!doctype html><html><head><style>
+    @font-face { font-family: Display; src: ${font("Newsreader-Display.woff2")}; }
+    @font-face { font-family: Geist; font-weight: 600; src: ${font("Geist-600.woff2")}; }
+    body { margin: 0; width: 1800px; height: 1200px; background: #f2f0eb; font-family: Geist, sans-serif; color: #1e3932; position: relative; overflow: hidden; }
+    .copy { position: absolute; left: 100px; top: 150px; width: 1000px; }
+    .eyebrow { font-weight: 600; font-size: 44px; letter-spacing: .12em; text-transform: uppercase; color: #a07b3b; }
+    h1 { margin: 34px 0 0; font: 400 172px/.96 Display, Georgia, serif; letter-spacing: -.03em; }
+    .fig { margin-top: 56px; font-weight: 600; font-size: 50px; color: #00754a; }
+    .fig span { display: block; margin-top: 10px; font-size: 30px; color: #6b766f; letter-spacing: .02em; }
+    img { position: absolute; width: 700px; border-radius: 30px; background: #fff; box-shadow: 0 50px 100px -40px rgba(30,57,50,.45), 0 0 0 1px rgba(30,57,50,.08); }
+    .back { right: -150px; top: 80px; transform: rotate(4deg); }
+    .front { right: 50px; top: 520px; transform: rotate(-2deg); }
+  </style></head><body>
+    <div class="copy"><div class="eyebrow">NVIDIA Nemotron · Tavily</div><h1>One message in. Checked books out.</h1>
+      <div class="fig">Median reply 2.2 s<span>Measured on Nebius Token Factory, 23 Oct 2026</span></div></div>
+    <img class="back" src="${card("zig")}"><img class="front" src="${card("sale")}">
+  </body></html>`);
+  await page.waitForTimeout(250);
+  await page.screenshot({ path: path.join(OUT, "thumbnail.png") });
+  console.log("picture thumbnail.png");
+  await page.close();
+}
+
 (async () => {
   const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN || "/usr/bin/google-chrome" });
   if (!process.env.COMPOSE_ONLY) await liveCards(browser);
   await compose(browser);
+  await thumbnail(browser);
   await browser.close();
 })();

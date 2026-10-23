@@ -3,7 +3,7 @@
 **Say what you sold. Ask what you made.** A shop owner types a line, speaks it or photographs a supplier's invoice. The agent turns it into the sale, the stock and double-entry books, checks every figure in plain code, and records nothing until the owner taps Record. It runs on four NVIDIA Nemotron models served by Nebius Token Factory, with Tavily reading the banks' rate pages when a customer pays in ZiG or rand.
 
 - Live demo: https://imali-ai-shop-agent.vercel.app
-- Film (2:32): https://youtu.be/MKX0xmoecNM
+- Film (2:56): https://youtu.be/WW27hUF0C8M
 - Built for the Nebius × NVIDIA Global AI Hackathon, Best Apps and Agents track
 - Open source under the MIT licence. The shop, people, invoice and figures in the demo are invented.
 
