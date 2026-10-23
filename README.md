@@ -6,8 +6,6 @@
 - Built for the Nebius × NVIDIA Global AI Hackathon, Best Apps and Agents track
 - Open source under the MIT licence. The shop, people, invoice and figures in the demo are invented.
 
-![The demo: the owner's chat on the left, the live books on the right](docs/screenshot.png)
-
 ## Why
 
 Imali AI is Africa's smartest AI Business OS: one AI agent runs sales, stock, staff, suppliers and double-entry books from a text, voice note or photo, in nine languages. Most small shops today keep no records or a paper book, so they cannot see their profit, chase what they are owed or show a lender a history. Imali AI was built, tested and piloted with users from April 2026, and launched on 21 October 2026.
