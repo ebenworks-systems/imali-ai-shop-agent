@@ -11,3 +11,5 @@ submission/work/
 submission/*.mp4
 submission/gallery/
 submission/eval-*.json.tmp
+submission/*.md
+submission/*.srt
