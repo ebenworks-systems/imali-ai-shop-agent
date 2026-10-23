@@ -430,7 +430,16 @@ export async function runAgent({ chat, models, books, message = "", image, histo
         } else if (!result) {
           seen.add(key);
           const built = BUILDERS[name](working, args);
-          const again = built.ok && built.entry && proposals.find((p) => p.tool === name && p.summary === built.entry.memo && p.amount === built.entry.amount);
+          const again =
+            built.ok &&
+            built.entry &&
+            proposals.find(
+              (p) =>
+                p.tool === name &&
+                ((p.summary === built.entry.memo && p.amount === built.entry.amount) ||
+                  // a delivery already proposed in full, called again for some of its lines
+                  (name === "record_stock_in" && p.entry.party === built.entry.party && built.entry.stock.every((s) => p.entry.stock.some((q) => q.item === s.item && q.qty === s.qty)))),
+            );
           if (!built.ok) result = { question: built.question };
           else if (again) result = { ok: true, note: "Already recorded above." };
           else {

@@ -213,6 +213,22 @@ test("a retry that proposes the same record in other words is not proposed twice
   assert.equal(out.proposals.length, 1);
 });
 
+test("a delivery already proposed in full is not proposed again for one of its lines", async () => {
+  const reading = { kind: "invoice", supplier: "Kudzai Wholesale", items: [{ name: "Sugar 2 kg", qty: 10, unit_cost: 2.1 }, { name: "Peanut butter 375 g", qty: 6, unit_cost: 1.85 }], total: 32.1, paid: "unknown" };
+  const { chat } = scripted(
+    { content: JSON.stringify(reading) },
+    {
+      tool_calls: [
+        call("record_stock_in", { supplier: "Kudzai Wholesale", items: [{ item: "sugar-2kg", qty: 10, unit_cost: 2.1 }, { item: "Peanut butter 375 g", qty: 6, unit_cost: 1.85 }], paid: "credit" }, "a"),
+        call("record_stock_in", { supplier: "Kudzai Wholesale", items: [{ item: "Peanut butter 375 g", qty: 6, unit_cost: 1.85 }], paid: "credit" }, "b"),
+      ],
+    },
+    "Delivery from Kudzai Wholesale ready to record.",
+  );
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Delivered, I pay Friday", image: "data:image/jpeg;base64,AAAA", now: NOW });
+  assert.equal(out.proposals.length, 1);
+});
+
 test("the same transaction called twice in one message is proposed once", async () => {
   const sale = { items: [{ item: "bread", qty: 1 }], payment: "cash" };
   const { chat } = scripted({ tool_calls: [call("record_sale", sale, "a"), call("record_sale", sale, "b")] }, "One bread.");
