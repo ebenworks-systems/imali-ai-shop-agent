@@ -117,6 +117,25 @@ test("a question from the ledger is passed back so the agent asks the owner", as
   assert.match(asked[1].messages.at(-1).content, /Who took it on credit/);
 });
 
+test("a ledger question reaches the owner even when the model's reply skips it", async () => {
+  const { chat } = scripted({ content: "", tool_calls: [call("record_sale", { items: [{ item: "candles-6", qty: 1 }], payment: "cash" }), call("reply", { text: "Today's sales: $1.70." })] });
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Sold a pack of candles and a box of matches", now: NOW });
+  assert.equal(out.proposals.length, 0);
+  assert.match(out.reply, /How did the customer pay/);
+});
+
+test("the day is closed only with a count the owner gave, never one the model took from the books", async () => {
+  const { chat, asked } = scripted(
+    { tool_calls: [call("record_owner_withdrawal", { amount: 10, method: "cash", note: "kids' lunch" }), call("close_day", { counted_cash: 40 })] },
+    "Noted: you took $10 from the till.",
+  );
+  const out = await runAgent({ chat, models: MODELS, books: books(), message: "Took $10 from the till for the kids' lunch money", now: NOW });
+  assert.equal(out.answeredBy, undefined);
+  assert.deepEqual(out.proposals.map((p) => p.tool), ["record_owner_withdrawal"]);
+  assert.ok(!asked.some((a) => a.model.label === "Nemotron 3 Ultra"));
+  assert.match(asked[1].messages.at(-1).content, /no counted cash/);
+});
+
 test("the same transaction called twice in one message is proposed once", async () => {
   const sale = { items: [{ item: "bread", qty: 1 }], payment: "cash" };
   const { chat } = scripted({ tool_calls: [call("record_sale", sale, "a"), call("record_sale", sale, "b")] }, "One bread.");

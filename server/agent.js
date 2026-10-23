@@ -311,6 +311,7 @@ export async function runAgent({ chat, models, books, message = "", image, histo
 
   let model = models.router;
   let failures = 0;
+  const questions = [];
   let escalated = false;
   const done = (reply, extra = {}) => ({ reply, proposals, trace, photo, escalated, ...extra });
 
@@ -406,6 +407,9 @@ export async function runAgent({ chat, models, books, message = "", image, histo
         trace.push(a.trace);
         if (a.text) return done(a.text, { answeredBy: models.analyst.label });
         result = { error: "The analyst could not answer. Answer briefly yourself." };
+      } else if (name === "close_day" && !numbersIn(message).has(Number(args.counted_cash))) {
+        failures += 1;
+        result = { error: "The owner's latest message gives no counted cash. Call close_day only when the owner says what they counted in the till." };
       } else if (name === "close_day") {
         const c = await closeDay({ chat, models, books: working, counted: args.counted_cash, ownerWords: message });
         if (c.question) result = { question: c.question };
@@ -419,9 +423,12 @@ export async function runAgent({ chat, models, books, message = "", image, histo
           result = { till: { expected: money(till.expected), counted: money(till.counted), difference: money(till.diff) } };
         }
       }
+      if (result?.question) questions.push(result.question);
       messages.push({ role: "tool", tool_call_id: call.id, content: JSON.stringify(result) });
     }
 
+    // A question from the ledger reaches the owner even when the model's reply skips it.
+    if (replyText && questions.length && !/\?/.test(replyText)) replyText = proposals.length ? `${replyText} ${questions[0]}` : questions[0];
     if (replyText) return done(replyText);
     if (failures >= 2 && !escalated) {
       model = models.analyst;
