@@ -12,7 +12,7 @@ questions fail in both. Under the override the trace still labels the analyst "N
 | 18 messages, 3 runs (`tools/eval-live.mjs --runs 3`) | 16.67 ± 0.58 per run | 17.00 ± 0.00 per run |
 | Demo day, 3 runs (`--day --runs 3`) | 8 ± 0 of 9 | 8 ± 0 of 9 |
 | Analyst calls, median time and mean cost | 8 calls, 5.2 s, $0.00102 | 7 calls, 8.3 s, $0.00158 |
-| Forced fallback (`tools/escalation-check.mjs`, 2 messages x 3) | 0 of 6: Token Factory answered 400 every time | 6 of 6 handled: 4 recorded, 2 asked how the costs were paid |
+| Forced fallback (`tools/escalation-check.mjs`, 2 messages x 3) | 0 of 6: Token Factory answered 400 every time (`escalation-old.log`) | 4 of 6 by the script's check; the other 2 asked how the costs were paid instead of recording them (`escalation.log`) |
 
 The misses: the rand rate (3 per arm) and ZiG payment (3 per arm) need Tavily; one "two expenses" miss in the old arm.
 The 400 with Nemotron 3 Super came after a broken tool call ("{not json") in the history; the cause was not isolated
