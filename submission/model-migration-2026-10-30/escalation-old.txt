@@ -1,13 +1,14 @@
-FAIL run1 "1 salt cash" 1231 ms escalated=undefined undefined ERROR Token Factory answered 400
+analyst: nvidia/nemotron-3-super-120b-a12b
+FAIL run1 "1 salt cash" 1005 ms escalated=undefined undefined ERROR Token Factory answered 400
    reply: undefined  proposals: undefined
-FAIL run1 "Paid $5 for electricity and $2 transport to town" 996 ms escalated=undefined undefined ERROR Token Factory answered 400
+FAIL run1 "Paid $5 for electricity and $2 transport to town" 1188 ms escalated=undefined undefined ERROR Token Factory answered 400
    reply: undefined  proposals: undefined
-FAIL run2 "1 salt cash" 432 ms escalated=undefined undefined ERROR Token Factory answered 400
+FAIL run2 "1 salt cash" 423 ms escalated=undefined undefined ERROR Token Factory answered 400
    reply: undefined  proposals: undefined
-FAIL run2 "Paid $5 for electricity and $2 transport to town" 661 ms escalated=undefined undefined ERROR Token Factory answered 400
+FAIL run2 "Paid $5 for electricity and $2 transport to town" 422 ms escalated=undefined undefined ERROR Token Factory answered 400
    reply: undefined  proposals: undefined
-FAIL run3 "1 salt cash" 428 ms escalated=undefined undefined ERROR Token Factory answered 400
+FAIL run3 "1 salt cash" 1480 ms escalated=undefined undefined ERROR Token Factory answered 400
    reply: undefined  proposals: undefined
-FAIL run3 "Paid $5 for electricity and $2 transport to town" 622 ms escalated=undefined undefined ERROR Token Factory answered 400
+FAIL run3 "Paid $5 for electricity and $2 transport to town" 651 ms escalated=undefined undefined ERROR Token Factory answered 400
    reply: undefined  proposals: undefined
 0 of 6 passed

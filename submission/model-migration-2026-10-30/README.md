@@ -18,7 +18,8 @@ The misses: the rand rate (3 per arm) and ZiG payment (3 per arm) need Tavily; o
 was a Token Factory timeout on the router, before any analyst call.
 
 The forced-fallback rows ran on this commit's code, not d1ff7dc: Super VL by the new default, Nemotron 3 Super by
-`NEBIUS_ANALYST_MODEL=nvidia/nemotron-3-super-120b-a12b` (the 400 prints no trace, so the log does not name the model;
-the script now prints the analyst id first).
+`NEBIUS_ANALYST_MODEL=nvidia/nemotron-3-super-120b-a12b` (`escalation-old.txt` is the
+re-run with the script that prints the analyst id on its first line).
 The 400 with Nemotron 3 Super came after a broken tool call ("{not json") in the history; the cause was not isolated
-further. The analyst answers were read by hand in both arms; none states a figure that is not in the book.
+further. The restock answers were read by hand in both arms; none states a figure that is not in the book. On the ZiG step,
+which reaches the analyst only because the rate lookup is off, both models miscounted bread stock in some runs.

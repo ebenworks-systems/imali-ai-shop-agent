@@ -68,7 +68,7 @@ const record = (out) => {
 // Per model: how many calls, the median and 90th-percentile time of one call, tokens and cost per call at list prices.
 function perModel(results) {
   const groups = {};
-  for (const r of results) for (const c of r.calls || []) (groups[c.model] ||= []).push(c);
+  for (const r of results) for (const c of r.calls || []) (groups[`${c.model} (${c.role})`] ||= []).push(c);
   const q = (xs, f) => xs.slice().sort((a, b) => a - b)[Math.min(xs.length - 1, Math.floor(xs.length * f))];
   return Object.fromEntries(
     Object.entries(groups).map(([m, cs]) => [
