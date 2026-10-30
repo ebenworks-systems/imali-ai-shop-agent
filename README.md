@@ -1,6 +1,6 @@
 # Imali AI shop agent on NVIDIA Nemotron
 
-**Say what you sold. Ask what you made.** A shop owner types a line, speaks it or photographs a supplier's invoice. The agent turns it into the sale, the stock and double-entry books, checks every figure in plain code, and records nothing until the owner taps Record. It runs on four NVIDIA Nemotron models served by Nebius Token Factory, with Tavily reading the banks' rate pages when a customer pays in ZiG or rand.
+**Say what you sold. Ask what you made.** A shop owner types a line, speaks it or photographs a supplier's invoice. The agent turns it into the sale, the stock and double-entry books, checks every figure in plain code, and records nothing until the owner taps Record. It runs on three NVIDIA Nemotron models, in four jobs, served by Nebius Token Factory, with Tavily reading the banks' rate pages when a customer pays in ZiG or rand.
 
 - Live demo: https://imali-ai-shop-agent.vercel.app
 - Film (2:56): https://youtu.be/WW27hUF0C8M
@@ -23,17 +23,19 @@ Measured on 23 October 2026 with `tools/eval-live.mjs` against the live Token Fa
 | Nemotron 3.5 Lightning | reads every message, calls typed tools | 83 | 2.0 s | $0.00033 |
 | Nemotron 3.5 Super VL | reads an invoice photo into JSON lines | 6 | 2.4 s | $0.00081 |
 | Nemotron 3 Super | answers "what should I restock?", retries a hard message | 6 | 5.5 s | $0.00104 |
+
+Nebius retires Nemotron 3 Super from Token Factory Serverless on 9 November 2026 and names Nemotron 3.5 Super VL as its replacement, at the same price. Since 30 October 2026 Super VL also answers the questions that need thought and takes over a hard message. Measured that day against Nemotron 3 Super on the same checks (18 messages and the demo day, three times each, Tavily switched off in both): the same messages passed, and its seven analyst calls took a median 8.3 s and $0.00158 against 5.2 s and $0.00102 over eight, because it writes longer reasoning. When Lightning's tool calls were made to fail twice, Super VL recorded the message or asked how it was paid in 6 of 6 tries, where Nemotron 3 Super was refused by Token Factory in 6 of 6.
 | Nemotron 3 Ultra | closes the day | 6 | 3.5 s | $0.00325 |
 
 A whole demo day of nine messages cost $0.0095 at Token Factory's list prices. Tavily search took a median 0.7 s and Tavily extract 2.3 s per lookup. With Nemotron 3 Nano as the router, an earlier run of 17 of these messages passed 42 of 51: it answered a credit sale with a question, invented a delivery when the owner paid a supplier, and recorded paraffin as candles. Nemotron 3.5 Lightning, at the same price, passed those, and became the router.
 
 ## How it works
 
-![The model proposes, code checks, the owner confirms: the flow from the owner's message through the four Nemotron models, the ledger's checks and Tavily's checked rates](docs/architecture.svg)
+![The model proposes, code checks, the owner confirms: the flow from the owner's message through the Nemotron models, the ledger's checks and Tavily's checked rates](docs/architecture.svg)
 
 ### NVIDIA Nemotron: each job on the model that fits it
 
-Lightning reads every message, so it has to be fast and cheap: 30B parameters with 3B active, built for tool calls, with reasoning switched off (`chat_template_kwargs: {"enable_thinking": false}`). Super VL reads photos. Super gets the questions that need thought, with the whole book and a week of sales, and takes over a message when Lightning's tool calls fail twice. Ultra runs once a day to close the books. The page shows, for every message, which model ran, how long it took, how many tokens it used and what it cost.
+Lightning reads every message, so it has to be fast and cheap: 30B parameters with 3B active, built for tool calls, with reasoning switched off (`chat_template_kwargs: {"enable_thinking": false}`). Super VL reads photos, and since 30 October also gets the questions that need thought, with the whole book and a week of sales, and takes over a message when Lightning's tool calls fail twice. Ultra runs once a day to close the books. The page shows, for every message, which model ran, how long it took, how many tokens it used and what it cost.
 
 ### The model proposes, code checks, the owner confirms
 
@@ -47,7 +49,7 @@ The models never write to the books. Lightning's tool calls go to a small ledger
 
 ### Nebius Token Factory
 
-One key and one OpenAI-compatible endpoint serve all four models, so routing a job to a different size is a change of model id. Tool calling, JSON mode and `tool_choice: "required"` work as documented. The demo counts the list-price cost of every call against a lifetime budget kept in Upstash Redis and stops calling models when it is spent.
+One key and one OpenAI-compatible endpoint serve every model, so routing a job to a different size is a change of model id. Tool calling, JSON mode and `tool_choice: "required"` work as documented. The demo counts the list-price cost of every call against a lifetime budget kept in Upstash Redis and stops calling models when it is spent.
 
 ### Tavily: exchange rates read live and checked in code
 
@@ -98,7 +100,7 @@ Imali AI is Africa's smartest AI Business OS: one AI agent runs sales, stock, st
 | `public/index.html`, `public/styles.css`, `public/app.js` | The page: chat, proposal cards, live books, model route |
 | `public/js/ledger.js` | Double-entry ledger shared by the browser and the server |
 | `public/js/shop.js` | The invented demo shop and the example messages |
-| `server/agent.js` | Tools, prompts, the routing between the four models and the checks on their answers |
+| `server/agent.js` | Tools, prompts, the routing between the models and the checks on their answers |
 | `server/rates.js` | Tavily search and extract, and the checks on every exchange rate |
 | `server/nebius.js` | Token Factory client, model ids and list prices |
 | `server/limits.js` | Per-address and daily limits, and a lifetime budget counted from each call's cost |

@@ -28,7 +28,7 @@ const SHOTS = [
 const MEASURED = [
   ["Nemotron 3.5 Lightning", "reads every message, calls typed tools", "2.0 s", "$0.0003"],
   ["Nemotron 3.5 Super VL", "reads an invoice photo", "2.4 s", "$0.0008"],
-  ["Nemotron 3 Super", "answers the questions that need thought", "5.5 s", "$0.0010"],
+  ["Nemotron 3.5 Super VL", "answers the questions that need thought (30 Oct)", "8.3 s", "$0.0016"],
   ["Nemotron 3 Ultra", "closes the day", "3.5 s", "$0.0033"],
   ["Tavily search + extract", "finds and reads the banks' rate pages", "3.0 s", "free tier"],
 ];

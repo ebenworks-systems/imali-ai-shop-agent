@@ -4,7 +4,7 @@ Working instructions for this repository.
 
 ## What this is
 
-A stand-alone demo built for the Nebius x NVIDIA Global AI Hackathon (Best Apps and Agents track): a shop owner's message or photo becomes checked double-entry records, using four NVIDIA Nemotron models on Nebius Token Factory and Tavily search and extract for checked exchange rates. It is new code and holds no Imali AI product code. README.md explains it for readers; submission/devpost-text.md is the entry's text.
+A stand-alone demo built for the Nebius x NVIDIA Global AI Hackathon (Best Apps and Agents track): a shop owner's message or photo becomes checked double-entry records, using NVIDIA Nemotron models on Nebius Token Factory and Tavily search and extract for checked exchange rates. It is new code and holds no Imali AI product code. README.md explains it for readers; submission/devpost-text.md is the entry's text.
 
 ## Run and test
 
@@ -17,7 +17,7 @@ A stand-alone demo built for the Nebius x NVIDIA Global AI Hackathon (Best Apps 
 ## Rules for this code
 
 - The models only propose. Every record is built and checked by `public/js/ledger.js` in whole cents, and the owner confirms it. Figures the agent quotes come from the ledger through a read tool.
-- Keep each job on its model: Lightning routes every message, Super VL reads photos, Super answers questions and retries failed tool calls, Ultra closes the day. A change of model or role updates the README table in the same commit.
+- Keep each job on its model: Lightning routes every message, Super VL reads photos and, since 30 October 2026 (Nemotron 3 Super retires on 9 November), answers questions and retries failed tool calls, Ultra closes the day. A change of model or role updates the README table in the same commit.
 - The demo shop, people, invoice and figures are invented. Never put a real merchant, customer or figure into the demo, the tests or the film.
 - No keys in code, tests, logs or commits. The server never sends a key to the browser.
 - Light theme only. Imali AI's lines on the page are the company's approved wording; change them only from that source, and write Imali AI in full.

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
-  <title>How the Imali AI shop agent works: four NVIDIA Nemotron models on Nebius Token Factory, Tavily for exchange rates, and a ledger that checks every record</title>
+  <title>How the Imali AI shop agent works: three NVIDIA Nemotron models in four jobs on Nebius Token Factory, Tavily for exchange rates, and a ledger that checks every record</title>
   <defs>
     <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#5b6b64"/></marker>
     <style>
@@ -81,10 +81,10 @@
 
   <!-- analyst and closer -->
   <rect x="40" y="590" width="350" height="110" rx="16" fill="#fff" stroke="#d9d4c7"/>
-  <text x="60" y="622" class="t">Nemotron 3 Super</text>
+  <text x="60" y="622" class="t">Nemotron 3.5 Super VL</text>
   <text x="60" y="646" class="s">"What should I restock?": the whole book</text>
   <text x="60" y="666" class="s">and a week of sales; retries a hard message</text>
-  <text x="60" y="688" class="m">5.5 s · $0.0010</text>
+  <text x="60" y="688" class="m">8.3 s · $0.0016 (30 Oct)</text>
   <rect x="420" y="590" width="360" height="110" rx="16" fill="#fff" stroke="#d9d4c7"/>
   <text x="440" y="622" class="t">Nemotron 3 Ultra closes the day</text>
   <text x="440" y="646" class="s">code counts the till first; Ultra names the</text>
@@ -98,7 +98,7 @@
   <rect x="810" y="590" width="350" height="110" rx="16" fill="#f2efe7" stroke="#d9d4c7"/>
   <text x="830" y="622" class="t">Nebius Token Factory</text>
   <text x="830" y="646" class="s">one key and one OpenAI-compatible API</text>
-  <text x="830" y="666" class="s">for all four models; each call's cost is</text>
+  <text x="830" y="666" class="s">for every model; each call's cost is</text>
   <text x="830" y="686" class="s">counted against the demo's budget</text>
   <text x="40" y="738" class="l">Measured on 23 October 2026: 81 of 81 owner messages passed their checks; median reply 2.2 s; about $0.0095 for a whole demo day at list prices.</text>
 </svg>

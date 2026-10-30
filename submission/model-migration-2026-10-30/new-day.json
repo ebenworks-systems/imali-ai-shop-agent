@@ -1,0 +1,928 @@
+{
+  "summary": {
+    "when": "2026-10-30T14:20:35.058Z",
+    "mode": "day",
+    "provider": "Nebius Token Factory",
+    "models": {
+      "router": "nvidia/Nemotron-3_5-Lightning",
+      "vision": "nvidia/Nemotron-3.5-Super-VL",
+      "analyst": "nvidia/Nemotron-3.5-Super-VL",
+      "closer": "nvidia/Nemotron-3-Ultra-550b-a55b"
+    },
+    "runs": 3,
+    "steps": 9,
+    "passed": 24,
+    "total": 27,
+    "medianMs": 6051,
+    "totalCost": 0.02932314,
+    "perModel": {
+      "Nemotron 3.5 Lightning": {
+        "calls": 27,
+        "medianMs": 2833,
+        "p90Ms": 6291,
+        "meanTokensIn": 3900,
+        "meanTokensOut": 450,
+        "meanCost": 0.0003419755555555556
+      },
+      "Nemotron 3.5 Super VL": {
+        "calls": 3,
+        "medianMs": 3029,
+        "p90Ms": 3619,
+        "meanTokensIn": 2054,
+        "meanTokensOut": 210,
+        "meanCost": 0.0008052
+      },
+      "Nemotron 3 Super": {
+        "calls": 4,
+        "medianMs": 11447,
+        "p90Ms": 12236,
+        "meanTokensIn": 1518,
+        "meanTokensOut": 1230,
+        "meanCost": 0.0015625499999999998
+      },
+      "Nemotron 3 Ultra": {
+        "calls": 3,
+        "medianMs": 4710,
+        "p90Ms": 4998,
+        "meanTokensIn": 663,
+        "meanTokensOut": 1048,
+        "meanCost": 0.003808
+      }
+    }
+  },
+  "results": [
+    {
+      "run": 1,
+      "name": "day: cash sale",
+      "pass": true,
+      "ms": 4246,
+      "cost": 0.00032574000000000004,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 4234,
+          "tokensIn": 3629,
+          "tokensOut": 450,
+          "cost": 0.00032574000000000004
+        }
+      ],
+      "escalated": false,
+      "reply": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash, $12.30. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash",
+          "amount": 1230,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "name": "day: Shona sale",
+      "pass": true,
+      "ms": 5932,
+      "cost": 0.00033198,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 5930,
+          "tokensIn": 3733,
+          "tokensOut": 450,
+          "cost": 0.00033198
+        }
+      ],
+      "escalated": false,
+      "reply": "Sold 1 × Eggs, tray of 30, 2 × Fresh milk 1 L by mobile money, $8.10. Eggs, tray of 30 is down to 2. Time to reorder. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 1 × Eggs, tray of 30, 2 × Fresh milk 1 L by mobile money",
+          "amount": 810,
+          "warnings": [
+            "Eggs, tray of 30 is down to 2. Time to reorder."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "name": "day: credit sale",
+      "pass": true,
+      "ms": 6177,
+      "cost": 0.00033617999999999994,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 6176,
+          "tokensIn": 3803,
+          "tokensOut": 450,
+          "cost": 0.00033617999999999994
+        }
+      ],
+      "escalated": false,
+      "reply": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai, $12.70. Maize meal 10 kg is down to 3. Time to reorder. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai",
+          "amount": 1270,
+          "warnings": [
+            "Maize meal 10 kg is down to 3. Time to reorder."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "name": "day: invoice photo",
+      "pass": true,
+      "ms": 9706,
+      "cost": 0.00116052,
+      "models": [
+        "Nemotron 3.5 Super VL (photo reader)",
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Super VL",
+          "role": "photo reader",
+          "ms": 3026,
+          "tokensIn": 2054,
+          "tokensOut": 210,
+          "cost": 0.0008052
+        },
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 6678,
+          "tokensIn": 4122,
+          "tokensOut": 450,
+          "cost": 0.00035532
+        }
+      ],
+      "escalated": false,
+      "reply": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375g, on account with Kudzai Wholesale, $88.50. Sugar 2 kg cost $2.10 this time, up from $2.05. Peanut butter 375g is new to your stock list. Tell me what you will sell it for. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375g, on account with Kudzai Wholesale",
+          "amount": 8850,
+          "warnings": [
+            "Sugar 2 kg cost $2.10 this time, up from $2.05.",
+            "Peanut butter 375g is new to your stock list. Tell me what you will sell it for."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "name": "day: paid in ZiG",
+      "pass": false,
+      "ms": 6407,
+      "cost": 0.00035172000000000003,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 6407,
+          "tokensIn": 4062,
+          "tokensOut": 450,
+          "cost": 0.00035172000000000003
+        }
+      ],
+      "escalated": false,
+      "reply": "Live exchange rates are switched off on this copy (no TAVILY_API_KEY).",
+      "proposals": []
+    },
+    {
+      "run": 1,
+      "name": "day: two costs",
+      "pass": true,
+      "ms": 6148,
+      "cost": 0.00034872,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 6146,
+          "tokensIn": 4012,
+          "tokensOut": 450,
+          "cost": 0.00034872
+        }
+      ],
+      "escalated": false,
+      "reply": "Recorded $5 electricity and $2 transport. Tap Record to save.",
+      "proposals": [
+        {
+          "summary": "Paid $5.00 for electricity",
+          "amount": 500,
+          "warnings": []
+        },
+        {
+          "summary": "Paid $2.00 for transport",
+          "amount": 200,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "name": "day: customer pays back",
+      "pass": true,
+      "ms": 6200,
+      "cost": 0.00034548,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 6199,
+          "tokensIn": 3958,
+          "tokensOut": 450,
+          "cost": 0.00034548
+        }
+      ],
+      "escalated": false,
+      "reply": "Baba Farai paid $4 cash. Tap Record to save.",
+      "proposals": [
+        {
+          "summary": "Baba Farai paid $4.00 in cash",
+          "amount": 400,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "name": "day: restock question",
+      "pass": true,
+      "ms": 17688,
+      "cost": 0.0021379199999999998,
+      "models": [
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3 Super (analyst)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 6240,
+          "tokensIn": 3847,
+          "tokensOut": 450,
+          "cost": 0.00033882
+        },
+        {
+          "model": "Nemotron 3 Super",
+          "role": "analyst",
+          "ms": 11447,
+          "tokensIn": 1536,
+          "tokensOut": 1487,
+          "cost": 0.0017990999999999999
+        }
+      ],
+      "escalated": false,
+      "reply": "Restock Maize meal 10 kg because only 3 are left and the reorder level is 3. Restock Eggs, tray of 30 because only 2 are left and the reorder level is 2. Restock Candles, pack of 6 because only 3 are left and the reorder level is 3. Slow sellers are Salt 1 kg with 2 sold in seven days, Rice 2 kg with 3 sold, and Soft drink 2 L with 5 sold.",
+      "proposals": []
+    },
+    {
+      "run": 1,
+      "name": "day: close",
+      "pass": true,
+      "ms": 7231,
+      "cost": 0.00412722,
+      "models": [
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3 Ultra (closer)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2232,
+          "tokensIn": 3937,
+          "tokensOut": 450,
+          "cost": 0.00034422
+        },
+        {
+          "model": "Nemotron 3 Ultra",
+          "role": "closer",
+          "ms": 4998,
+          "tokensIn": 663,
+          "tokensOut": 1040,
+          "cost": 0.003783
+        }
+      ],
+      "escalated": false,
+      "reply": "Today you sold $33.10 and after $7.00 running costs you made a $0.35 loss. The till is $2.00 short; the most likely causes are the $5.00 electricity and $2.00 transport paid from the till but not recorded as cash out, and the $8.10 mobile‑money sale possibly entered as cash. Check the expense cash payments and the mobile‑money entry. Reorder candles (pack of 6), eggs (tray of 30) and maize meal (10 kg) for tomorrow.",
+      "proposals": [
+        {
+          "summary": "Till count $47.30: short by $2.00",
+          "amount": 200,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: cash sale",
+      "pass": true,
+      "ms": 2680,
+      "cost": 0.00032574000000000004,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2679,
+          "tokensIn": 3629,
+          "tokensOut": 450,
+          "cost": 0.00032574000000000004
+        }
+      ],
+      "escalated": false,
+      "reply": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash, $12.30. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash",
+          "amount": 1230,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: Shona sale",
+      "pass": true,
+      "ms": 5420,
+      "cost": 0.00033198,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 5419,
+          "tokensIn": 3733,
+          "tokensOut": 450,
+          "cost": 0.00033198
+        }
+      ],
+      "escalated": false,
+      "reply": "Sold 1 × Eggs, tray of 30, 2 × Fresh milk 1 L by mobile money, $8.10. Eggs, tray of 30 is down to 2. Time to reorder. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 1 × Eggs, tray of 30, 2 × Fresh milk 1 L by mobile money",
+          "amount": 810,
+          "warnings": [
+            "Eggs, tray of 30 is down to 2. Time to reorder."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: credit sale",
+      "pass": true,
+      "ms": 6292,
+      "cost": 0.00033617999999999994,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 6291,
+          "tokensIn": 3803,
+          "tokensOut": 450,
+          "cost": 0.00033617999999999994
+        }
+      ],
+      "escalated": false,
+      "reply": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai. She'll pay Friday.",
+      "proposals": [
+        {
+          "summary": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai",
+          "amount": 1270,
+          "warnings": [
+            "Maize meal 10 kg is down to 3. Time to reorder."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: invoice photo",
+      "pass": true,
+      "ms": 9124,
+      "cost": 0.00115896,
+      "models": [
+        "Nemotron 3.5 Super VL (photo reader)",
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Super VL",
+          "role": "photo reader",
+          "ms": 3619,
+          "tokensIn": 2054,
+          "tokensOut": 210,
+          "cost": 0.0008052
+        },
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 5505,
+          "tokensIn": 4096,
+          "tokensOut": 450,
+          "cost": 0.00035376
+        }
+      ],
+      "escalated": false,
+      "reply": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375 g, on account with Kudzai Wholesale, $88.50. Sugar 2 kg cost $2.10 this time, up from $2.05. Peanut butter 375 g is new to your stock list. Tell me what you will sell it for. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375 g, on account with Kudzai Wholesale",
+          "amount": 8850,
+          "warnings": [
+            "Sugar 2 kg cost $2.10 this time, up from $2.05.",
+            "Peanut butter 375 g is new to your stock list. Tell me what you will sell it for."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: paid in ZiG",
+      "pass": false,
+      "ms": 2346,
+      "cost": 0.00035015999999999997,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2345,
+          "tokensIn": 4036,
+          "tokensOut": 450,
+          "cost": 0.00035015999999999997
+        }
+      ],
+      "escalated": false,
+      "reply": "Live exchange rates are switched off on this copy (no TAVILY_API_KEY).",
+      "proposals": []
+    },
+    {
+      "run": 2,
+      "name": "day: two costs",
+      "pass": true,
+      "ms": 2417,
+      "cost": 0.00034715999999999995,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2415,
+          "tokensIn": 3986,
+          "tokensOut": 450,
+          "cost": 0.00034715999999999995
+        }
+      ],
+      "escalated": false,
+      "reply": "Recorded $5 electricity and $2 transport. Both paid in cash.",
+      "proposals": [
+        {
+          "summary": "Paid $5.00 for electricity",
+          "amount": 500,
+          "warnings": []
+        },
+        {
+          "summary": "Paid $2.00 for transport",
+          "amount": 200,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: customer pays back",
+      "pass": true,
+      "ms": 2294,
+      "cost": 0.00034548,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2294,
+          "tokensIn": 3958,
+          "tokensOut": 450,
+          "cost": 0.00034548
+        }
+      ],
+      "escalated": false,
+      "reply": "Baba Farai paid $4.00 in cash. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Baba Farai paid $4.00 in cash",
+          "amount": 400,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "name": "day: restock question",
+      "pass": true,
+      "ms": 8346,
+      "cost": 0.00150972,
+      "models": [
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3 Super (analyst)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2323,
+          "tokensIn": 3852,
+          "tokensOut": 450,
+          "cost": 0.00033912
+        },
+        {
+          "model": "Nemotron 3 Super",
+          "role": "analyst",
+          "ms": 6022,
+          "tokensIn": 1541,
+          "tokensOut": 787,
+          "cost": 0.0011706
+        }
+      ],
+      "escalated": false,
+      "reply": "Restock maize meal 10 kg, eggs tray of 30, and candles pack of 6 before the weekend. Each is at its reorder level with only 3, 2, and 3 units left. Slow sellers are salt 1 kg with 2 sold in seven days, rice 2 kg with 3 sold, and soft drink 2 L with 5 sold. Peanut butter 375 g has no recorded sales and no price set. Consider ordering less salt, rice, and soft drink until demand improves.",
+      "proposals": []
+    },
+    {
+      "run": 2,
+      "name": "day: close",
+      "pass": true,
+      "ms": 6051,
+      "cost": 0.00394482,
+      "models": [
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3 Ultra (closer)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2358,
+          "tokensIn": 3947,
+          "tokensOut": 450,
+          "cost": 0.00034481999999999997
+        },
+        {
+          "model": "Nemotron 3 Ultra",
+          "role": "closer",
+          "ms": 3692,
+          "tokensIn": 663,
+          "tokensOut": 979,
+          "cost": 0.0036
+        }
+      ],
+      "escalated": false,
+      "reply": "Today you made $33.10 in sales and after $7.00 running costs the profit after costs was -$0.35. The till is $2.00 short, most likely because too much change was given on cash sales or a cash expense was paid from the till without being recorded; check the change given and the electricity and transport receipts. Reorder tomorrow: Candles pack of 6, Eggs tray of 30, Maize meal 10 kg.",
+      "proposals": [
+        {
+          "summary": "Till count $47.30: short by $2.00",
+          "amount": 200,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: cash sale",
+      "pass": true,
+      "ms": 2491,
+      "cost": 0.00032574000000000004,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2491,
+          "tokensIn": 3629,
+          "tokensOut": 450,
+          "cost": 0.00032574000000000004
+        }
+      ],
+      "escalated": false,
+      "reply": "Sold 3 bread and 2 cooking oil, cash.",
+      "proposals": [
+        {
+          "summary": "Sold 3 × Bread loaf, 2 × Cooking oil 2 L in cash",
+          "amount": 1230,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: Shona sale",
+      "pass": true,
+      "ms": 2820,
+      "cost": 0.00033072,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2819,
+          "tokensIn": 3712,
+          "tokensOut": 450,
+          "cost": 0.00033072
+        }
+      ],
+      "escalated": false,
+      "reply": "Sold 1 × Eggs, tray of 30, 2 × Fresh milk 1 L by mobile money, $8.10. Eggs, tray of 30 is down to 2. Time to reorder. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 1 × Eggs, tray of 30, 2 × Fresh milk 1 L by mobile money",
+          "amount": 810,
+          "warnings": [
+            "Eggs, tray of 30 is down to 2. Time to reorder."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: credit sale",
+      "pass": true,
+      "ms": 2435,
+      "cost": 0.00033491999999999994,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2435,
+          "tokensIn": 3782,
+          "tokensOut": 450,
+          "cost": 0.00033491999999999994
+        }
+      ],
+      "escalated": false,
+      "reply": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai, $12.70. Maize meal 10 kg is down to 3. Time to reorder. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Sold 2 × Sugar 2 kg, 1 × Maize meal 10 kg on credit to Mai Tendai",
+          "amount": 1270,
+          "warnings": [
+            "Maize meal 10 kg is down to 3. Time to reorder."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: invoice photo",
+      "pass": true,
+      "ms": 5876,
+      "cost": 0.00115926,
+      "models": [
+        "Nemotron 3.5 Super VL (photo reader)",
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Super VL",
+          "role": "photo reader",
+          "ms": 3029,
+          "tokensIn": 2054,
+          "tokensOut": 210,
+          "cost": 0.0008052
+        },
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2847,
+          "tokensIn": 4101,
+          "tokensOut": 450,
+          "cost": 0.00035406
+        }
+      ],
+      "escalated": false,
+      "reply": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375 g, on account with Kudzai Wholesale, $88.50. Sugar 2 kg cost $2.10 this time, up from $2.05. Peanut butter 375 g is new to your stock list. Tell me what you will sell it for. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Stock in: 12 × Cooking oil 2 L, 10 × Sugar 2 kg, 24 × Bath soap, 6 × Peanut butter 375 g, on account with Kudzai Wholesale",
+          "amount": 8850,
+          "warnings": [
+            "Sugar 2 kg cost $2.10 this time, up from $2.05.",
+            "Peanut butter 375 g is new to your stock list. Tell me what you will sell it for."
+          ]
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: paid in ZiG",
+      "pass": false,
+      "ms": 15069,
+      "cost": 0.00244242,
+      "models": [
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3 Super (analyst)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2833,
+          "tokensIn": 4062,
+          "tokensOut": 450,
+          "cost": 0.00035172000000000003
+        },
+        {
+          "model": "Nemotron 3 Super",
+          "role": "analyst",
+          "ms": 12236,
+          "tokensIn": 1458,
+          "tokensOut": 1837,
+          "cost": 0.0020907
+        }
+      ],
+      "escalated": false,
+      "reply": "You had 15 bread loaves in stock. After selling 2, you have 13 left. The reorder point is 6, so you do not need to reorder yet.",
+      "proposals": []
+    },
+    {
+      "run": 3,
+      "name": "day: two costs",
+      "pass": true,
+      "ms": 3152,
+      "cost": 0.0003501,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 3151,
+          "tokensIn": 4035,
+          "tokensOut": 450,
+          "cost": 0.0003501
+        }
+      ],
+      "escalated": false,
+      "reply": "Paid $5.00 for electricity. Paid $2.00 for transport. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Paid $5.00 for electricity",
+          "amount": 500,
+          "warnings": []
+        },
+        {
+          "summary": "Paid $2.00 for transport",
+          "amount": 200,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: customer pays back",
+      "pass": true,
+      "ms": 2666,
+      "cost": 0.00034745999999999996,
+      "models": [
+        "Nemotron 3.5 Lightning (router)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2666,
+          "tokensIn": 3991,
+          "tokensOut": 450,
+          "cost": 0.00034745999999999996
+        }
+      ],
+      "escalated": false,
+      "reply": "Baba Farai paid $4.00 in cash. Tap Record to add it.",
+      "proposals": [
+        {
+          "summary": "Baba Farai paid $4.00 in cash",
+          "amount": 400,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "name": "day: restock question",
+      "pass": true,
+      "ms": 7417,
+      "cost": 0.0015309,
+      "models": [
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3 Super (analyst)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2729,
+          "tokensIn": 3885,
+          "tokensOut": 450,
+          "cost": 0.0003411
+        },
+        {
+          "model": "Nemotron 3 Super",
+          "role": "analyst",
+          "ms": 4688,
+          "tokensIn": 1536,
+          "tokensOut": 810,
+          "cost": 0.0011898
+        }
+      ],
+      "escalated": false,
+      "reply": "Restock maize meal 10 kg, eggs tray of 30, and candles pack of 6 before the weekend. Each is at its reorder level with only 3, 2, and 3 units left. Slow sellers are salt 1 kg with 2 sold last week, rice 2 kg with 3 sold, and soft drink 2 L with 5 sold. Peanut butter 375 g has no recorded sales and no price, so it is also moving very slowly.",
+      "proposals": []
+    },
+    {
+      "run": 3,
+      "name": "day: close",
+      "pass": true,
+      "ms": 7316,
+      "cost": 0.0043859400000000005,
+      "models": [
+        "Nemotron 3.5 Lightning (router)",
+        "Nemotron 3 Ultra (closer)"
+      ],
+      "calls": [
+        {
+          "model": "Nemotron 3.5 Lightning",
+          "role": "router",
+          "ms": 2606,
+          "tokensIn": 3949,
+          "tokensOut": 450,
+          "cost": 0.00034494
+        },
+        {
+          "model": "Nemotron 3 Ultra",
+          "role": "closer",
+          "ms": 4710,
+          "tokensIn": 663,
+          "tokensOut": 1126,
+          "cost": 0.004041
+        }
+      ],
+      "escalated": false,
+      "reply": "Today you sold $33.10 and after $7.00 running costs you made a $0.35 loss. The till is $2.00 short; the most likely causes are the $5.00 electricity and $2.00 transport payments taken from the till but not recorded as cash out, and possible wrong change given. Check the cash‑out entries for those payments and recount the change given. Reorder tomorrow: Candles pack of 6, Eggs tray of 30, Maize meal 10 kg.",
+      "proposals": [
+        {
+          "summary": "Till count $47.30: short by $2.00",
+          "amount": 200,
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

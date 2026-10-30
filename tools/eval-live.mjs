@@ -32,7 +32,7 @@ const CASES = [
   { name: "figures from the ledger", message: "How much cash is in the till right now?", expect: (o) => o.proposals.length === 0 && /40(\.00)?/.test(o.reply) },
   { name: "rand rate, checked on the banks' pages", message: "What is the rand rate today?", expect: (o) => o.proposals.length === 0 && o.lookups?.[0]?.currency === "South African rand" && o.lookups[0].sources.length >= 1 },
   { name: "photo of a supplier invoice", message: "Kudzai Wholesale just delivered this. I will pay them on Friday.", photo: "public/samples/invoice-kudzai-wholesale.jpg", expect: (o) => kinds(o).join() === "stock-in" && o.proposals[0].amount === 8850 && o.proposals[0].entry.method === "credit" },
-  { name: "restock advice from the analyst", message: "What should I restock before the weekend, and what is selling slowly?", expect: (o) => o.answeredBy === "Nemotron 3 Super" && /candle|egg|maize/i.test(o.reply) },
+  { name: "restock advice from the analyst", message: "What should I restock before the weekend, and what is selling slowly?", expect: (o) => o.answeredBy === models.analyst.label && /candle|egg|maize/i.test(o.reply) },
   { name: "closing the day with a short till", message: "Closing up now. I counted $38 in the till.", expect: (o) => o.answeredBy === "Nemotron 3 Ultra" && o.till?.diff === -200 && o.proposals.some((p) => p.tool === "close_day") },
 ];
 
@@ -46,7 +46,7 @@ const SCRIPT = [
   { name: "day: paid in ZiG", message: "Sold 2 bread, the customer paid 60 ZiG on mobile money", expect: (o) => kinds(o).join() === "sale" && Boolean(o.proposals[0].rate) },
   { name: "day: two costs", message: "Paid $5 for electricity and $2 transport to town", expect: (o) => kinds(o).join() === "expense,expense" },
   { name: "day: customer pays back", message: "Baba Farai paid back his $4 in cash", expect: (o) => kinds(o).join() === "customer-payment" },
-  { name: "day: restock question", message: "What should I restock before the weekend, and what is selling slowly?", expect: (o) => o.answeredBy === "Nemotron 3 Super" },
+  { name: "day: restock question", message: "What should I restock before the weekend, and what is selling slowly?", expect: (o) => o.answeredBy === models.analyst.label },
   { name: "day: close", message: "Closing up now. I counted $47.30 in the till.", expect: (o) => o.answeredBy === "Nemotron 3 Ultra" && o.till?.diff === -200 },
 ];
 

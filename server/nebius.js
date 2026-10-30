@@ -4,14 +4,17 @@
 export const DEFAULT_BASE_URL = "https://api.tokenfactory.nebius.com/v1";
 
 // NVIDIA open models on Token Factory's public endpoints, with list prices per million tokens
-// (input, output) as the Token Factory catalogue showed them on 23 October 2026.
+// (input, output) as the Token Factory catalogue showed them on 23 October 2026 (Super VL and the
+// retired Nemotron 3 Super read again on 30 October 2026: both $0.30 and $0.90).
+// Nemotron 3 Super (nvidia/nemotron-3-super-120b-a12b) leaves Token Factory Serverless on 9 November 2026;
+// Nebius names Super VL as its replacement, so Super VL now reads photos and answers the analyst's questions.
 // The router and the photo reader answer with reasoning switched off, so every message stays quick;
 // the analyst and the day-closer think before they answer.
 const NO_THINKING = { chat_template_kwargs: { enable_thinking: false } };
 export const MODELS = {
   router: { id: "nvidia/Nemotron-3_5-Lightning", label: "Nemotron 3.5 Lightning", price: [0.06, 0.24], extra: NO_THINKING },
   vision: { id: "nvidia/Nemotron-3.5-Super-VL", label: "Nemotron 3.5 Super VL", price: [0.3, 0.9], extra: NO_THINKING },
-  analyst: { id: "nvidia/nemotron-3-super-120b-a12b", label: "Nemotron 3 Super", price: [0.3, 0.9], extra: {} },
+  analyst: { id: "nvidia/Nemotron-3.5-Super-VL", label: "Nemotron 3.5 Super VL", price: [0.3, 0.9], extra: {} },
   closer: { id: "nvidia/Nemotron-3-Ultra-550b-a55b", label: "Nemotron 3 Ultra", price: [1, 3], extra: {} },
 };
 

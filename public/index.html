@@ -36,7 +36,7 @@
         <p class="lede reveal">
           A shop owner types a line, speaks it or photographs an invoice. Imali AI's agent turns it into the sale, the stock and double-entry books, checks every figure in plain code, and waits for one tap before anything is recorded.
         </p>
-        <ul class="model-strip reveal" aria-label="The four NVIDIA models the agent uses, why, and what each call measured">
+        <ul class="model-strip reveal" aria-label="The NVIDIA models the agent uses, why, and what each call measured">
           <li>
             <span class="m-name" translate="no">Nemotron 3.5 Lightning</span><span class="m-role">reads every message</span>
             <span class="m-why">30B with 3B active, built for tool calls: quick and cheap enough for every message.</span>
@@ -48,9 +48,9 @@
             <span class="m-measured">2.4 s · $0.0008 a call</span>
           </li>
           <li>
-            <span class="m-name" translate="no">Nemotron 3 Super</span><span class="m-role">thinks it through</span>
-            <span class="m-why">Reasons over the whole book and a week of sales for "what should I restock?".</span>
-            <span class="m-measured">5.5 s · $0.0010 a call</span>
+            <span class="m-name" translate="no">Nemotron 3.5 Super VL</span><span class="m-role">thinks it through</span>
+            <span class="m-why">Reasons over the whole book and a week of sales for "what should I restock?". It took this job from Nemotron 3 Super, which Nebius retires on 9 November.</span>
+            <span class="m-measured">8.3 s · $0.0016 a call (30 Oct)</span>
           </li>
           <li>
             <span class="m-name" translate="no">Nemotron 3 Ultra</span><span class="m-role">closes the day</span>
@@ -158,7 +158,7 @@
 
       <section id="how" class="how" aria-labelledby="how-title">
         <p class="eyebrow reveal"><span class="dot" aria-hidden="true"></span>How it works</p>
-        <h2 id="how-title" class="reveal">Four NVIDIA models.<br /><em>One shop's day.</em></h2>
+        <h2 id="how-title" class="reveal">Four jobs, three NVIDIA models.<br /><em>One shop's day.</em></h2>
         <div class="steps">
           <article class="shell step reveal">
             <div class="core">
@@ -177,8 +177,8 @@
           <article class="shell step reveal">
             <div class="core">
               <span class="step-n">03</span>
-              <h3>Nemotron 3 Super thinks it through</h3>
-              <p>"What should I restock before the weekend?" goes to Super with the whole book and a week of sales. Super also takes over a message when Lightning's tool calls fail twice, so a hard message still gets recorded.</p>
+              <h3>Nemotron 3.5 Super VL thinks it through</h3>
+              <p>"What should I restock before the weekend?" goes to Super VL with the whole book and a week of sales. Super VL also takes over a message when Lightning's tool calls fail twice, so a hard message still gets recorded.</p>
             </div>
           </article>
           <article class="shell step reveal">

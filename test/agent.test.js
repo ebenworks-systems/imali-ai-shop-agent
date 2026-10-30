@@ -66,12 +66,13 @@ test("a photo goes to Nemotron 3.5 Super VL first, and its reading reaches the r
   assert.equal(out.proposals[0].entry.method, "credit");
 });
 
-test("a question that needs thought is answered by Nemotron 3 Super with the whole book", async () => {
+test("a question that needs thought goes to the analyst model with the whole book", async () => {
   const { chat, asked } = scripted({ tool_calls: [call("ask_analyst", { question: "What should I restock?" })] }, "Reorder eggs and maize meal before Saturday.");
   const out = await runAgent({ chat, models: MODELS, books: books(), message: "What should I restock before the weekend?", now: NOW });
-  assert.equal(out.answeredBy, "Nemotron 3 Super");
+  assert.equal(out.answeredBy, MODELS.analyst.label);
   assert.match(out.reply, /eggs/);
-  assert.equal(asked[1].model.label, "Nemotron 3 Super");
+  assert.equal(asked[1].model.id, MODELS.analyst.id);
+  assert.equal(asked[1].purpose, "analyst");
   assert.match(asked[1].messages[1].content, /units_sold_last_7_days/);
 });
 
@@ -90,7 +91,7 @@ test("figures come from the ledger, not from the model", async () => {
   assert.match(asked[1].messages.at(-1).content, /"cash_in_till":"\$40.00"/);
 });
 
-test("when Lightning's tool calls fail twice, Nemotron 3 Super takes over the message", async () => {
+test("when Lightning's tool calls fail twice, the analyst model takes over the message", async () => {
   const { chat, asked } = scripted(
     { tool_calls: [call("record_sale", "{not json")] },
     { tool_calls: [call("record_sael", { items: [] })] },
@@ -99,7 +100,7 @@ test("when Lightning's tool calls fail twice, Nemotron 3 Super takes over the me
   );
   const out = await runAgent({ chat, models: MODELS, books: books(), message: "1 salt cash", now: NOW });
   assert.equal(out.escalated, true);
-  assert.equal(asked[2].model.label, "Nemotron 3 Super");
+  assert.equal(asked[2].model.id, MODELS.analyst.id);
   assert.equal(asked[2].purpose, "router, retried on Super");
   assert.equal(out.proposals.length, 1);
 });
@@ -154,7 +155,7 @@ test("the analyst answers questions only, not a message that records something",
   );
   const out = await runAgent({ chat, models: MODELS, books: books(), message: "Paid $2 transport to town", now: NOW });
   assert.equal(out.answeredBy, undefined);
-  assert.ok(!asked.some((x) => x.model.label === "Nemotron 3 Super"));
+  assert.ok(!asked.some((x) => x.purpose === "analyst"));
   assert.equal(out.reply, "Transport, $2.00 cash.");
 });
 
