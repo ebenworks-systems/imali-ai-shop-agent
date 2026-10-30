@@ -10,6 +10,7 @@ const CASES = [
   { message: "1 salt cash", ok: (o) => o.proposals.length === 1 && o.proposals[0].entry?.kind === "sale" && o.proposals[0].amount > 0 },
   { message: "Paid $5 for electricity and $2 transport to town", ok: (o) => o.proposals.map((p) => p.amount).sort((a, b) => a - b).join() === "200,500" },
 ];
+console.log(`analyst: ${models.analyst.id}`);
 let pass = 0, n = 0;
 for (let run = 1; run <= runs; run++) for (const c of CASES) {
   let routerCalls = 0;

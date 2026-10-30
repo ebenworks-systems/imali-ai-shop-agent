@@ -1,0 +1,13 @@
+PASS run1 "1 salt cash" 3207 ms escalated=true Nemotron 3.5 Lightning/router/0ms > Nemotron 3.5 Lightning/router/0ms > Nemotron 3.5 Super VL/router, retried on Super/1971ms > Nemotron 3.5 Super VL/router, retried on Super/1226ms 
+   reply: Ready to record: sold 1 Salt 1 kg for $0.60 in cash.  proposals: [["Sold 1 × Salt 1 kg in cash",60]]
+PASS run1 "Paid $5 for electricity and $2 transport to town" 2843 ms escalated=true Nemotron 3.5 Lightning/router/0ms > Nemotron 3.5 Lightning/router/0ms > Nemotron 3.5 Super VL/router, retried on Super/1435ms > Nemotron 3.5 Super VL/router, retried on Super/1407ms 
+   reply: Ready to record: $5 for electricity and $2 for transport to town.  proposals: [["Paid $5.00 for electricity",500],["Paid $2.00 for transport",200]]
+PASS run2 "1 salt cash" 3125 ms escalated=true Nemotron 3.5 Lightning/router/0ms > Nemotron 3.5 Lightning/router/0ms > Nemotron 3.5 Super VL/router, retried on Super/1468ms > Nemotron 3.5 Super VL/router, retried on Super/1656ms 
+   reply: Ready to record: sold 1 Salt 1 kg for $0.60 in cash.  proposals: [["Sold 1 × Salt 1 kg in cash",60]]
+FAIL run2 "Paid $5 for electricity and $2 transport to town" 4162 ms escalated=true Nemotron 3.5 Lightning/router/0ms > Nemotron 3.5 Lightning/router/0ms > Nemotron 3.5 Super VL/router, retried on Super/4161ms 
+   reply: How did you pay for the electricity and transport - cash or mobile money?  proposals: []
+PASS run3 "1 salt cash" 2228 ms escalated=true Nemotron 3.5 Lightning/router/0ms > Nemotron 3.5 Lightning/router/0ms > Nemotron 3.5 Super VL/router, retried on Super/1038ms > Nemotron 3.5 Super VL/router, retried on Super/1190ms 
+   reply: Ready to record: sold 1 Salt 1 kg for $0.60 in cash.  proposals: [["Sold 1 × Salt 1 kg in cash",60]]
+FAIL run3 "Paid $5 for electricity and $2 transport to town" 2901 ms escalated=true Nemotron 3.5 Lightning/router/0ms > Nemotron 3.5 Lightning/router/0ms > Nemotron 3.5 Super VL/router, retried on Super/2901ms 
+   reply: I can record the $5 electricity and $2 transport expenses. How did you pay for each - cash or mobile money?  proposals: []
+4 of 6 passed

@@ -1,6 +1,6 @@
 // The agent. Nemotron 3.5 Lightning reads every message and calls tools; the ledger turns each call into a
-// checked double-entry proposal; Nemotron 3.5 Super VL reads photos; Nemotron 3 Super answers the
-// questions that need thought and takes over when Lightning's tool calls keep failing; Nemotron 3 Ultra
+// checked double-entry proposal; Nemotron 3.5 Super VL reads photos and also answers
+// the questions that need thought and takes over when Lightning's tool calls keep failing; Nemotron 3 Ultra
 // closes the day. Nothing reaches the books until the owner confirms in the app.
 
 import { currencyCode } from "./rates.js";
